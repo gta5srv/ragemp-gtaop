@@ -1,0 +1,21 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build
+node_modules
+packages/gta-op/*
+
+# Server misc
+positions.txt
+
+# Text editors/IDEs
+*.pyo
+*.pyc
+*~
+.idea

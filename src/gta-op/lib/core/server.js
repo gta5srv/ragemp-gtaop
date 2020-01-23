@@ -1,47 +1,72 @@
-import { FSHelper, Loader } from '@lib/core'
+import Loader from '@core/loader'
 import { Rectangle, Interval } from '@lib/algebra'
 import { HeightMap, TeamFactory, ClientFactory } from '@lib'
 
-const path = require('path')
-
 export default class Server {
-  constructor () {
-    this.clients = new ClientFactory()
+  static debuggingEnabled = true
 
-    this.initHeightMap()
-    this.initTeams()
-  }
+  static clients = new ClientFactory()
+  static teams = new TeamFactory()
+  static heightMap
 
-  initTeams () {
-    this.teams = new TeamFactory()
-
-    let teamsInfo = require('@config/teams').teams
-
-    for (let teamSlug in teamsInfo) {
-      let teamInfo = teamsInfo[teamSlug]
-      teamInfo.slug = teamSlug
-
-      let team = Loader.team(teamInfo)
-      this.teams.add(team)
-    }
-  }
-
-  initHeightMap () {
+  static initHeightMap (heightMapPath) {
     const v = new mp.Vector3(-4300, -4100, 0)
     const v2 = v.add(new mp.Vector3(300 * 30, 150 * 90, 0))
     const area = new Rectangle(new Interval(v.x, v2.x), new Interval(v.y, v2.y))
 
-    let heightMapPath = FSHelper.path('assets/hmap.dat')
-    this.heightMap = new HeightMap(heightMapPath, area)
+    Server.heightMap = new HeightMap(heightMapPath, area)
   }
 
-  getZ (v, cb) {
-    if (!this.heightMap) {
-      throw 'Height map not initialized'
+  static getZ (v, cb) {
+    if (!Server.heightMap) {
+      throw Exception('Height map not initialized yet')
     }
 
-    this.heightMap.getZ(v, z => {
+    Server.heightMap.getZ(v, z => {
       cb(z)
+    })
+  }
+
+  static log () {
+    console.log(...arguments)
+  }
+
+  static debug () {
+    if (!Server.debuggingEnabled) {
+      return
+    }
+
+    Server.log(...arguments)
+  }
+
+  static sendMessageToAll () {
+    Server.clients.sendMessage(...arguments)
+  }
+
+  static broadcast () {
+    Server.log(...arguments)
+    Server.sendMessageToAll(...arguments)
+  }
+
+  static playerArgsToClientArray () {
+    let args = [...arguments]
+
+    let player = args.shift()
+    let client = Server.clients.byPlayer(player)
+    args.unshift(client)
+
+    return args
+  }
+
+  static addCommand (command, callback) {
+    mp.events.addCommand(command, function () {
+      callback.apply(null, Server.playerArgsToClientArray(...arguments))
+    })
+  }
+
+  static addEvent (event, callback) {
+    mp.events.add(event, function () {
+      callback.apply(null, Server.playerArgsToClientArray(...arguments))
     })
   }
 }

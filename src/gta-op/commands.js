@@ -1,46 +1,43 @@
-const fs = require('fs')
+import { Server, FSHelper } from '@core'
+import { Client, Vehicle } from '@lib'
 
-import FSHelper from '@lib/core/fs-helper'
-import Vehicle from '@lib/vehicle'
+Server.addCommand("savepos", (client, description) => {
+	let append = [ client.position, client.heading ]
 
-module.exports = (server) => {
-	mp.events.addCommand("savepos", (player) => {
-		let pos = JSON.stringify(player.position)
+	if (client.vehicle) {
+		append = [ client.vehicle.position, client.vehicle.rotation ]
+	}
 
-		if (player.vehicle) {
-			console.log(new Vehicle(player.vehicle).rotation)
-		}
+	append = JSON.stringify(append)
+	let prefixedAppend = description ? `${description} ${append}` : append
 
-		FSHelper.appendFile('./positions.txt', JSON.stringify(player.position) + "\n", (err) => {
-			if (err) {
-				console.error(err)
-				return
-			}
-
-			player.outputChatBox(pos + ' has been saved!')
-		})
-	})
-
-	mp.events.addCommand('kill', player => {
-		let client = server.clients.byPlayer(player)
-		client.kill()
-	})
-
-	mp.events.addCommand('setteam', (player, teamSlug) => {
-		let team = server.teams.bySlug(teamSlug)
-
-		if (!(teamSlug && team)) {
-			player.outputChatBox('Usage: /setteam [team_slug]')
-			player.outputChatBox('Note: Possible team slugs are: "fib", "marines", "lost_mc"')
+	FSHelper.appendFile( './positions.txt', prefixedAppend + "\n", (err) => {
+		if (err) {
+			console.error(err)
 			return
 		}
 
-		let client = server.clients.byPlayer(player)
-		client.team = server.teams.bySlug(teamSlug)
-		client.spawn()
-
-		let output = `Setting ${client.player.name}'s team to ${client.team.name}`
-		player.outputChatBox(output)
-		console.log(output)
+		client.sendMessage(`!{#ff0000}${append} ` + (description ? `!{#ffff00}(${description}) ` : '') + `!{#ffffff}has been saved!`)
+		Server.log(append + ' has been saved!')
 	})
-}
+})
+
+Server.addCommand('kill', (client) => {
+	client.kill()
+})
+
+Server.addCommand('setteam', (client, teamSlug) => {
+	let team = Server.teams.bySlug(teamSlug)
+
+	if (!(team && teamSlug)) {
+		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/setteam !{#dddddd}[team_slug]`)
+		client.sendMessage(`!{#ffff00}Note: !{#ffffff}Possible team slugs are: !{#dddddd}fib!{#ffffff}, !{#dddddd}marines!{#ffffff}, !{#dddddd}lost_mc`)
+		return
+	}
+
+	client.team = Server.teams.bySlug(teamSlug)
+	client.spawn()
+
+	Server.debug(`Setting ${client.player.name}'s team to ${client.team.name}`)
+	client.sendMessage(`Setting your team to !{#ff0000}${client.team.name}`)
+})

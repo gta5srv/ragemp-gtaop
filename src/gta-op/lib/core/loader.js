@@ -1,6 +1,25 @@
-import { Team } from '@lib'
+import { Server, FSHelper } from '@core'
+import Team from '@lib/team'
 
-export default class Loader {
+module.exports = class Loader {
+  static run (rootDirectory) {
+    global.root = rootDirectory
+
+    Loader.clients()
+    Loader.teams()
+    Loader.heightMap()
+  }
+
+  static clients () {
+    mp.events.add('playerJoin', (player) => {
+      Server.clients.add(player)
+    })
+
+    mp.events.add('playerQuit', (player) => {
+      Server.clients.remove(player)
+    })
+  }
+
   static team (info) {
     info.base = new mp.Vector3(info.base[0], info.base[1], info.base[2])
 
@@ -29,5 +48,21 @@ export default class Loader {
     }
 
     return new Team(info)
+  }
+
+  static teams () {
+    let teamsInfo = require('@config/teams').teams
+
+    for (let teamSlug in teamsInfo) {
+      let teamInfo = teamsInfo[teamSlug]
+      teamInfo.slug = teamSlug
+
+      let team = Loader.team(teamInfo)
+      Server.teams.add(team)
+    }
+  }
+
+  static heightMap () {
+    Server.initHeightMap(FSHelper.path('assets/hmap.dat'))
   }
 }

@@ -1,36 +1,27 @@
-module.exports = (server) => {
-  mp.events.add('playerDeath', function (player, reason, killer) {
+import Server from '@core/server'
 
-     let respawnTimer = setTimeout(() => {
-       server.clients.spawn(player)
-     }, 3000)
+Server.addEvent('playerDeath', (client, reason, killer) => {
+   let respawnTimer = setTimeout(() => {
+     client.spawn()
+   }, 3000)
+})
+
+Server.addEvent('playerCreateWaypoint', (client, position) => {
+  let coords = JSON.parse(position)
+
+  Server.getZ(coords, z => {
+    if (!z) {
+      console.error('Invalid z coordinate given')
+      return
+    }
+
+    console.log('Setting pos to', new mp.Vector3(coords.x, coords.y, z))
+    client.position = new mp.Vector3(coords.x, coords.y, z + 0.5)
   })
 
-  mp.events.add('playerCreateWaypoint', (player, position) => {
-    let coords = JSON.parse(position)
+  console.log('playerCreateWaypoint', client, coords)
+})
 
-    server.getZ(coords, z => {
-      if (!z) {
-        console.error('Invalid z coordinate given')
-        return
-      }
-
-      console.log('Setting pos to', new mp.Vector3(coords.x, coords.y, z))
-      player.position = new mp.Vector3(coords.x, coords.y, z + 0.5)
-    })
-
-    console.log('playerCreateWaypoint', player, coords)
-  })
-
-  mp.events.add('playerJoin', player => {
-    server.clients.add(player)
-  })
-
-  mp.events.add('playerQuit', player => {
-    server.clients.remove(player)
-  })
-
-  mp.events.add('playerReady', player => {
-    server.clients.spawn(player)
-  })
-}
+Server.addEvent('playerReady', (client) => {
+  client.spawn()
+})

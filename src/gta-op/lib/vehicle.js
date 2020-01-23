@@ -20,7 +20,13 @@ export default class Vehicle {
     }
   }
 
+  get colors () {
+    return this._colors
+  }
+
   set colors (colors) {
+    this._colors = colors
+
     const colorsArray = [].concat(...colors)
     this._vehicle.setColorRGB.apply(this._vehicle, colorsArray)
   }
@@ -35,5 +41,17 @@ export default class Vehicle {
         y: y * -Math.cos(ry) + x * Math.sin(ry),
         z
     }
+  }
+
+  set rotation (rotation) {
+    this._vehicle.rotation = rotation
+  }
+
+  set position (position) {
+    this._vehicle.position = position
+  }
+
+  get position () {
+    return this._vehicle.position
   }
 }

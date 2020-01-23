@@ -2,13 +2,17 @@ import Client from '@lib/client'
 
 export default class ClientFactory {
    constructor () {
-     this.list = []
+     this._list = []
+   }
+
+   get all () {
+     return this._list
    }
 
    byPlayer (player) {
      let client = null
 
-     this.list.forEach(singleClient => {
+     this._list.forEach(singleClient => {
        if (singleClient.player == player) {
          client = singleClient
        }
@@ -19,7 +23,7 @@ export default class ClientFactory {
 
    add (player) {
      if (!this.byPlayer(player)) {
-       this.list.push(new Client(player))
+       this._list.push(new Client(player))
        console.log('Adding ' + player.name)
      }
    }
@@ -31,15 +35,15 @@ export default class ClientFactory {
      }
 
      console.log('Removing ' + player.name)
-     const clientIndex = this.list.indexOf(client)
-     delete this.list[clientIndex]
+
+     const clientIndex = this._list.indexOf(client)
+
+     this._list = this._list.filter((listItem, listItemIndex) => {
+       return listItemIndex != clientIndex
+     })
    }
 
-   spawn (player) {
-     let client = this.byPlayer(player)
-     
-     if (client) {
-       client.spawn()
-     }
+   sendMessage () {
+     this._list.forEach(client => client.sendMessage(...arguments))
    }
 }

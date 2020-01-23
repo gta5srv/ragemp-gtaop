@@ -1,8 +1,4 @@
-global.root = __dirname
+require('@core/loader').run(__dirname)
 
-import Server from '@lib/core/server'
-
-let server = new Server()
-
-require('./events')(server)
-require('./commands')(server)
+require('./events')
+require('./commands')

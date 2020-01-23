@@ -66,6 +66,11 @@ export default class Team {
     })
   }
 
+  setupClient (client) {
+    const modelIndex = Math.floor(Math.random() * this._models.length)
+    client.model = mp.joaat(this._models[modelIndex])
+  }
+
   getSpawn () {
     let spawnIndex = Math.floor(Math.random() * this._spawns.length)
     return this._spawns[spawnIndex]

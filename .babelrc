@@ -1,0 +1,15 @@
+{
+  "presets": [ "@babel/preset-env" ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties",
+    ["module-resolver", {
+      "cwd": "./src/gta-op",
+      "alias": {
+        "@config": "./config",
+        "@lib": "./lib",
+        "@core": "./lib/core",
+        "@assets": "./assets"
+      }
+    }]
+  ]
+}

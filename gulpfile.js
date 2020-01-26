@@ -19,7 +19,7 @@ const js = (cb) => {
   const outputDir = 'packages/gta-op'
   //
   // streams.push(
-    gulp.src('**/*.js', { cwd: inputDir })
+    gulp.src('**/*.ts', { cwd: inputDir })
     .pipe(prettyError())
     .pipe(sourceMaps.init())
     .pipe(print())
@@ -31,7 +31,7 @@ const js = (cb) => {
   // streams.push(
     gulp.src([
         '**/*',
-        '!**/*.js'
+        '!**/*.ts'
       ], {
         cwd: inputDir,
         nodir: true

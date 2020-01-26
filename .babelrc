@@ -1,7 +1,6 @@
 {
-  "presets": [ "@babel/preset-env" ],
+  "presets": [ "@babel/typescript" ],
   "plugins": [
-    "@babel/plugin-proposal-class-properties",
     ["module-resolver", {
       "cwd": "./src/gta-op",
       "alias": {
@@ -10,6 +9,9 @@
         "@core": "./lib/core",
         "@assets": "./assets"
       }
-    }]
+    }],
+    "@babel/plugin-proposal-class-properties",
+    "@babel/proposal-object-rest-spread",
+    "@babel/plugin-transform-modules-commonjs"
   ]
 }

@@ -1,54 +1,37 @@
 const gulp = require('gulp')
-const glob = require('glob')
 const print = require('gulp-print').default
-const path = require('path')
-const rename = require('gulp-rename')
+const ts = require('gulp-typescript')
 const prettyError = require('gulp-prettyerror')
-// const source = require('vinyl-source-stream')
-// const buffer = require('vinyl-buffer')
-// const browserify = require('browserify');
-// const babelify = require('babelify')
 const merge = require('merge-stream')
-const sourceMaps = require('gulp-sourcemaps')
 const babel = require('gulp-babel')
+const del = require('del')
 
-const js = (cb) => {
-  let streams = []
+function clean (cb) {
+  del.sync('dest/server/*')
+  cb()
+}
 
-  const inputDir = 'src/gta-op'
-  const outputDir = 'packages/gta-op'
-  //
-  // streams.push(
-    gulp.src('**/*.ts', { cwd: inputDir })
-    .pipe(prettyError())
-    .pipe(sourceMaps.init())
-    .pipe(print())
-    .pipe(babel())
-    .pipe(sourceMaps.write())
-    .pipe(gulp.dest(outputDir))
-  // )
+function server (cb) {
+  process.chdir('projects/server')
 
-  // streams.push(
+  let tsProject = ts.createProject('tsconfig.json')
+
+  return merge(
     gulp.src([
         '**/*',
         '!**/*.ts'
-      ], {
-        cwd: inputDir,
-        nodir: true
-      })
-      .pipe(prettyError())
-      .pipe(print())
-      .pipe(gulp.dest(outputDir))
+      ], { cwd: 'src'})
+      .pipe(gulp.dest('build/server', { cwd: __dirname })),
 
-  cb()
-  // )
-  //
-  // merge.apply(null, streams).on('finish', () => {
-  //   console.log('finish')
-  //   cb()
-  // })
+    gulp.src('**/*.ts', { cwd: 'src' })
+        .pipe(prettyError())
+        .pipe(tsProject())
+        .js
+        .pipe(babel())
+        .pipe(gulp.dest('build/server', { cwd: __dirname }))
+  )
 }
+
 module.exports = {
-  js,
-  default: gulp.parallel(js)
+  default: gulp.series(clean, server)
 }

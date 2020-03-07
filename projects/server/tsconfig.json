@@ -1,0 +1,33 @@
+{
+	"files": [
+			"src/index.ts"
+	],
+	"compilerOptions": {
+    "target": "es2018",
+    "lib": ["es2018"],
+		"moduleResolution": "node",
+		"allowJs": true,
+		"noEmit": false,
+		"strict": true,
+		"isolatedModules": false,
+		"esModuleInterop": true,
+		"baseUrl": "./src",
+		"paths": {
+			"@core/*": ["lib/core/*"],
+			"@lib/*": ["lib/*"],
+			"@config/*": ["config/*"],
+			"@assets/*": ["assets/*"]
+		},
+		"module": "commonjs",
+		"resolveJsonModule": true,
+		"removeComments": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"types" : ["node", "ragemp-s"],
+		"allowSyntheticDefaultImports": true,
+		"sourceMap": true
+	},
+	"include": [
+		"src/**/*"
+	]
+}

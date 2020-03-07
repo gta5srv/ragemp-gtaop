@@ -1,9 +1,0 @@
-{
-	"maxplayers" : 100,
-	"name" : "Opposing Forces TDM - Tired of roleplay?",
-	"gamemode" : "tdm",
-	"stream-distance" : 500.0,
-	"announce" : false,
-	"csharp" : "disabled",
-	"port": 22005
-}

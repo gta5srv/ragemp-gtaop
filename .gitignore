@@ -9,6 +9,8 @@ Thumbs.db
 
 # Build
 node_modules
+build/client/*
+build/server/*
 packages/gta-op/*
 
 # Server misc

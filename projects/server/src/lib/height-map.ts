@@ -10,7 +10,7 @@ export default class HeightMap {
     this.area = area
   }
 
-  getZ (v: Vector3Mp, cb: Function) {
+  getZ (v: Vector3Mp, cb: Function): void {
     fs.open(this.file, 'r', (err: any, fd: any) => {
         if(err) {
           cb(0)

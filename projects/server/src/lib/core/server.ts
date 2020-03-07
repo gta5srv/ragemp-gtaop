@@ -1,13 +1,13 @@
-import Rectangle from '@lib/algebra/rectangle'
-import { Interval } from '@lib/algebra/index'
-import { TeamManager, ClientManager } from '@lib/managers/index'
 import { HeightMap } from '@lib/index'
+import { Interval, Rectangle } from '@lib/algebra/index'
+import { TeamManager, ClientManager, ZoneManager } from '@lib/managers/index'
 
 export default class Server {
   static debuggingEnabled = true
 
   static clients: ClientManager = new ClientManager()
   static teams: TeamManager = new TeamManager()
+  static zones: ZoneManager = new ZoneManager()
   static heightMap: HeightMap
 
   static initHeightMap (heightMapPath: string) {

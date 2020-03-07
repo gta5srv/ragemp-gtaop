@@ -5,15 +5,15 @@ const extend = require('extend')
 
 export default class Team {
   _name: string = ''
-  _slug:string = ''
+  _slug: string = ''
   _base?: Vector3Mp
   _blip?: BlipMp // Base blip
   _label?: TextLabelMp
   _checkpoint?: MarkerMp
-  _blipColorID = 0
-  _vehicleColors = [[ 0, 0, 0 ], [ 0, 0, 0 ]]
-  _models:Array<any> = [] // TODO: Change type
-  _spawns:Array<any> = [] // TODO: Adjust type
+  _blipColorID: number = 0
+  _vehicleColors: [RGB, RGB] = [[ 0, 0, 0 ], [ 0, 0, 0 ]]
+  _models: Array<any> = [] // TODO: Change type
+  _spawns: Array<any> = [] // TODO: Adjust type
   _vehicles: Array<Vehicle> = []
 
   constructor (options: Object = {}) {
@@ -50,6 +50,8 @@ export default class Team {
 
   _init () {
     if (this._base) {
+      console.log('team', typeof this._base, this._base)
+
       this._blip = mp.blips.new(40, this._base, {
         name: this._name + ' base',
         color: this._blipColorID

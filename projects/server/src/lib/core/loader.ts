@@ -1,5 +1,11 @@
 import { Server, FSHelper } from '@core/index'
-import Team from '@lib/team'
+import { Team, Zone } from '@lib/index'
+
+interface ZoneInfo {
+  name: string
+  position: Array3d,
+  group?: string
+}
 
 export default class Loader {
   static run (rootDirectory: string) {
@@ -7,6 +13,7 @@ export default class Loader {
 
     Loader.clients()
     Loader.teams()
+    Loader.zones()
     Loader.heightMap()
   }
 
@@ -63,6 +70,26 @@ export default class Loader {
       let team = Loader.team(teamInfo)
       Server.teams.add(team)
     }
+  }
+
+  static zones () {
+    let zonesInfo = require('@config/zones').zones
+
+    zonesInfo.forEach((zoneInfo: ZoneInfo) => {
+      const zone = new Zone(
+        zoneInfo.name,
+        new mp.Vector3(
+          zoneInfo.position[0],
+          zoneInfo.position[1],
+          zoneInfo.position[2]
+        ),
+        zoneInfo.group
+      )
+
+      // console.log(`Adding zone ${zoneInfo.name} (${zone.position})`)
+
+      Server.zones.add(zone)
+    })
   }
 
   static heightMap () {

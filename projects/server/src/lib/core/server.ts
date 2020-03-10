@@ -1,6 +1,9 @@
-import { HeightMap } from '@lib/index'
-import { Interval, Rectangle } from '@lib/algebra/index'
-import { TeamManager, ClientManager, ZoneManager } from '@lib/managers/index'
+import HeightMap from '@lib/height-map'
+import Interval from '@lib/algebra/interval'
+import Rectangle from '@lib/algebra/rectangle'
+import TeamManager from '@lib/managers/team-manager'
+import ClientManager from '@lib/managers/client-manager'
+import ZoneManager from '@lib/managers/zone-manager'
 
 export default class Server {
   static debuggingEnabled = true

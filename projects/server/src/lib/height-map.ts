@@ -1,5 +1,5 @@
-const fs = require('fs')
-import Rectangle from "./algebra/rectangle";
+import fs from 'fs';
+import Rectangle from "@lib/algebra/rectangle";
 
 export default class HeightMap {
   file: string

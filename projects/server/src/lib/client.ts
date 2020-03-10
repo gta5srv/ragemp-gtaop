@@ -1,4 +1,5 @@
-import { Team, Vehicle } from '@lib/index'
+import Team from '@lib/team'
+import Vehicle from '@lib/vehicle'
 
 export default class Client {
   _player: PlayerMp

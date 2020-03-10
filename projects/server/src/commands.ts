@@ -1,5 +1,6 @@
-import { Server, FSHelper } from '@core/index'
-import { Client, Vehicle } from '@lib/index'
+import Server from '@core/server'
+import FSHelper from '@core/fs-helper'
+import Client from '@lib/client'
 
 Server.addCommand('savepos', (client: Client, description: string) => {
 	let coords = [ client.position, client.heading ]

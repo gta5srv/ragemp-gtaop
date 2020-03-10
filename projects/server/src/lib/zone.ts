@@ -1,4 +1,4 @@
-import { Marker } from '@lib/marker'
+import Marker from '@lib/marker'
 
 export default class Zone {
   private _name: string

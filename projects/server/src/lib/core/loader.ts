@@ -1,11 +1,13 @@
-import { Server, FSHelper } from '@core/index'
-import { Team, Zone } from '@lib/index'
-
 interface ZoneInfo {
   name: string
   position: Array3d,
   group?: string
 }
+import Server from '@core/server'
+import FSHelper from '@core/fs-helper'
+import Client from '@lib/client'
+import Team from '@lib/team'
+import Zone from '@lib/zone'
 
 export default class Loader {
   static run (rootDirectory: string) {

@@ -1,4 +1,6 @@
+import Server from '@core/server'
 import Marker from '@lib/marker'
+import Team from '@lib/team'
 
 export default class Zone {
   private _name: string
@@ -6,9 +8,11 @@ export default class Zone {
   private _radius: number
   private _blip: BlipMp
   private _marker: MarkerMp
+  private _owner?: Team
 
   private static readonly DEFAULT_RADIUS: number = 5
   private static readonly DEFAULT_BLIP_MODEL: number = 38
+  private static readonly DEFAULT_BLIP_COLOR: 4
 
   constructor (name: string, position: Vector3Mp, group?: string, radius: number = Zone.DEFAULT_RADIUS,
                blipModel: number = Zone.DEFAULT_BLIP_MODEL) {
@@ -18,9 +22,11 @@ export default class Zone {
     this._radius = radius
     this._blip = mp.blips.new(blipModel, position, {
       name: name,
-      color: 4
+      color: Zone.DEFAULT_BLIP_COLOR
     })
     this._marker = mp.markers.new(Marker.Type.VerticalCylinder, position, radius)
+
+    Server.zones.add(this)
   }
 
   get name () {

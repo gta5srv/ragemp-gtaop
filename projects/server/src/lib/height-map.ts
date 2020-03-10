@@ -11,7 +11,7 @@ export default class HeightMap {
   }
 
   getZ (v: Vector3Mp, cb: Function): void {
-    fs.open(this.file, 'r', (err: any, fd: any) => {
+    fs.open(this.file, 'r', (err: NodeJS.ErrnoException | null, fd: number) => {
         if(err) {
           cb(0)
           return console.error(err);
@@ -26,7 +26,7 @@ export default class HeightMap {
 
         let start = (y + x) * LENGTH
 
-        fs.read(fd, buffer, 0, LENGTH, start, (err: any, num: any) => {
+        fs.read(fd, buffer, 0, LENGTH, start, (err: any, _num: any) => {
           if (err) {
             cb(0)
             return

@@ -1,12 +1,13 @@
 export default class Manager<T> {
-  protected _items: Array<T> = []
+  protected _items: T[] = []
 
-  get items () {
+  get items (): T[] {
     return this._items
   }
 
   add (...args: T[]): void {
-    let items = [ ...args ]
+    const items = [ ...args ]
+
     items.forEach((item: T) => {
       if (this._items.indexOf(item) === -1) {
         this._items.push(item)
@@ -22,5 +23,9 @@ export default class Manager<T> {
     }
 
     delete this._items[itemIndex]
+  }
+
+  contains (item: T): boolean {
+    return this._items.indexOf(item) !== -1
   }
 }

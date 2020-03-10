@@ -1,7 +1,7 @@
 export default class Interval {
   min: number
   max: number
-  
+
   constructor (a: number, b: number) {
     if (a < b) {
       this.min = a
@@ -12,7 +12,7 @@ export default class Interval {
     }
   }
 
-  total () {
+  total (): number {
     return this.max - this.min
   }
 }

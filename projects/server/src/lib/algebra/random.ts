@@ -1,5 +1,5 @@
 export default class Random {
-  static getInt(min: number, max: number) {
+  static getInt(min: number, max: number): number {
     min = Math.ceil(min)
     max = Math.floor(max)
 

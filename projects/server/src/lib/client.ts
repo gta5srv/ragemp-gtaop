@@ -32,8 +32,8 @@ export default class Client {
     this._player.heading = heading
   }
 
-  get vehicle () {
-    return this._player.vehicle ? new Vehicle(this._player.vehicle) : null
+  get vehicle (): Vehicle | null {
+    return this._player.vehicle ? Vehicle.byVehicleMp(this._player.vehicle) : null
   }
 
   get team () {

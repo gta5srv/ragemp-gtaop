@@ -1,22 +1,34 @@
+import Server from '@core/server'
+
 export default class Vehicle {
-  _vehicle:VehicleMp
-  _colors:any
+  _vehicle: VehicleMp
+  _colors: any
 
-  constructor (vehicle:any) {
-    this._vehicle = mp.vehicles.new(vehicle.model, vehicle.position, {
-    })
+  constructor (model: HashOrString, position: Vector3Mp, rotation: Vector3Mp | null = null,
+               colors?: [RGB,RGB], numberPlate?: string) {
+    this._vehicle = mp.vehicles.new(model, position, {})
 
-    if (vehicle.numberPlate) {
-      this._vehicle.numberPlate = vehicle.numberPlate
+    if (rotation) {
+      this._vehicle.rotation = rotation
     }
 
-    if (vehicle.colors) {
-      this.colors = vehicle.colors
+    if (colors) {
+      this.colors = colors
     }
 
-    if (vehicle.rotation) {
-      this._vehicle.rotation = vehicle.rotation
+    if (numberPlate) {
+      this._vehicle.numberPlate = numberPlate
     }
+
+    Server.vehicles.add(this)
+  }
+
+  static byVehicleMp(vehicleMp: VehicleMp): Vehicle | null {
+    return Server.vehicles.byVehicleMp(vehicleMp)
+  }
+
+  get vehicleMp () {
+    return this._vehicle
   }
 
   get colors () {

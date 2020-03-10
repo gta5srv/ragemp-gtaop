@@ -4,6 +4,7 @@ import Rectangle from '@lib/algebra/rectangle'
 import TeamManager from '@lib/managers/team-manager'
 import ClientManager from '@lib/managers/client-manager'
 import ZoneManager from '@lib/managers/zone-manager'
+import VehicleManager from '@lib/managers/vehicle-manager'
 
 export default class Server {
   static debuggingEnabled = true
@@ -11,6 +12,8 @@ export default class Server {
   static clients: ClientManager = new ClientManager()
   static teams: TeamManager = new TeamManager()
   static zones: ZoneManager = new ZoneManager()
+  static vehicles: VehicleManager = new VehicleManager()
+
   static heightMap: HeightMap
 
   static initHeightMap (heightMapPath: string) {
@@ -44,7 +47,7 @@ export default class Server {
 
   static playerArgsToClientArray (...args: any[]) {
     let player = args.shift()
-    let client = Server.clients.byPlayer(player)
+    let client = Server.clients.byPlayerMp(player)
     args.unshift(client)
 
     return args

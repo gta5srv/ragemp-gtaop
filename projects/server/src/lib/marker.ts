@@ -37,3 +37,5 @@ export namespace Marker {
     WolfsHead
   }
 }
+
+export default Marker

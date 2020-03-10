@@ -4,12 +4,12 @@ import path from 'path';
 export default class FSHelper {
   static rootDirectory?: string
 
-  static path (_path: string) {
+  static path (_path: string): string {
     return path.join(FSHelper.rootDirectory || '', _path)
   }
 
-  static appendFile (file: string, append: any, cb: Function) {
-    fs.readFile(file, (err: any, data: string) => {
+  static appendFile (file: string, append: any, cb: Function): void {
+    fs.readFile(file, 'utf-8', (err: NodeJS.ErrnoException | null, data: string) => {
       if (err) {
         data = ''
       }

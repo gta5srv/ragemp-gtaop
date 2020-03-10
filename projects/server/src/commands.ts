@@ -28,7 +28,7 @@ Server.addCommand('kill', (client: Client) => {
 })
 
 Server.addCommand('setteam', (client: Client, teamSlug: string) => {
-	let team = Server.teams.bySlug(teamSlug)
+	const team = Server.teams.bySlug(teamSlug)
 
 	if (!(team && teamSlug)) {
 		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/setteam !{#dddddd}[team_slug]`)
@@ -36,7 +36,12 @@ Server.addCommand('setteam', (client: Client, teamSlug: string) => {
 		return
 	}
 
-	client.team = Server.teams.bySlug(teamSlug)
+	if (!team) {
+		client.sendMessage(`{#ff0000}Team slug "${teamSlug}" couldn't be found...`)
+		return
+	}
+
+	client.team = team
 	client.spawn()
 
 	Server.debug(`Setting ${client.player.name}'s team to ${client.team.name}`)

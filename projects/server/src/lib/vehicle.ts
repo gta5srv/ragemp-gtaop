@@ -1,15 +1,15 @@
 import Server from '@core/server'
 
 export default class Vehicle {
-  _vehicle: VehicleMp
-  _colors: any
+  private _vehicleMp: VehicleMp
+  private _colors: any
 
   constructor (model: HashOrString, position: Vector3Mp, rotation: Vector3Mp | null = null,
                colors?: [RGB,RGB], numberPlate?: string) {
-    this._vehicle = mp.vehicles.new(model, position, {})
+    this._vehicleMp = mp.vehicles.new(model, position, {})
 
     if (rotation) {
-      this._vehicle.rotation = rotation
+      this._vehicleMp.rotation = rotation
     }
 
     if (colors) {
@@ -17,7 +17,7 @@ export default class Vehicle {
     }
 
     if (numberPlate) {
-      this._vehicle.numberPlate = numberPlate
+      this._vehicleMp.numberPlate = numberPlate
     }
 
     Server.vehicles.add(this)
@@ -28,7 +28,7 @@ export default class Vehicle {
   }
 
   get vehicleMp () {
-    return this._vehicle
+    return this._vehicleMp
   }
 
   get colors () {
@@ -39,11 +39,11 @@ export default class Vehicle {
     this._colors = colors
 
     const colorsArray: any = [].concat(...colors)
-    this._vehicle.setColorRGB.apply(this._vehicle, colorsArray)
+    this._vehicleMp.setColorRGB.apply(this._vehicleMp, colorsArray)
   }
 
   get rotation (): Vector3Mp {
-    const { x, y, z } = this._vehicle.rotation
+    const { x, y, z } = this._vehicleMp.rotation
     const rx = (360 - z) / 180 * Math.PI
     const ry = z / 180 * Math.PI
 
@@ -55,14 +55,14 @@ export default class Vehicle {
   }
 
   set rotation (rotation: Vector3Mp) {
-    this._vehicle.rotation = rotation
+    this._vehicleMp.rotation = rotation
   }
 
   set position (position: Vector3Mp) {
-    this._vehicle.position = position
+    this._vehicleMp.position = position
   }
 
   get position () {
-    return this._vehicle.position
+    return this._vehicleMp.position
   }
 }

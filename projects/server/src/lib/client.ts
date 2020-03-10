@@ -2,9 +2,9 @@ import Team from '@lib/team'
 import Vehicle from '@lib/vehicle'
 
 export default class Client {
-  _player: PlayerMp
-  _team?: Team
-  _respawnTimer: any
+  private _player: PlayerMp
+  private _team?: Team
+  private _respawnTimer: any
 
   constructor (player: PlayerMp) {
     this._player = player

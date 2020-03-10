@@ -8,13 +8,12 @@ import VehicleManager from '@lib/managers/vehicle-manager'
 
 export default class Server {
   static debuggingEnabled = true
-
-  static clients: ClientManager = new ClientManager()
-  static teams: TeamManager = new TeamManager()
-  static zones: ZoneManager = new ZoneManager()
-  static vehicles: VehicleManager = new VehicleManager()
-
   static heightMap: HeightMap
+
+  static readonly clients: ClientManager = new ClientManager()
+  static readonly teams: TeamManager = new TeamManager()
+  static readonly zones: ZoneManager = new ZoneManager()
+  static readonly vehicles: VehicleManager = new VehicleManager()
 
   static initHeightMap (heightMapPath: string) {
     const v = new mp.Vector3(-4100, -4300, 0)

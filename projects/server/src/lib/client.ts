@@ -3,12 +3,11 @@ import Vehicle from '@lib/vehicle'
 
 export default class Client {
   _player: PlayerMp
-  _team: any
+  _team?: Team
   _respawnTimer: any
 
   constructor (player: PlayerMp) {
     this._player = player
-    this._team = null
     this._respawnTimer = null
   }
 
@@ -56,20 +55,20 @@ export default class Client {
     this._player.model = model
   }
 
-  sendMessage (...args: any[]) {
+  sendMessage (...args: any[]): void {
     let texts = [...args]
     let textsPutTogether = texts.map(text => String(text)).join(' ')
 
     this._player.outputChatBox(textsPutTogether)
   }
 
-  spawn (timeMs?: number) {
-    if (!this._team) {
+  spawn (timeMs?: number): void {
+    if (this._team === undefined) {
       this._player.spawn(new mp.Vector3(1408.315673828125, 3099.702880859375, 52.74652099609375))
       return
     }
 
-    let spawn = this.team.getSpawn()
+    let spawn = this._team.getSpawn()
 
     if (this._respawnTimer) {
       clearTimeout(this._respawnTimer)
@@ -87,7 +86,7 @@ export default class Client {
     this._player.giveWeapon(mp.joaat('weapon_compactlauncher'), 50)
   }
 
-  kill () {
+  kill (): void {
     this._player.health = 0
   }
 }

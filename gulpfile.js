@@ -33,9 +33,14 @@ function server (cb) {
       .js
       .pipe(babel())
       .pipe(gulp.dest('build/server', { cwd: __dirname }))
-  )
+  ).on('finish', () => process.chdir(__dirname))
+}
+
+function watch () {
+  gulp.watch('**/*', { cwd: 'projects/server' }, server)
 }
 
 module.exports = {
-  default: gulp.series(clean, server)
+  default: gulp.series(clean, server),
+  watch: gulp.series(watch)
 }

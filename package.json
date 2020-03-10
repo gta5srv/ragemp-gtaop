@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "gulp",
+    "dev": "gulp default watch --series",
     "check-types": "tsc"
   },
   "keywords": [],

@@ -13,8 +13,8 @@
 		"esModuleInterop": true,
 		"baseUrl": "./src",
 		"paths": {
-			"@core/*": ["lib/core/*"],
 			"@lib/*": ["lib/*"],
+			"@core/*": ["lib/core/*"],
 			"@config/*": ["config/*"],
 			"@assets/*": ["assets/*"]
 		},

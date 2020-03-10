@@ -7,9 +7,9 @@
     ["module-resolver", {
       "cwd": "./src",
       "alias": {
-        "@config": "./config",
         "@lib": "./lib",
         "@core": "./lib/core",
+        "@config": "./config",
         "@assets": "./assets"
       }
     }],

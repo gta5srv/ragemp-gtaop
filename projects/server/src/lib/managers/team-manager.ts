@@ -29,7 +29,6 @@ export default class TeamManager {
 
       if (this.teams.indexOf(team) === -1) {
         this.teams.push(team)
-        console.log('[TEAM] Adding ' + team.name)
       }
     })
   }
@@ -41,7 +40,6 @@ export default class TeamManager {
       return
     }
 
-    console.log('Removing ' + team.name)
     delete this.teams[teamIndex]
   }
 }

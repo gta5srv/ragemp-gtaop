@@ -17,8 +17,6 @@ Server.addEvent('playerCreateWaypoint', (client: Client, position: string) => {
     console.log('Setting pos to', new mp.Vector3(coords.x, coords.y, z))
     client.position = new mp.Vector3(coords.x, coords.y, z + 0.5)
   })
-
-  console.log('playerCreateWaypoint', client, coords)
 })
 
 Server.addEvent('playerReady', (client: Client) => {

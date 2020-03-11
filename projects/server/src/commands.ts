@@ -31,7 +31,7 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 	// Remove first argument (which only contains all latter ones)
 	params.shift()
 	// Convert numeric values to floats
-	params = params.map((param: string): any => {
+	params = params.map((param: string): number|string => {
 		return Util.isNumeric(param) ? parseFloat(param) : param
 	})
 

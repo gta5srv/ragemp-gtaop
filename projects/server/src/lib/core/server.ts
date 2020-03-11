@@ -7,7 +7,7 @@ import ZoneManager from '@lib/managers/zone-manager'
 import VehicleManager from '@lib/managers/vehicle-manager'
 
 export default class Server {
-  static debuggingEnabled = true
+  static debuggingEnabled: boolean = true
   static heightMap: HeightMap
 
   static readonly clients: ClientManager = new ClientManager()
@@ -15,7 +15,7 @@ export default class Server {
   static readonly zones: ZoneManager = new ZoneManager()
   static readonly vehicles: VehicleManager = new VehicleManager()
 
-  static initHeightMap (heightMapPath: string) {
+  static initHeightMap (heightMapPath: string): void {
     const v = new mp.Vector3(-4100, -4300, 0)
     const v2 = v.add(new mp.Vector3(300 * 30, 150 * 90, 0))
     const area = new Rectangle(new Interval(v.x, v2.x), new Interval(v.y, v2.y))
@@ -23,11 +23,11 @@ export default class Server {
     Server.heightMap = new HeightMap(heightMapPath, area)
   }
 
-  static log (...args: any[]) {
+  static log (...args: any[]): void {
     console.log(...args)
   }
 
-  static debug (...args: any[]) {
+  static debug (...args: any[]): void {
     if (!Server.debuggingEnabled) {
       return
     }
@@ -35,30 +35,31 @@ export default class Server {
     Server.log(...args)
   }
 
-  static sendMessageToAll (...args: any[]) {
+  static sendMessageToAll (...args: any[]): void {
     Server.clients.sendMessage(...args)
   }
 
-  static broadcast (...args: any[]) {
+  static broadcast (...args: any[]): void {
     Server.log(...args)
     Server.sendMessageToAll(...args)
   }
 
-  static playerArgsToClientArray (...args: any[]) {
+  static playerArgsToClientArray (...args: any[]): any[] {
     let player = args.shift()
+
     let client = Server.clients.byPlayerMp(player)
     args.unshift(client)
 
     return args
   }
 
-  static addCommand (command: string, callback: Function) {
+  static addCommand (command: string, callback: Function): void {
     mp.events.addCommand(command, function (...args: any[]) {
       callback.apply(null, Server.playerArgsToClientArray(...args))
     })
   }
 
-  static addEvent (event: string, callback: Function) {
+  static addEvent (event: string, callback: Function): void {
     mp.events.add(event, function (...args: any[]) {
       callback.apply(null, Server.playerArgsToClientArray(...args))
     })

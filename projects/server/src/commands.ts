@@ -66,7 +66,7 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 		} else {
 			position.z = params[2]
 			client.position = position
-			client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}(${position}){#ffffff}.`)
+			client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}(${position})!{#ffffff}.`)
 		}
 
 		return

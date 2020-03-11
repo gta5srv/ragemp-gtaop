@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "gulp",
+    "watch": "gulp watch",
     "dev": "gulp default watch --series",
     "check-types": "tsc"
   },
@@ -12,13 +13,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "^7.8.3",
+    "@babel/core": "^7.8.7",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-transform-modules-commonjs": "^7.8.3",
-    "@babel/plugin-transform-regenerator": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
+    "@babel/plugin-transform-regenerator": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
     "@babel/preset-typescript": "^7.8.3",
-    "@types/node": "^13.7.7",
+    "@types/node": "^13.9.0",
     "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#master",
     "babel-plugin-module-resolver": "^4.0.0",
     "babelify": "^10.0.0",
@@ -42,10 +43,10 @@
     "module-alias": "^2.2.2",
     "path-posix": "^1.0.0",
     "tsify": "^4.0.1",
-    "typescript": "^3.7.5",
+    "typescript": "^3.8.3",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
-    "yargs": "^15.1.0"
+    "yargs": "^15.3.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-object-rest-spread": "^7.8.3"

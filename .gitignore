@@ -11,7 +11,7 @@ Thumbs.db
 node_modules
 build/client/*
 build/server/*
-packages/gta-op/*
+gtaop-error.log
 
 # Server misc
 positions.txt
@@ -21,3 +21,9 @@ positions.txt
 *.pyc
 *~
 .idea
+
+# Node package lock
+package-lock.json
+
+# ETC
+yarn-error.log

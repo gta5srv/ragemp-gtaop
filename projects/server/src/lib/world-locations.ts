@@ -1,4 +1,3 @@
-import Manager from "@core/manager";
 import Client from "@lib/client";
 
 export class WorldLocation {

@@ -1,7 +1,7 @@
 import Server from '@core/server'
 import FSHelper from '@core/fs-helper'
+import Util from '@core/util'
 import Client from '@lib/client'
-import Util from '@lib/util'
 import WorldLocations from '@lib/world-locations'
 
 Server.addCommand('savepos', (client: Client, description: string) => {

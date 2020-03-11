@@ -1,6 +1,3 @@
-export class Marker {
-}
-
 export namespace Marker {
   export enum Type {
     UpsideDownCone,

@@ -1,7 +1,7 @@
 import Server from '@core/server'
 import Manager from '@core/manager'
 import Client from '@lib/client'
-import Vehicle from './vehicle';
+import Vehicle from '@lib/vehicle';
 
 export class Team {
   private _name: string

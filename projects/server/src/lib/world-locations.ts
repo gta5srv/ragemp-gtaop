@@ -63,11 +63,12 @@ export class WorldLocations {
       return false
     }
 
+
     location.ipls.forEach((ipl: string) => {
       mp.world.requestIpl(ipl)
     })
 
-    // TODO: Make client load interior props
+    client.loadWorldLocation(location)
 
     client.position = location.position
     return true

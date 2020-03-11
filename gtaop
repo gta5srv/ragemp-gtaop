@@ -1,0 +1,136 @@
+#!/usr/bin/env node
+
+
+/*
+ *    ____                     _             ____
+ *   / __ \___  ___  ___  ___ (_)__  ___ _  / __/__  ___________ ___
+ *  / /_/ / _ \/ _ \/ _ \(_-</ / _ \/ _ `/ / _// _ \/ __/ __/ -_|_-<
+ *  \____/ .__/ .__/\___/___/_/_//_/\_, / /_/  \___/_/  \__/\__/___/
+ *      /_/  /_/                   /___/
+ */
+
+
+/**
+ * Dependencies
+ */
+const chalk = require('chalk')
+const spawn = require('cross-spawn')
+const fs = require('fs-extra')
+const strftime = require('strftime')
+const { Signale } = require('signale')
+const stripAnsi = require('strip-ansi')
+const box = require('ascii-box').box
+// Local dependencies
+const util = require('./lib/util')
+
+
+/**
+ * Constants/Variables
+ */
+const PROJECTS = [ 'client', 'server' ]
+const ERROR_LOG_FILE = 'gtaop-error.log'
+
+
+/**
+ * Arguments
+ */
+const argv = require('yargs')
+ .command(['build <project>'], 'Build a project')
+ .choices('project', [...PROJECTS, 'all'])
+ .demandCommand()
+ .argv
+
+
+/**
+ * Build a project
+ *
+ * @param  {string} project The project's name
+ * @return {void}
+ */
+function build (project) {
+  // Save start time
+  const startTime = new Date()
+
+  const buildSignale = new Signale({
+    scope: `BUILD:${project}`,
+  })
+
+  buildSignale.pending(`Start building ${chalk.yellow(project)}...`)
+
+  // Log strings
+  let errorLog = ''
+  let exceptionLog = ''
+
+  // Spawn gulp child process
+  const buildProcess = spawn('gulp', ['--gulpfile', `projects/${project}/gulpfile.js`], {
+    cwd: process.cwd(),
+    env: { PROJECT_ROOT: __dirname },
+    silent: true,
+    stdio: 'pipe'
+  })
+
+  buildProcess.stdout.setEncoding('utf-8')
+  buildProcess.stderr.on('data', (chunk) => {
+    exceptionLog += chunk
+  })
+
+  buildProcess.stdout.setEncoding('utf-8')
+  buildProcess.stdout.on('data', (chunk) => {
+    errorLog += chunk
+  })
+
+  // On process exit
+  buildProcess.on('exit', (code, signal) => {
+    // Success exit code
+    if (code === 0) {
+      // Calculate elapsed time
+      secondsElapsed = (new Date() - startTime) / 1000
+      buildSignale.success(`Successfully built! (${secondsElapsed}s)`)
+      return
+    }
+
+    // Unsuccessfull exit code
+    buildSignale.fatal(
+      chalk.red('An error occured while building. ')
+      + `Please see ${chalk.yellow(ERROR_LOG_FILE)} for details.`
+    )
+
+    // Log error to file
+    const failReason = errorLog ? 'Error' : 'Exception'
+    let headerText = `[BUILD:${project}:${failReason}]\n`
+    headerText += strftime('(%F %T)', new Date())
+
+    mainLog = errorLog ? errorLog : exceptionLog
+
+    const errorLogFile = fs.createWriteStream(ERROR_LOG_FILE, { flags: 'a' });
+    errorLogFile.write(box(headerText) + '\n')
+    errorLogFile.write(stripAnsi(mainLog) + '\n') // We strip ANSI characters for logging
+    errorLogFile.end()
+  })
+}
+
+
+/**
+ * Main method
+ *
+ * @return {void}
+ */
+function main () {
+  util.printHeader()
+
+  if (argv.project === 'all') {
+    PROJECTS.forEach((project) => {
+      build(project)
+    })
+  } else {
+    build(argv.project)
+  }
+}
+
+
+/**
+ * Invoke main method
+ */
+if (require.main === module) {
+  main()
+}

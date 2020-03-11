@@ -1,5 +1,6 @@
 import Team from '@lib/team'
 import Vehicle from '@lib/vehicle'
+import { WorldLocation } from '@lib/world-locations';
 
 export default class Client {
   private _player: PlayerMp
@@ -88,5 +89,9 @@ export default class Client {
 
   kill (): void {
     this._player.health = 0
+  }
+
+  loadWorldLocation(worldLocation: WorldLocation) {
+    this._player.call('loadInteriorProps', [ worldLocation.position, worldLocation.interiorProps ])
   }
 }

@@ -62,12 +62,14 @@ function build (project) {
   let exceptionLog = ''
 
   // Spawn gulp child process
-  const buildProcess = spawn('node_modules/gulp-cli/bin/gulp.js', ['--gulpfile', `projects/${project}/gulpfile.js`], {
-    cwd: process.cwd(),
-    env: { PROJECT_ROOT: __dirname },
-    silent: true,
-    stdio: 'pipe'
-  })
+  const buildProcess = spawn(
+    'node_modules/gulp-cli/bin/gulp.js',
+    ['--gulpfile', `projects/${project}/gulpfile.js`], {
+      cwd: process.cwd(),
+      env: { PROJECT_ROOT: __dirname },
+      silent: true,
+      stdio: 'pipe'
+    })
 
   buildProcess.stdout.setEncoding('utf-8')
   buildProcess.stderr.on('data', (chunk) => {

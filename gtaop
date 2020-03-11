@@ -62,7 +62,7 @@ function build (project) {
   let exceptionLog = ''
 
   // Spawn gulp child process
-  const buildProcess = spawn('gulp', ['--gulpfile', `projects/${project}/gulpfile.js`], {
+  const buildProcess = spawn('node_modules/gulp-cli/bin/gulp.js', ['--gulpfile', `projects/${project}/gulpfile.js`], {
     cwd: process.cwd(),
     env: { PROJECT_ROOT: __dirname },
     silent: true,

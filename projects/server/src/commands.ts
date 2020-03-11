@@ -2,6 +2,7 @@ import Server from '@core/server'
 import FSHelper from '@core/fs-helper'
 import Client from '@lib/client'
 import Util from '@lib/util'
+import WorldLocations from '@lib/world-locations'
 
 Server.addCommand('savepos', (client: Client, description: string) => {
 	let coords = [ client.position, client.heading ]
@@ -33,6 +34,21 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 	params = params.map((param: string): any => {
 		return Util.isNumeric(param) ? parseFloat(param) : param
 	})
+
+	// Only one parameter given which is a string -> assuming WorldLocation name
+	if (params.length === 1 && typeof params[0] === 'string') {
+		const locationName = params[0]
+		const location = WorldLocations.byName(locationName)
+
+		if (location) {
+			WorldLocations.tp(client, location)
+			client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}"${location.name}"!{#ffffff} (${location.position}).`)
+		} else {
+			client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Location !{#ffff00}"${locationName}"!{#ffffff} couldn't be found...`)
+		}
+
+		return
+	}
 
 	// At least two parameters given of which all are numbers -> assuming coordinates
 	if (params.length >= 2 && params.every((p: any) => typeof p === 'number')) {

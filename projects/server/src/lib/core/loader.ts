@@ -3,6 +3,7 @@ import FSHelper from '@core/fs-helper'
 import Client from '@lib/client'
 import Team from '@lib/team'
 import Zone from '@lib/zone'
+import { WorldLocations, WorldLocation } from '@lib/world-locations';
 
 export default class Loader {
   static run (rootDirectory: string): void {
@@ -12,6 +13,7 @@ export default class Loader {
     Loader.teams()
     Loader.zones()
     Loader.heightMap()
+    Loader.worldLocations()
   }
 
   static clients (): void {
@@ -95,6 +97,30 @@ export default class Loader {
     })
   }
 
+  static worldLocations (): void {
+    let worldLocationsInfo = require('@config/world-locations').world_locations
+    let worldLocations: WorldLocation[] = []
+
+    worldLocationsInfo.forEach((worldLocationInfo: Loader.WorldLocationInfo) => {
+      const worldLocationPosition = new mp.Vector3(
+        worldLocationInfo.position[0],
+        worldLocationInfo.position[1],
+        worldLocationInfo.position[2]
+      )
+
+      const worldLocation = new WorldLocation(
+        worldLocationInfo.name,
+        worldLocationPosition,
+        worldLocationInfo.ipls,
+        worldLocationInfo.interior_props
+      )
+
+      worldLocations.push(worldLocation)
+    })
+
+    WorldLocations.list = WorldLocations.list.concat(worldLocations)
+  }
+
   static heightMap (): void {
     Server.initHeightMap(FSHelper.path('assets/hmap.dat'))
   }
@@ -128,5 +154,12 @@ namespace Loader {
     models: Array<string>,
     spawns: Array3d[],
     vehicles: VehicleGroupInfo[][]
+  }
+
+  export interface WorldLocationInfo {
+    name: string,
+    position: Array3d,
+    ipls?: string[],
+    interior_props?: string[]
   }
 }

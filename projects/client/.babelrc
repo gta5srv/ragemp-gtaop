@@ -1,0 +1,20 @@
+{
+  "presets": [
+    "@babel/preset-typescript",
+    "@babel/preset-env"
+  ],
+  "plugins": [
+    ["module-resolver", {
+      "cwd": "./src",
+      "alias": {
+        "@lib": "./lib",
+        "@core": "./lib/core",
+        "@config": "./config",
+        "@assets": "./assets"
+      }
+    }],
+    "@babel/plugin-proposal-class-properties",
+    "@babel/proposal-object-rest-spread",
+    "@babel/plugin-transform-modules-commonjs"
+  ]
+}

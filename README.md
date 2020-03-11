@@ -13,12 +13,7 @@ $ npm i # Install node dependencies
 ```
 
 # Build
-All **source files are located in** ```src/gta-op```.
+All **source files are located in** ```projects/```.
 ```bash
-$ npm run build
-```
-
-# Start
-```shell
-$ .\server.exe
+$ node gtaop build <server/client/all>
 ```

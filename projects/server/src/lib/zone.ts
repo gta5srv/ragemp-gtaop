@@ -8,6 +8,7 @@ export default class Zone {
   private _radius: number
   private _blip: BlipMp
   private _marker: MarkerMp
+  private _colShape: ColshapeMp
   private _owner?: Team
 
   private static readonly DEFAULT_RADIUS: number = 5
@@ -25,6 +26,7 @@ export default class Zone {
       color: Zone.DEFAULT_BLIP_COLOR
     })
     this._marker = mp.markers.new(Marker.Type.VerticalCylinder, position, radius)
+    this._colShape = mp.colshapes.newSphere(position.x, position.y, position.z, radius)
 
     Server.zones.add(this)
   }

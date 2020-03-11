@@ -118,7 +118,7 @@ export default class Loader {
       worldLocations.push(worldLocation)
     })
 
-    WorldLocations.list = WorldLocations.list.concat(worldLocations)
+    WorldLocations.add(...worldLocations)
   }
 
   static heightMap (): void {

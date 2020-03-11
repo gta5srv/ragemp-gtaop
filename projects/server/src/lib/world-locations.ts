@@ -33,12 +33,16 @@ export class WorldLocation {
 }
 
 export class WorldLocations {
-  public static list: WorldLocation[] = []
+  private static _list: WorldLocation[] = []
+
+  static get all () {
+    return this._list
+  }
 
   public static byName (name: string): WorldLocation | null {
     let foundLocation: WorldLocation | null = null
 
-    this.list.forEach((location: WorldLocation) => {
+    this._list.forEach((location: WorldLocation) => {
       if (location.name === name) {
         foundLocation = location
       }
@@ -68,6 +72,10 @@ export class WorldLocations {
 
     client.position = location.position
     return true
+  }
+
+  public static add (...worldLocations: WorldLocation[]) {
+    this._list = this._list.concat(worldLocations)
   }
 }
 

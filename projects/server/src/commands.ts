@@ -1,4 +1,4 @@
-import Server from '@core/server'
+import Server from '@lib/server'
 import FSHelper from '@core/fs-helper'
 import Util from '@core/util'
 import Client from '@lib/client'

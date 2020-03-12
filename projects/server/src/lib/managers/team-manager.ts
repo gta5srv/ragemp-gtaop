@@ -1,7 +1,7 @@
 import Manager from '@core/manager'
 import Team from '@lib/team'
 
-export default class TeamManager extends Manager<Team> {
+export class TeamManager extends Manager<Team> {
   bySlug (slug: string): Team | null {
     let foundTeam = null
 

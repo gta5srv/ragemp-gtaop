@@ -1,4 +1,4 @@
-import Server from '@core/server'
+import Server from '@lib/server'
 import Manager from '@core/manager'
 import Client from '@lib/client'
 import Vehicle from '@lib/vehicle';

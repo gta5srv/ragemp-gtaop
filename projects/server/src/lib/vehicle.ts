@@ -1,4 +1,4 @@
-import Server from '@core/server'
+import Server from '@lib/server'
 
 export default class Vehicle {
   private _vehicleMp: VehicleMp

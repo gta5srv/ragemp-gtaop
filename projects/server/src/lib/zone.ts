@@ -1,4 +1,4 @@
-import Server from '@core/server'
+import Server from '@lib/server'
 import Marker from '@lib/marker'
 import Team from '@lib/team'
 

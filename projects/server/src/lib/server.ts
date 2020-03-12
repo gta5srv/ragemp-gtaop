@@ -3,10 +3,7 @@ import Client from '@lib/client'
 import Interval from '@lib/algebra/interval'
 import Rectangle from '@lib/algebra/rectangle'
 import Random from '@lib/algebra/random'
-import TeamManager from '@lib/managers/team-manager'
-import ClientManager from '@lib/managers/client-manager'
-import ZoneManager from '@lib/managers/zone-manager'
-import VehicleManager from '@lib/managers/vehicle-manager'
+import * as Manager from '@lib/managers'
 
 
 /**
@@ -15,10 +12,10 @@ import VehicleManager from '@lib/managers/vehicle-manager'
 class Server {
   public static heightMap: HeightMap
 
-  public static readonly clients: ClientManager = new ClientManager()
-  public static readonly teams: TeamManager = new TeamManager()
-  public static readonly zones: ZoneManager = new ZoneManager()
-  public static readonly vehicles: VehicleManager = new VehicleManager()
+  public static readonly clients: Manager.Client = new Manager.Client()
+  public static readonly teams: Manager.Team = new Manager.Team()
+  public static readonly zones: Manager.Zone = new Manager.Zone()
+  public static readonly vehicles: Manager.Vehicle = new Manager.Vehicle()
 
   private static loopTimer: NodeJS.Timeout|null = null
   private static loopLastRun: Date|null = null

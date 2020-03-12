@@ -1,4 +1,4 @@
-import Server from '@core/server'
+import Server from '@lib/server'
 import Client from '@lib/client'
 
 Server.addEvent('playerDeath', (client: Client, reason: any, killer: any) => {

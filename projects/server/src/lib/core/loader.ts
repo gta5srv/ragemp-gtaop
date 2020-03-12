@@ -14,6 +14,8 @@ export default class Loader {
     Loader.zones()
     Loader.heightMap()
     Loader.worldLocations()
+
+    Server.start()
   }
 
   static clients (): void {

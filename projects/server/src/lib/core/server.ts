@@ -1,4 +1,5 @@
 import HeightMap from '@lib/height-map'
+import Client from '@lib/client'
 import Interval from '@lib/algebra/interval'
 import Rectangle from '@lib/algebra/rectangle'
 import Random from '@lib/algebra/random'
@@ -124,9 +125,24 @@ class Server {
 
 
   /**
+   * Start tracking clients by adding/removing them from list on join/quit
+   */
+  private static startTrackingClients (): void {
+    mp.events.add('playerJoin', (player: PlayerMp) => {
+      Server.clients.add(new Client(player))
+    })
+
+    mp.events.add('playerQuit', (player: PlayerMp) => {
+      Server.clients.remove(new Client(player))
+    })
+  }
+
+
+  /**
    * Starts cricital server functionality
    */
   public static start (): void {
+    Server.startTrackingClients()
     Server.Time.randomize()
     Server.runLoop()
   }

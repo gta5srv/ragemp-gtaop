@@ -1,6 +1,5 @@
 import Server from '@core/server'
 import FSHelper from '@core/fs-helper'
-import Client from '@lib/client'
 import Team from '@lib/team'
 import Zone from '@lib/zone'
 import { WorldLocations, WorldLocation } from '@lib/world-locations';
@@ -9,23 +8,12 @@ export default class Loader {
   static run (rootDirectory: string): void {
     FSHelper.rootDirectory = rootDirectory
 
-    Loader.clients()
     Loader.teams()
     Loader.zones()
     Loader.heightMap()
     Loader.worldLocations()
 
     Server.start()
-  }
-
-  static clients (): void {
-    mp.events.add('playerJoin', (player: PlayerMp) => {
-      Server.clients.add(new Client(player))
-    })
-
-    mp.events.add('playerQuit', (player: PlayerMp) => {
-      Server.clients.remove(new Client(player))
-    })
   }
 
   static team (info: Loader.TeamInfo): Team {

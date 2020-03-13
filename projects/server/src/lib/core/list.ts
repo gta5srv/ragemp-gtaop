@@ -1,11 +1,11 @@
-export default class Manager<T> {
+export default class List<T> implements Iterable<T> {
   protected _items: T[] = []
 
   get items (): T[] {
     return this._items
   }
 
-  add (...args: T[]): void {
+  public add (...args: T[]): void {
     const items = [ ...args ]
 
     items.forEach((item: T) => {
@@ -15,7 +15,7 @@ export default class Manager<T> {
     })
   }
 
-  remove (item: T): void {
+  public remove (item: T): void {
     let itemIndex = this._items.indexOf(item)
 
     if (itemIndex === -1) {
@@ -25,7 +25,19 @@ export default class Manager<T> {
     delete this._items[itemIndex]
   }
 
-  contains (item: T): boolean {
+  public contains (item: T): boolean {
     return this._items.indexOf(item) !== -1
+  }
+
+  public [Symbol.iterator](): Iterator<T> {
+    let count = 0
+    return {
+      next: (): IteratorResult<T> => {
+        return {
+          done: count === (this._items.length - 1),
+          value: this._items[count++]
+        }
+      }
+    }
   }
 }

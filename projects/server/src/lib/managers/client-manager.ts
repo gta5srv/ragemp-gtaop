@@ -1,7 +1,7 @@
+import List from '@core/list'
 import Client from '@lib/client'
-import Manager from '@core/manager';
 
-export class ClientManager extends Manager<Client> {
+export class ClientManager extends List<Client> {
    byPlayerMp (player: PlayerMp): Client | null {
      let foundClient = null
 
@@ -12,6 +12,14 @@ export class ClientManager extends Manager<Client> {
      })
 
      return foundClient
+   }
+
+   removeByPlayerMp (player: PlayerMp): void {
+     const client = this.byPlayerMp(player)
+
+     if (client) {
+       this.remove(client)
+     }
    }
 
    sendMessage (...args: any[]) {

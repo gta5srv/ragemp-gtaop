@@ -3,6 +3,7 @@ import FSHelper from '@core/fs-helper'
 import Util from '@core/util'
 import Client from '@lib/client'
 import WorldLocations from '@lib/world-locations'
+import Team from '@lib/team'
 
 Server.addCommand('savepos', (client: Client, description: string) => {
 	let coords = [ client.position, client.heading ]
@@ -57,7 +58,7 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 		// No Z coordinate given ->
 		if (params[2] === undefined) {
 			// Use height map for Z coordinate retrieval
-			Server.heightMap.getZ(position, (z: number) => {
+			Server.heightMap.getZ(position.x, position.y, (z: number) => {
 				position.z = z
 				client.position = position
 				client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}(${position}){#ffffff}.`)
@@ -83,7 +84,7 @@ Server.addCommand('kill', (client: Client) => {
 })
 
 Server.addCommand('setteam', (client: Client, teamSlug: string) => {
-	const team = Server.teams.bySlug(teamSlug)
+	const team = Team.all.bySlug(teamSlug)
 
 	if (!teamSlug) {
 		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/setteam !{#dddddd}[team_slug]`)
@@ -99,6 +100,6 @@ Server.addCommand('setteam', (client: Client, teamSlug: string) => {
 	client.team = team
 	client.spawn()
 
-	Server.debug(`Setting ${client.player.name}'s team to ${client.team.name}`)
-	client.sendMessage(`!{#00ff00}[TEAM] !{#ffffff}Setting your team to !{#ffff00}"${client.team.name}"!{#ffffff}.`)
+	Server.debug(`Setting ${client.name}'s team to ${team.name}`)
+	client.sendMessage(`!{#00ff00}[TEAM] !{#ffffff}Setting your team to !{#ffff00}"${team.name}"!{#ffffff}.`)
 })

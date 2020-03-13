@@ -1,5 +1,5 @@
-import fs from 'fs';
-import Rectangle from "@lib/algebra/rectangle";
+import fs from 'fs'
+import Rectangle from '@lib/algebra/rectangle'
 
 export default class HeightMap {
   private _file: string
@@ -18,7 +18,7 @@ export default class HeightMap {
     return this._area
   }
 
-  getZ (v: Vector3Mp, cb: Function): void {
+  getZ (x: number, y: number, cb: Function): void {
     fs.open(this._file, 'r', (err: NodeJS.ErrnoException | null, fd: number) => {
         if(err) {
           cb(0)
@@ -29,10 +29,10 @@ export default class HeightMap {
 
         let buffer = Buffer.alloc(LENGTH)
 
-        let x = Math.floor(v.x) - Math.floor(this._area.x.min)
-        let y = Math.floor(this._area.x.total()) * (Math.floor(v.y) - Math.floor(this._area.y.min))
+        let fileX = Math.floor(x) - Math.floor(this._area.x.min)
+        let fileY = Math.floor(this._area.x.total()) * (Math.floor(y) - Math.floor(this._area.y.min))
 
-        let start = (y + x) * LENGTH
+        let start = (fileY + fileX) * LENGTH
 
         fs.read(fd, buffer, 0, LENGTH, start, (err: any, _num: any) => {
           if (err) {

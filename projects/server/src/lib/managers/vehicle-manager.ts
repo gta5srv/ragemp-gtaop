@@ -1,7 +1,7 @@
+import List from '@core/list'
 import Vehicle from '@lib/vehicle'
-import Manager from '@core/manager'
 
-export class VehicleManager extends Manager<Vehicle> {
+export class VehicleManager extends List<Vehicle> {
   byVehicleMp(vehicleMp: VehicleMp): Vehicle | null {
     let foundVehicle = null
 

@@ -1,10 +1,13 @@
-import Server from '@lib/server'
+import * as Manager from '@lib/managers'
 
 export default class Vehicle {
   private _vehicleMp: VehicleMp
   private _colors: any
 
-  constructor (model: HashOrString, position: Vector3Mp, rotation: Vector3Mp | null = null,
+  public static all: Manager.Vehicle = new Manager.Vehicle()
+
+  constructor (model: HashOrString,
+               position: Vector3Mp, rotation: Vector3Mp | null = null,
                colors?: [RGB,RGB], numberPlate?: string) {
     this._vehicleMp = mp.vehicles.new(model, position, {})
 
@@ -20,11 +23,7 @@ export default class Vehicle {
       this._vehicleMp.numberPlate = numberPlate
     }
 
-    Server.vehicles.add(this)
-  }
-
-  static byVehicleMp(vehicleMp: VehicleMp): Vehicle | null {
-    return Server.vehicles.byVehicleMp(vehicleMp)
+    Vehicle.all.add(this)
   }
 
   get vehicleMp () {

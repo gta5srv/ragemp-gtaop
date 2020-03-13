@@ -1,4 +1,4 @@
-import Client from "@lib/client";
+import Client from '@lib/client'
 
 export class WorldLocation {
   private _name: string

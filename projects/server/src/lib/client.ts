@@ -1,15 +1,23 @@
 import Team from '@lib/team'
 import Vehicle from '@lib/vehicle'
-import { WorldLocation } from '@lib/world-locations';
+import Server from '@lib/server'
+import { WorldLocation } from '@lib/world-locations'
+import * as Manager from '@lib/managers'
+import * as Listeners from '@lib/listeners'
 
-export default class Client {
+export default class Client implements Listeners.ClientListener {
   private _player: PlayerMp
   private _team?: Team
   private _respawnTimer: any
 
+  public static all: Manager.Client = new Manager.Client()
+
   constructor (player: PlayerMp) {
     this._player = player
     this._respawnTimer = null
+
+    Client.all.add(this)
+    Server.listeners.add(this)
   }
 
   get player () {
@@ -33,7 +41,7 @@ export default class Client {
   }
 
   get vehicle (): Vehicle | null {
-    return this._player.vehicle ? Vehicle.byVehicleMp(this._player.vehicle) : null
+    return this._player.vehicle ? Vehicle.all.byVehicleMp(this._player.vehicle) : null
   }
 
   get team () {
@@ -54,6 +62,10 @@ export default class Client {
 
   set model (model) {
     this._player.model = model
+  }
+
+  get name () {
+    return this._player.name
   }
 
   sendMessage (...args: any[]): void {
@@ -93,5 +105,19 @@ export default class Client {
 
   loadWorldLocation(worldLocation: WorldLocation) {
     this._player.call('loadInteriorProps', [ worldLocation.position, worldLocation.interiorProps ])
+  }
+
+  onClientCreateWaypoint(x: number, y: number): void {
+    Server.heightMap.getZ(x, y, (z: number) => {
+      this.position = new mp.Vector3(x, y, z + 0.5)
+    })
+  }
+
+  onClientDeath(_reason: number, _killer: Client): void {
+    this.spawn(5000)
+  }
+
+  onClientReady(): void {
+    this.spawn()
   }
 }

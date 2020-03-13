@@ -1,7 +1,7 @@
-import { ClientManager as Client } from '@lib/managers/client-manager'
-import { TeamManager as Team } from '@lib/managers/team-manager'
-import { VehicleManager as Vehicle } from '@lib/managers/vehicle-manager'
-import { ZoneManager as Zone } from '@lib/managers/zone-manager'
+import { ClientManager as Client } from './client-manager'
+import { TeamManager as Team } from './team-manager'
+import { VehicleManager as Vehicle } from './vehicle-manager'
+import { ZoneManager as Zone } from './zone-manager'
 
 export {
   Client,

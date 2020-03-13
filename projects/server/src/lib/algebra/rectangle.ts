@@ -1,4 +1,4 @@
-import Interval from "./interval";
+import Interval from './interval'
 
 export default class Rectangle {
   x: Interval

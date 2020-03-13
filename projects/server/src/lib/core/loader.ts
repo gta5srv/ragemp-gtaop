@@ -2,11 +2,13 @@ import Server from '@lib/server'
 import FSHelper from '@core/fs-helper'
 import Team from '@lib/team'
 import Zone from '@lib/zone'
-import { WorldLocations, WorldLocation } from '@lib/world-locations';
+import { WorldLocations, WorldLocation } from '@lib/world-locations'
 
 export default class Loader {
   static run (rootDirectory: string): void {
     FSHelper.rootDirectory = rootDirectory
+
+    Server.setup()
 
     Loader.teams()
     Loader.zones()

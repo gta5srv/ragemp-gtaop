@@ -25,8 +25,8 @@ mp.events.add('render', () => {
         var coord = mp.game.ui.getBlipInfoIdCoord(i)
         coord.z = 0
 
-        mp.events.call('playerCreateWaypoint', coord, Boolean(waypoint))
-        mp.events.callRemote('playerCreateWaypoint', JSON.stringify(coord), Boolean(waypoint))
+        mp.events.call('playerCreateWaypoint', coord)
+        mp.events.callRemote('playerCreateWaypoint', JSON.stringify(coord))
       }
     }
   }

@@ -1,9 +1,10 @@
+import Util from '@core/util'
 import HeightMap from '@lib/height-map'
 import Client from '@lib/client'
 import Interval from '@lib/algebra/interval'
 import Rectangle from '@lib/algebra/rectangle'
 import Random from '@lib/algebra/random'
-import * as Manager from '@lib/managers'
+import * as Listeners from '@lib/listeners'
 
 
 /**
@@ -11,11 +12,7 @@ import * as Manager from '@lib/managers'
  */
 class Server {
   public static heightMap: HeightMap
-
-  public static readonly clients: Manager.Client = new Manager.Client()
-  public static readonly teams: Manager.Team = new Manager.Team()
-  public static readonly zones: Manager.Zone = new Manager.Zone()
-  public static readonly vehicles: Manager.Vehicle = new Manager.Vehicle()
+  public static listeners: Listeners.Callback
 
   private static loopTimer: NodeJS.Timeout|null = null
   private static loopLastRun: Date|null = null
@@ -63,39 +60,13 @@ class Server {
 
 
   /**
-   * Sends a message to all players online
-   *
-   * @param ...args Message parts
-   */
-  public static sendMessageToAll (...args: any[]): void {
-    Server.clients.sendMessage(...args)
-  }
-
-
-  /**
    * Broadcasts a message to console and players
    *
    * @param ...args Message parts
    */
   public static broadcast (...args: any[]): void {
     Server.log(...args)
-    Server.sendMessageToAll(...args)
-  }
-
-
-  /**
-   * Converts the first argument of an array from PlayerMp to Client instance
-   *
-   * @param  ...args Argument list
-   * @return         Argument list with Client instance first
-   */
-  private static playerArgsToClientArray (...args: any[]): any[] {
-    let player = args.shift()
-
-    let client = Server.clients.byPlayerMp(player)
-    args.unshift(client)
-
-    return args
+    Client.all.sendMessage(...args)
   }
 
 
@@ -105,33 +76,13 @@ class Server {
    */
   public static addCommand (command: string, callback: Function): void {
     mp.events.addCommand(command, function (...args: any[]) {
-      callback.apply(null, Server.playerArgsToClientArray(...args))
+      callback.apply(null, Util.convertRageMPInstances(...args))
     })
   }
 
 
-  /**
-   * Adds an event (wrapper for mp.events.add) and calls callback
-   * with first argument as Client instance instead of PlayerMp
-   */
-  public static addEvent (event: string, callback: Function): void {
-    mp.events.add(event, function (...args: any[]) {
-      callback.apply(null, Server.playerArgsToClientArray(...args))
-    })
-  }
-
-
-  /**
-   * Start tracking clients by adding/removing them from list on join/quit
-   */
-  private static startTrackingClients (): void {
-    mp.events.add('playerJoin', (player: PlayerMp) => {
-      Server.clients.add(new Client(player))
-    })
-
-    mp.events.add('playerQuit', (player: PlayerMp) => {
-      Server.clients.remove(new Client(player))
-    })
+  public static setup (): void {
+    Server.listeners = new Listeners.Callback()
   }
 
 
@@ -139,7 +90,6 @@ class Server {
    * Starts cricital server functionality
    */
   public static start (): void {
-    Server.startTrackingClients()
     Server.Time.randomize()
     Server.runLoop()
   }

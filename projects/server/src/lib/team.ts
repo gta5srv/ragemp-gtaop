@@ -1,7 +1,7 @@
-import Server from '@lib/server'
-import Manager from '@core/manager'
+import List from '@core/list'
 import Client from '@lib/client'
-import Vehicle from '@lib/vehicle';
+import Vehicle from '@lib/vehicle'
+import * as Manager from '@lib/managers'
 
 export class Team {
   private _name: string
@@ -19,9 +19,13 @@ export class Team {
   private static readonly DEFAULT_BLIP_COLOR: number = 0
   private static readonly DEFAULT_VEHICLE_COLORS: [RGB, RGB] = [[ 0, 0, 0 ], [ 0, 0, 0 ]]
 
+  public static all: Manager.Team = new Manager.Team()
+
   constructor (name: string, slug: string, base: Vector3Mp,
-               blipColor: number = Team.DEFAULT_BLIP_COLOR, vehicleColors: [RGB, RGB] = Team.DEFAULT_VEHICLE_COLORS,
-               models: string[] = [], spawns: any[] = [], vehicles: Team.VehicleGroupManager = new Manager()) {
+               blipColor: number = Team.DEFAULT_BLIP_COLOR,
+               vehicleColors: [RGB, RGB] = Team.DEFAULT_VEHICLE_COLORS,
+               models: string[] = [], spawns: any[] = [],
+               vehicles: Team.VehicleGroupManager = new Team.VehicleGroupManager()) {
     this._name = name
     this._slug = slug
     this._base = base
@@ -33,7 +37,7 @@ export class Team {
 
     this._init()
 
-    Server.teams.add(this)
+    Team.all.add(this)
   }
 
   get name () {
@@ -94,7 +98,7 @@ export namespace Team {
     price?: number
   }
 
-  export class VehicleGroupManager extends Manager<Team.VehicleGroup> {
+  export class VehicleGroupManager extends List<Team.VehicleGroup> {
   }
 }
 

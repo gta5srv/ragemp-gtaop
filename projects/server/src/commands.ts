@@ -37,10 +37,9 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 		return Util.isNumeric(param) ? parseFloat(param) : param
 	})
 
-	// Only one parameter given which is a string -> assuming WorldLocation name
-
-
+	// Two parameters given
 	if (params.length === 2) {
+		// Is location
 		if (params[0] === 'location' && typeof params[1] === 'string') {
 			const locationName = params[1]
 			const location = WorldLocations.byName(locationName)
@@ -55,29 +54,33 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 			return
 		}
 
+		// Is saved position
 		if (params[0] === 'saved' && typeof params[1] === 'string') {
 			const savedLocationSlug = params[1]
+			let foundLocation = false
 
 			FSHelper.readByLine(Config.savedPositionsFile, (line: string) => {
 				const savedPosRegExp = new RegExp(/(?:(\w+) )\[\{"x":(.*?),"y":(.*?),"z":(.*?)\},(.*?)\]/)
 				const matches = line.match(savedPosRegExp)
 
-				if (!matches) {
-					client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Saved position !{#ffff00}"${savedLocationSlug}"!{#ffffff} couldn't be found...`)
+				if (!(matches && matches.length >= 5)) {
 					return
 				}
 
-				if (matches.length >= 5) {
-					matches.shift() // Remove main match
+				foundLocation = true
+				matches.shift() // Remove main match
 
-					// Convert remaining coordinates matches to floats
-					const position = matches.slice(1).map((match) => {
-						return parseFloat(match)
-					})
+				// Convert remaining coordinates matches to floats
+				const position = matches.slice(1).map((match) => {
+					return parseFloat(match)
+				})
 
-					client.position = new mp.Vector3(position[0], position[1], position[2])
-				}
+				client.position = new mp.Vector3(position[0], position[1], position[2])
 			})
+
+			if (!foundLocation) {
+				client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Saved position !{#ffff00}"${savedLocationSlug}"!{#ffffff} couldn't be found...`)
+			}
 
 			return
 		}

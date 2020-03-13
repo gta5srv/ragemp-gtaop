@@ -7,21 +7,31 @@ import Rectangle from '@lib/algebra/rectangle'
 import Random from '@lib/algebra/random'
 import * as Listeners from '@lib/listeners'
 
-let lastLoop: Date|null = null
 
 /**
  * The Gamemode's heart
  */
-class Server {
-  public static heightMap: HeightMap
-  public static listeners: Listeners.Callback
-
-  private static loopTimer: NodeJS.Timeout|null = null
-  private static loopLastRun: Date|null = null
+class Server implements Listeners.TickListener {
+  private static _instance?: Server
   private static msSinceTimeIncrease: number = 0
 
-  private static readonly TICK_RATE: number = 100
+  public static heightMap: HeightMap
+  public static listeners: Listeners.Callback = new Listeners.Callback()
 
+  static get instance () {
+    if (!Server._instance) {
+      Server._instance = new Server()
+    }
+
+    return Server._instance
+  }
+
+  constructor () {
+    Server.listeners.add(this)
+    Server.Time.randomize()
+
+    Server.log(`OPPOSING FORCES started (Ingame time: ${Server.Time})`)
+  }
 
   /**
    * Initialize height map
@@ -53,7 +63,6 @@ class Server {
    * @param ...args Message parts
    */
   public static debug (...args: any[]): void {
-    if (Server.DEBUG_MODE) {
     if (Config.DEBUG_MODE) {
       Server.log(...args)
     }
@@ -81,53 +90,7 @@ class Server {
     })
   }
 
-
-  public static setup (): void {
-    Server.listeners = new Listeners.Callback()
-    Server.Time.randomize()
-  }
-
-
-  /**
-   * Used to call the main loop
-   */
-  public static runLoop (): void {
-    // Loop timer is given, stop it first
-    if (Server.loopTimer) {
-      clearTimeout(Server.loopTimer)
-    }
-
-    // Time to wait until next loop run
-    let timeToNextLoopRun = Server.TICK_RATE
-    let msElapsedNow = 0
-
-    // Loop ran before and saved it's timing
-    if (Server.loopLastRun != null) {
-      // We calculate total elapsed milliseconds from last loop run until this call
-      msElapsedNow = new Date().getTime() - Server.loopLastRun.getTime()
-    }
-
-    // Save last run time
-    Server.loopLastRun = new Date()
-    // Set loop timer
-    Server.loopTimer = setTimeout(Server.runLoop, timeToNextLoopRun)
-
-    // Call actual loop function
-    Server.loop(msElapsedNow)
-  }
-
-
-  /**
-   * Main loop
-   *
-   * @param msElapsed Milliseconds elapsed since last run
-   */
-  private static loop (msElapsed: number): void {
-    if (lastLoop) {
-      console.log('Time since last loop: ' + (new Date().getTime() - lastLoop.getTime()))
-    }
-
-    lastLoop = new Date()
+  public onTick(msElapsed: number): void {
     Server.msSinceTimeIncrease += msElapsed
 
     // At least a second has passed since last in-game time increase
@@ -137,7 +100,6 @@ class Server {
       const gameSecsToIncrease = Math.floor(gameMsSinceTimeIncreased / 1000)
 
       Server.Time.add(gameSecsToIncrease)
-      console.log('Adding ', gameSecsToIncrease)
       Server.msSinceTimeIncrease -= gameSecsToIncrease * 1000 / Config.GAME_TIME_MULTIPLIER
     }
   }

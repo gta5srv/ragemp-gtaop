@@ -9,14 +9,10 @@ export default class Loader {
   static run (rootDirectory: string): void {
     FSHelper.rootDirectory = rootDirectory
 
-    Server.setup()
-
     Loader.teams()
     Loader.zones()
     Loader.heightMap()
     Loader.worldLocations()
-
-    Server.runLoop()
   }
 
   static team (info: Loader.TeamInfo): Team {

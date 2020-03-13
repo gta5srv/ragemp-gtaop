@@ -1,10 +1,14 @@
 import * as Listeners from './'
 import { Listener } from './'
+import Config from '@root/config'
+import Loop from '@core/loop';
 import List from '@core/list'
 import Util from '@core/util'
 import Client from '@lib/client'
 
 export default class Callback extends List<Listener<any>> {
+  private _loop: Loop = new Loop(Config.TICK_RATE, this.tick, this)
+
   constructor () {
     super()
 
@@ -14,6 +18,10 @@ export default class Callback extends List<Listener<any>> {
 
   get subscribers () {
     return this.items
+  }
+
+  get loop () {
+    return this._loop
   }
 
   public addEvent (event: string,
@@ -37,7 +45,7 @@ export default class Callback extends List<Listener<any>> {
     })
   }
 
-  init () {
+  private init (): void {
     mp.events.add('playerJoin', (player: PlayerMp) => {
       new Client(player)
     })
@@ -47,7 +55,7 @@ export default class Callback extends List<Listener<any>> {
     })
   }
 
-  register () {
+  private register (): void {
     this.addEvent('playerReady', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener) => {
       subscriber.onClientReady()
@@ -62,6 +70,14 @@ export default class Callback extends List<Listener<any>> {
                   (subscriber: Listeners.ClientListener, position: string) => {
       let coords = JSON.parse(position)
       subscriber.onClientCreateWaypoint(coords.x, coords.y)
+    })
+  }
+
+  public tick (msElapsed: number): void {
+    this.subscribers.forEach((subscriber: Listener<any>) => {
+      if (Listeners.isTickListener(subscriber)) {
+        subscriber.onTick(msElapsed)
+      }
     })
   }
 }

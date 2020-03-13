@@ -5,7 +5,7 @@ import Client from '@lib/client'
 import * as Manager from '@lib/managers'
 import * as Listeners from '@lib/listeners'
 
-export default class Zone implements Listeners.ZoneListener {
+export default class Zone implements Listeners.ZoneListener, Listeners.TickListener {
   private _name: string
   private _position: Vector3Mp
   private _radius: number
@@ -67,5 +67,8 @@ export default class Zone implements Listeners.ZoneListener {
 
   public onZoneExit(client: Client): void {
     console.log('exit', client.name)
+  }
+
+  public onTick(msElapsed: number): void {
   }
 }

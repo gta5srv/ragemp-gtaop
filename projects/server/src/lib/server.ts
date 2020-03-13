@@ -83,22 +83,14 @@ class Server {
 
   public static setup (): void {
     Server.listeners = new Listeners.Callback()
-  }
-
-
-  /**
-   * Starts cricital server functionality
-   */
-  public static start (): void {
     Server.Time.randomize()
-    Server.runLoop()
   }
 
 
   /**
    * Used to call the main loop
    */
-  private static runLoop (): void {
+  public static runLoop (): void {
     // Loop timer is given, stop it first
     if (Server.loopTimer) {
       clearTimeout(Server.loopTimer)

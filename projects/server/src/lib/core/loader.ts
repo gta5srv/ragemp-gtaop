@@ -15,7 +15,7 @@ export default class Loader {
     Loader.heightMap()
     Loader.worldLocations()
 
-    Server.start()
+    Server.runLoop()
   }
 
   static team (info: Loader.TeamInfo): Team {

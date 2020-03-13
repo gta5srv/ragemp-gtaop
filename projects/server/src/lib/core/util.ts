@@ -11,6 +11,10 @@ export default class Util {
     return typeof variable === 'object' && variable !== null
   }
 
+  static isTypeArray <T> (array: Array<any>, typeString: string): boolean {
+    return array.every((a: any) => typeof a === typeString)
+  }
+
   /**
    * Converts RageMP instances in an array to GTA:OP equivalents
    *

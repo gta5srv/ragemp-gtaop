@@ -1,4 +1,5 @@
 import fs from 'fs'
+import readline from 'readline'
 import path from 'path'
 
 export default class FSHelper {
@@ -21,6 +22,16 @@ export default class FSHelper {
 
           cb()
       })
+    })
+  }
+
+  static readByLine (path: string, lineCallback: (line: string) => void): void {
+    readline.createInterface({
+      input: fs.createReadStream(path),
+      output: process.stdout,
+      terminal: false
+    }).on('line', function(line) {
+      lineCallback(line)
     })
   }
 }

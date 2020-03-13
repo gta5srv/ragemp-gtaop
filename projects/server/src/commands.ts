@@ -1,3 +1,4 @@
+import Config from '@root/config'
 import Server from '@lib/server'
 import FSHelper from '@core/fs-helper'
 import Util from '@core/util'
@@ -15,7 +16,7 @@ Server.addCommand('savepos', (client: Client, description: string) => {
 	let append = JSON.stringify(coords)
 	let prefixedAppend = description ? `${description} ${append}` : append
 
-	FSHelper.appendFile('./positions.txt', prefixedAppend + "\n", (err: any) => {
+	FSHelper.appendFile(Config.savedPositionsFile, prefixedAppend + "\n", (err: any) => {
 		if (err) {
 			console.error(err)
 			return
@@ -37,22 +38,53 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 	})
 
 	// Only one parameter given which is a string -> assuming WorldLocation name
-	if (params.length === 1 && typeof params[0] === 'string') {
-		const locationName = params[0]
-		const location = WorldLocations.byName(locationName)
 
-		if (location) {
-			WorldLocations.tp(client, location)
-			client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}"${location.name}"!{#ffffff} (${location.position}).`)
-		} else {
-			client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Location !{#ffff00}"${locationName}"!{#ffffff} couldn't be found...`)
+
+	if (params.length === 2) {
+		if (params[0] === 'location' && typeof params[1] === 'string') {
+			const locationName = params[1]
+			const location = WorldLocations.byName(locationName)
+
+			if (location) {
+				WorldLocations.tp(client, location)
+				client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}"${location.name}"!{#ffffff} (${location.position}).`)
+			} else {
+				client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Location !{#ffff00}"${locationName}"!{#ffffff} couldn't be found...`)
+			}
+
+			return
 		}
 
-		return
+		if (params[0] === 'saved' && typeof params[1] === 'string') {
+			const savedLocationSlug = params[1]
+
+			FSHelper.readByLine(Config.savedPositionsFile, (line: string) => {
+				const savedPosRegExp = new RegExp(/(?:(\w+) )\[\{"x":(.*?),"y":(.*?),"z":(.*?)\},(.*?)\]/)
+				const matches = line.match(savedPosRegExp)
+
+				if (!matches) {
+					client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Saved position !{#ffff00}"${savedLocationSlug}"!{#ffffff} couldn't be found...`)
+					return
+				}
+
+				if (matches.length >= 5) {
+					matches.shift() // Remove main match
+
+					// Convert remaining coordinates matches to floats
+					const position = matches.slice(1).map((match) => {
+						return parseFloat(match)
+					})
+
+					client.position = new mp.Vector3(position[0], position[1], position[2])
+				}
+			})
+
+			return
+		}
 	}
 
 	// At least two parameters given of which all are numbers -> assuming coordinates
-	if (params.length >= 2 && params.every((p: any) => typeof p === 'number')) {
+	if (params.length >= 2 && Util.isTypeArray(params, 'number')) {
 		const position = new mp.Vector3(params[0], params[1], 0)
 
 		// No Z coordinate given ->
@@ -74,7 +106,8 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 	}
 
 	// Print usage if no specific action could be determined
-	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[world_location_name]`)
+	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp location !{#dddddd}[location_name]`)
+	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp saved !{#dddddd}[saved_position_name]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[x] [y]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[x] [y] [z]`)
 })

@@ -6,6 +6,7 @@ import Rectangle from '@lib/algebra/rectangle'
 import Random from '@lib/algebra/random'
 import * as Listeners from '@lib/listeners'
 
+let lastLoop: Date|null = null
 
 /**
  * The Gamemode's heart
@@ -19,7 +20,7 @@ class Server {
   private static msSinceTimeIncrease: number = 0
 
   private static readonly GAME_TIME_MULTIPLIER: number = 50
-  private static readonly TICK_RATE: number = 200
+  private static readonly TICK_RATE: number = 100
   private static readonly DEBUG_MODE: boolean = true
 
 
@@ -96,37 +97,23 @@ class Server {
       clearTimeout(Server.loopTimer)
     }
 
-    // Milliseconds elapsed since last loop run is zero by default
-    let msElapsedSinceLastRun = 0
-
-    // Loop ran before and saved it's timing
-    if (Server.loopLastRun != null) {
-      // Calculate real milliseconds elapsed since last loop
-      msElapsedSinceLastRun = new Date().getTime() - Server.loopLastRun.getTime()
-    }
-
-    // Call actual loop function
-    Server.loop(msElapsedSinceLastRun)
-
     // Time to wait until next loop run
     let timeToNextLoopRun = Server.TICK_RATE
+    let msElapsedNow = 0
 
     // Loop ran before and saved it's timing
     if (Server.loopLastRun != null) {
       // We calculate total elapsed milliseconds from last loop run until this call
-      const msElapsedNow = new Date().getTime() - Server.loopLastRun.getTime()
-
-      // More time elapsed than desired by given tick rate,
-      // therefore we substract difference for next timer
-      if (msElapsedNow > Server.TICK_RATE) {
-        timeToNextLoopRun -= msElapsedNow - Server.TICK_RATE
-      }
+      msElapsedNow = new Date().getTime() - Server.loopLastRun.getTime()
     }
 
-    // Set loop timer
-    Server.loopTimer = setTimeout(Server.runLoop, timeToNextLoopRun)
     // Save last run time
     Server.loopLastRun = new Date()
+    // Set loop timer
+    Server.loopTimer = setTimeout(Server.runLoop, timeToNextLoopRun)
+
+    // Call actual loop function
+    Server.loop(msElapsedNow)
   }
 
 
@@ -136,6 +123,11 @@ class Server {
    * @param msElapsed Milliseconds elapsed since last run
    */
   private static loop (msElapsed: number): void {
+    if (lastLoop) {
+      console.log('Time since last loop: ' + (new Date().getTime() - lastLoop.getTime()))
+    }
+
+    lastLoop = new Date()
     Server.msSinceTimeIncrease += msElapsed
 
     // At least a second has passed since last in-game time increase
@@ -145,6 +137,7 @@ class Server {
       const gameSecsToIncrease = Math.floor(gameMsSinceTimeIncreased / 1000)
 
       Server.Time.add(gameSecsToIncrease)
+      console.log('Adding ', gameSecsToIncrease)
       Server.msSinceTimeIncrease -= gameSecsToIncrease * 1000 / Server.GAME_TIME_MULTIPLIER
     }
   }

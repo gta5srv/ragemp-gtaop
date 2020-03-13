@@ -1,3 +1,4 @@
+import Types from '@core/types'
 import Server from '@lib/server'
 import FSHelper from '@core/fs-helper'
 import Team from '@lib/team'
@@ -24,7 +25,7 @@ export default class Loader {
     if (info.vehicles) {
       info.vehicles.forEach((vehGroup: Loader.VehicleGroupInfo[]) => {
         vehGroup.forEach((vehInfo: Loader.VehicleGroupInfo) => {
-          const vehGroupSpawns: Location[] = vehInfo.locations.map((l: Loader.LocationInfo) => {
+          const vehGroupSpawns: Types.Location[] = vehInfo.locations.map((l: Loader.LocationInfo) => {
             return {
               position: new mp.Vector3(l.position[0], l.position[1], l.position[2]),
               rotation: new mp.Vector3(l.rotation[1], l.rotation[1], l.rotation[2])

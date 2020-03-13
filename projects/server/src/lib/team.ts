@@ -1,3 +1,4 @@
+import Types from '@core/types';
 import List from '@core/list'
 import Client from '@lib/client'
 import Vehicle from '@lib/vehicle'
@@ -73,7 +74,7 @@ export class Team {
     this._checkpoint.visible = true
 
     this._vehicles.items.forEach((vehicleGroup: Team.VehicleGroup) => {
-      vehicleGroup.spawns.forEach((spawn: Location) => {
+      vehicleGroup.spawns.forEach((spawn: Types.Location) => {
         new Vehicle(vehicleGroup.model, spawn.position, spawn.rotation, this._vehicleColors, this._name.toUpperCase())
       })
     })
@@ -94,7 +95,7 @@ export namespace Team {
   export interface VehicleGroup {
     model: string
     name: string
-    spawns: Location[]
+    spawns: Types.Location[]
     price?: number
   }
 

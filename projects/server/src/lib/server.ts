@@ -1,3 +1,4 @@
+import Config from '@root/config'
 import Util from '@core/util'
 import HeightMap from '@lib/height-map'
 import Client from '@lib/client'
@@ -19,9 +20,7 @@ class Server {
   private static loopLastRun: Date|null = null
   private static msSinceTimeIncrease: number = 0
 
-  private static readonly GAME_TIME_MULTIPLIER: number = 50
   private static readonly TICK_RATE: number = 100
-  private static readonly DEBUG_MODE: boolean = true
 
 
   /**
@@ -55,6 +54,7 @@ class Server {
    */
   public static debug (...args: any[]): void {
     if (Server.DEBUG_MODE) {
+    if (Config.DEBUG_MODE) {
       Server.log(...args)
     }
   }
@@ -131,14 +131,14 @@ class Server {
     Server.msSinceTimeIncrease += msElapsed
 
     // At least a second has passed since last in-game time increase
-    const gameMsSinceTimeIncreased = Server.msSinceTimeIncrease * Server.GAME_TIME_MULTIPLIER
+    const gameMsSinceTimeIncreased = Server.msSinceTimeIncrease * Config.GAME_TIME_MULTIPLIER
 
     if (gameMsSinceTimeIncreased > 1000) {
       const gameSecsToIncrease = Math.floor(gameMsSinceTimeIncreased / 1000)
 
       Server.Time.add(gameSecsToIncrease)
       console.log('Adding ', gameSecsToIncrease)
-      Server.msSinceTimeIncrease -= gameSecsToIncrease * 1000 / Server.GAME_TIME_MULTIPLIER
+      Server.msSinceTimeIncrease -= gameSecsToIncrease * 1000 / Config.GAME_TIME_MULTIPLIER
     }
   }
 }

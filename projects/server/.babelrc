@@ -7,6 +7,7 @@
     ["module-resolver", {
       "cwd": "./src",
       "alias": {
+        "@root": "./",
         "@lib": "./lib",
         "@core": "./lib/core",
         "@config": "./config",

@@ -5,6 +5,7 @@ import Loop from '@core/loop';
 import List from '@core/list'
 import Util from '@core/util'
 import Client from '@lib/client'
+import Zone from '../zone';
 
 export default class Callback extends List<Listener<any>> {
   private _loop: Loop = new Loop(Config.TICK_RATE, this.tick, this)
@@ -65,6 +66,20 @@ export default class Callback extends List<Listener<any>> {
                   (subscriber: Listeners.ClientListener, reason: number, killer: Client) => {
       subscriber.onClientDeath(reason, killer)
     })
+
+    this.addEvent('playerEnterColshape', Listeners.isZoneListener,
+                  (zone: Zone, client: Client, colshape: ColshapeMp) => {
+      if (zone.colshape === colshape) {
+        zone.onZoneEnter(client);
+      }
+    }, false);
+
+    this.addEvent('playerExitColshape', Listeners.isZoneListener,
+                  (zone: Zone, client: Client, colshape: ColshapeMp) => {
+      if (zone.colshape === colshape) {
+        zone.onZoneExit(client);
+      }
+    }, false);
 
     this.addEvent('playerCreateWaypoint', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener, position: string) => {

@@ -78,11 +78,11 @@ export default class Zone extends Spawnable implements Listeners.ZoneListener/*,
   }
 
   public onZoneEnter(client: Client): void {
-    console.log('enter', client.name);
+    Server.debug('enter zone', this.name, client.name);
   }
 
   public onZoneExit(client: Client): void {
-    console.log('exit', client.name);
+    Server.debug('exit zone', this.name, client.name);
   }
 
   public onTick(msElapsed: number): void {

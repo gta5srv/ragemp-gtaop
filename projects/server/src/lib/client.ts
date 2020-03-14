@@ -1,14 +1,17 @@
+import Types from '@core/types';
 import Team from '@lib/team'
 import Vehicle from '@lib/vehicle'
 import Server from '@lib/server'
-import { WorldLocation } from '@lib/world-locations'
+import { WorldLocation, WorldLocations } from '@lib/world-locations'
 import * as Manager from '@lib/managers'
 import * as Listeners from '@lib/listeners'
+import Zone from '@lib/zone';
 
 export default class Client implements Listeners.ClientListener {
-  private _player: PlayerMp
+  public _player: PlayerMp
   private _team?: Team
   private _respawnTimer: any
+  private _spawnZone: Zone|null = null
 
   public static all: Manager.Client = new Manager.Client()
 
@@ -68,39 +71,65 @@ export default class Client implements Listeners.ClientListener {
     return this._player.name
   }
 
-  sendMessage (...args: any[]): void {
-    let texts = [...args]
-    let textsPutTogether = texts.map(text => String(text)).join(' ')
+  get spawnZone () {
+    return this._spawnZone
+  }
 
-    this._player.outputChatBox(textsPutTogether)
+  setSpawnZone (spawnZone: Zone): boolean {
+    if (!spawnZone.spawns.length) {
+      return false;
+    }
+
+    this._spawnZone = spawnZone;
+    return true;
+  }
+
+  sendMessage (...args: any[]): void {
+    let texts = [...args];
+    let textsPutTogether = texts.map(text => String(text)).join(' ');
+
+    this._player.outputChatBox(textsPutTogether);
   }
 
   spawn (timeMs?: number): void {
-    if (this._team === undefined) {
-      this._player.spawn(new mp.Vector3(1408.315673828125, 3099.702880859375, 52.74652099609375))
-      return
-    }
-
-    let spawn = this._team.getSpawn()
-
     if (this._respawnTimer) {
-      clearTimeout(this._respawnTimer)
-      this._respawnTimer = null
+      clearTimeout(this._respawnTimer);
+      this._respawnTimer = null;
     }
 
     if (timeMs) {
       this._respawnTimer = setTimeout(() => {
-        this._player.spawn(spawn)
-      }, timeMs)
-    } else {
-      this._player.spawn(spawn)
+        this.spawn.call(this);
+      }, timeMs);
+
+      return;
     }
 
-    this._player.giveWeapon(mp.joaat('weapon_compactlauncher'), 50)
+    if (this.spawnZone !== null) {
+      this.spawnZone.spawn(this);
+      return;
+    }
+
+    if (this._team === undefined) {
+      this._player.spawn(new mp.Vector3(1408.315673828125, 3099.702880859375, 52.74652099609375));
+      return;
+    }
+
+    this._player.spawn(this._team.getSpawn())
+    this._player.giveWeapon(mp.joaat('weapon_compactlauncher'), 50);
   }
 
   kill (): void {
-    this._player.health = 0
+    this._player.health = 0;
+  }
+
+  putInVehicle(v: Vehicle) {
+    this._player.putIntoVehicle(v.vehicleMp, -1)
+  }
+
+  giveWeapon(weaponName: HashOrString, ammo: number): void {
+    const weaponHash = mp.joaat(String(weaponName))
+    this._player.giveWeapon(weaponHash, ammo)
   }
 
   loadWorldLocation(worldLocation: WorldLocation) {
@@ -118,6 +147,10 @@ export default class Client implements Listeners.ClientListener {
   }
 
   onClientReady(): void {
+    WorldLocations.all.forEach((worldLocation: WorldLocation) => {
+      this.loadWorldLocation(worldLocation)
+    })
+
     this.spawn()
   }
 }

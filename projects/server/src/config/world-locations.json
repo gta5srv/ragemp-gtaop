@@ -1,6 +1,46 @@
 {
   "world_locations": [
     {
+      "name": "cocaine",
+      "position": [ 1093.6, -3196.6, -38.99841 ],
+      "ipls":[
+        "bkr_biker_interior_placement_interior_4_biker_dlc_int_ware03_milo"
+      ],
+      "interior_props": [
+        "set_up",
+        "security_low",
+        "equipment_basic",
+        "production_basic",
+        "coke_press_basic",
+        "table_equipment",
+        "security_high",
+        "equipment_upgrade",
+        "production_upgrade",
+        "coke_press_upgrade",
+        "table_equipment_upgrade",
+        "coke_cut_01",
+        "coke_cut_02",
+        "coke_cut_03",
+        "coke_cut_04",
+        "coke_cut_05"
+      ]
+    },
+    {
+      "name": "carrier",
+      "position": [ 3084.73, -4770.709, 15.26167 ],
+      "ipls": [
+        "hei_carrier",
+        "hei_carrier_DistantLights",
+        "hei_Carrier_int1",
+        "hei_Carrier_int2",
+        "hei_Carrier_int3",
+        "hei_Carrier_int4",
+        "hei_Carrier_int5",
+        "hei_Carrier_int6",
+        "hei_carrier_LODLights"
+      ]
+    },
+    {
       "name": "clubhouse_1",
       "position": [ 1107.04, -3157.399, -37.51859 ],
       "ipls": [
@@ -44,6 +84,15 @@
         "counterfeit_stash1",
         "counterfeit_stash2",
         "counterfeit_stash3"
+      ]
+    },
+    {
+      "name": "farm_oneil",
+      "position": [ 2469.03, 4955.278, 45.11892 ],
+      "ipls": [
+        "farm",
+        "farm_props",
+        "farm_int"
       ]
     },
     {

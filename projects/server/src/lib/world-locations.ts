@@ -1,4 +1,5 @@
 import Client from '@lib/client'
+import Server from '@lib/server'
 
 export class WorldLocation {
   private _name: string
@@ -38,6 +39,14 @@ export class WorldLocations {
     return this._list
   }
 
+  static load () {
+    this.all.forEach((wl: WorldLocation) => {
+      wl.ipls.forEach((ipl: string) => {
+        Server.requestIpl(ipl)
+      })
+    })
+  }
+
   public static byName (name: string): WorldLocation | null {
     let foundLocation: WorldLocation | null = null
 
@@ -62,13 +71,6 @@ export class WorldLocations {
     if (location == null) {
       return false
     }
-
-
-    location.ipls.forEach((ipl: string) => {
-      mp.world.requestIpl(ipl)
-    })
-
-    client.loadWorldLocation(location)
 
     client.position = location.position
     return true

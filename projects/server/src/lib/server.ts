@@ -6,6 +6,7 @@ import Interval from '@lib/algebra/interval'
 import Rectangle from '@lib/algebra/rectangle'
 import Random from '@lib/algebra/random'
 import * as Listeners from '@lib/listeners'
+import { WorldLocations } from './world-locations';
 
 
 /**
@@ -29,6 +30,7 @@ class Server implements Listeners.TickListener {
   constructor () {
     Server.listeners.add(this)
     Server.Time.randomize()
+    WorldLocations.load()
 
     Server.log(`OPPOSING FORCES started (Ingame time: ${Server.Time})`)
   }
@@ -102,6 +104,10 @@ class Server implements Listeners.TickListener {
       Server.Time.add(gameSecsToIncrease)
       Server.msSinceTimeIncrease -= gameSecsToIncrease * 1000 / Config.GAME_TIME_MULTIPLIER
     }
+  }
+
+  public static requestIpl (ipl: string) {
+    mp.world.requestIpl(ipl)
   }
 }
 
@@ -178,6 +184,8 @@ namespace Server {
         return ('0' + timeValue).slice(-2)
       }).join(':')
     }
+
+
   }
 }
 

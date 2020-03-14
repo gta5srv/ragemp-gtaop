@@ -15,13 +15,13 @@ export default class Loader {
     Loader.worldLocations()
   }
 
-  static team (info: Loader.TeamInfo): Team {
+  static team (info: Loader.TeamModel): Team {
     const vehicleGroupManager = new Team.VehicleGroupManager()
 
     if (info.vehicles) {
-      info.vehicles.forEach((vehGroup: Loader.VehicleGroupInfo[]) => {
-        vehGroup.forEach((vehInfo: Loader.VehicleGroupInfo) => {
-          const vehGroupSpawns: Types.Location[] = vehInfo.locations.map((l: Loader.LocationInfo) => {
+      info.vehicles.forEach((vehGroup: Loader.VehicleGroupModel[]) => {
+        vehGroup.forEach((vehInfo: Loader.VehicleGroupModel) => {
+          const vehGroupSpawns: Types.Location[] = vehInfo.locations.map((l: Loader.VehicleLocationModel) => {
             return {
               position: new mp.Vector3(l.position[0], l.position[1], l.position[2]),
               rotation: new mp.Vector3(l.rotation[1], l.rotation[1], l.rotation[2])
@@ -71,37 +71,52 @@ export default class Loader {
   static zones (): void {
     let zonesInfo = require('@config/zones').zones
 
-    zonesInfo.forEach((zoneInfo: Loader.ZoneInfo) => {
+    for (const zoneSlug in zonesInfo) {
+      const zoneInfo = zonesInfo[zoneSlug]
+
       const zoneBase = new mp.Vector3(
         zoneInfo.position[0],
         zoneInfo.position[1],
         zoneInfo.position[2]
       )
 
+      let zoneSpawns: Types.Location[] = []
+      if (zoneInfo.spawns) {
+        zoneSpawns = zoneInfo.spawns.map((spawn: Array4d): Types.Location => {
+          return {
+            position: new mp.Vector3(spawn[0], spawn[1], spawn[2]),
+            rotation: new mp.Vector3(0, 0, spawn[3])
+          }
+        });
+      }
+
       new Zone(
         zoneInfo.name,
+        zoneSlug,
         zoneBase,
-        zoneInfo.group
-      )
-    })
+        zoneSpawns,
+        zoneInfo.group,
+        zoneInfo.radius
+      );
+    }
   }
 
   static worldLocations (): void {
     let worldLocationsInfo = require('@config/world-locations').world_locations
     let worldLocations: WorldLocation[] = []
 
-    worldLocationsInfo.forEach((worldLocationInfo: Loader.WorldLocationInfo) => {
+    worldLocationsInfo.forEach((worldVehicleLocationModel: Loader.WorldLocationModel) => {
       const worldLocationPosition = new mp.Vector3(
-        worldLocationInfo.position[0],
-        worldLocationInfo.position[1],
-        worldLocationInfo.position[2]
+        worldVehicleLocationModel.position[0],
+        worldVehicleLocationModel.position[1],
+        worldVehicleLocationModel.position[2]
       )
 
       const worldLocation = new WorldLocation(
-        worldLocationInfo.name,
+        worldVehicleLocationModel.name,
         worldLocationPosition,
-        worldLocationInfo.ipls,
-        worldLocationInfo.interior_props
+        worldVehicleLocationModel.ipls,
+        worldVehicleLocationModel.interior_props
       )
 
       worldLocations.push(worldLocation)
@@ -116,25 +131,27 @@ export default class Loader {
 }
 
 namespace Loader {
-  export interface ZoneInfo {
+  export interface ZoneModel {
     name: string
     position: Array3d,
+    radius?: number,
+    spawns?: Array4d[],
     group?: string
   }
 
-  export interface LocationInfo {
+  export interface VehicleLocationModel {
     position: Array3d
     rotation: Array3d
   }
 
-  export interface VehicleGroupInfo {
+  export interface VehicleGroupModel {
     name: string,
     model: string,
     price?: number,
-    locations: LocationInfo[]
+    locations: VehicleLocationModel[]
   }
 
-  export interface TeamInfo {
+  export interface TeamModel {
     name: string
     slug: string
     base: Array3d,
@@ -142,10 +159,10 @@ namespace Loader {
     vehicleColors: [RGB, RGB],
     models: Array<string>,
     spawns: Array3d[],
-    vehicles: VehicleGroupInfo[][]
+    vehicles: VehicleGroupModel[][]
   }
 
-  export interface WorldLocationInfo {
+  export interface WorldLocationModel {
     name: string,
     position: Array3d,
     ipls?: string[],

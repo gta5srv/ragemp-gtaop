@@ -2,6 +2,10 @@ mp.events.add('loadInteriorProps', (position: Vector3Mp, props: string[]) => {
   const interiorID = mp.game.interior.getInteriorAtCoords(position.x, position.y, position.z)
 
   props.forEach((prop) => {
+    if (mp.game.interior.isInteriorPropEnabled(interiorID, prop)) {
+      return true;
+    }
+    
     mp.game.interior.enableInteriorProp(interiorID, prop)
   })
 })

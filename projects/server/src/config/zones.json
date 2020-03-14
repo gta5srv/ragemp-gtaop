@@ -1,6 +1,6 @@
 {
-  "zones": [
-    {
+  "zones": {
+    "electric_station": {
       "name": "Electric Station",
       "position": [
         2100.75610351563,
@@ -8,7 +8,7 @@
         93.2852783203125
       ]
     },
-    {
+    "building_site": {
       "name": "Building Site",
       "position": [
         930.06982421875,
@@ -17,7 +17,7 @@
       ],
       "group": "armor"
     },
-    {
+    "rebel_radio": {
       "name": "Rebel Radio Tower",
       "position": [
         740.601013183594,
@@ -25,7 +25,7 @@
         74.5283813476563
       ]
     },
-    {
+    "oil": {
       "name": "Oil",
       "position": [
         591.400939941406,
@@ -34,7 +34,7 @@
       ],
       "group": "ammo"
     },
-    {
+    "cement_factory": {
       "name": "Cement Factory",
       "position": [
         269.713195800781,
@@ -43,7 +43,7 @@
       ],
       "group": "armor"
     },
-    {
+    "marine_bridge": {
       "name": "Marine Bridge",
       "position": [
         -164.817016601563,
@@ -51,7 +51,7 @@
         43.9325637817383
       ]
     },
-    {
+    "gondola_station": {
       "name": "Gondola Station",
       "position": [
         444.576538085938,
@@ -60,7 +60,7 @@
       ],
       "group": "health"
     },
-    {
+    "sawmill": {
       "name": "Sawmill",
       "position": [
         -494.334228515625,
@@ -69,7 +69,7 @@
       ],
       "group": "armor"
     },
-    {
+    "hill_settlement": {
       "name": "Hill Settlement",
       "position": [
         -1177.93151855469,
@@ -77,7 +77,7 @@
         222.343444824219
       ]
     },
-    {
+    "lighthouse": {
       "name": "Lighthouse",
       "position": [
         3437.98266601563,
@@ -86,7 +86,7 @@
       ],
       "group": "armor"
     },
-    {
+    "church": {
       "name": "Church",
       "position": [
         -292.407531738281,
@@ -95,7 +95,7 @@
       ],
       "group": "health"
     },
-    {
+    "gasstation_trevor": {
       "name": "Gasstation Trevor",
       "position": [
         2003.58020019531,
@@ -103,7 +103,7 @@
         31.1808471679688
       ]
     },
-    {
+    "forgotten_motel": {
       "name": "Forgotten Motel",
       "position": [
         1565.69262695313,
@@ -111,7 +111,7 @@
         32.6210327148438
       ]
     },
-    {
+    "homeless": {
       "name": "Homeless",
       "position": [
         896.393310546875,
@@ -119,7 +119,7 @@
         32.8035278320313
       ]
     },
-    {
+    "forgotten_market": {
       "name": "Forgotten Market",
       "position": [
         450.260498046875,
@@ -128,7 +128,7 @@
       ],
       "group": "ammo"
     },
-    {
+    "refinery": {
       "name": "Refinery",
       "position": [
         365.105285644531,
@@ -136,7 +136,7 @@
         35.4034423828125
       ]
     },
-    {
+    "safe_the_world": {
       "name": "Safe the World",
       "position": [
         2514.16528320313,
@@ -145,7 +145,7 @@
       ],
       "group": "health"
     },
-    {
+    "farmer_gas": {
       "name": "Farmer Gasstation",
       "position": [
         2518.859375,
@@ -153,7 +153,7 @@
         38.9011840820313
       ]
     },
-    {
+    "grain_factory": {
       "name": "Grain Factory",
       "position": [
         2909.09448242188,
@@ -162,7 +162,7 @@
       ],
       "group": "ammo"
     },
-    {
+    "farm": {
       "name": "Farm",
       "position": [
         2546.85498046875,
@@ -171,7 +171,7 @@
       ],
       "group": "health"
     },
-    {
+    "ltd_gas": {
       "name": "Ltd Gas Station",
       "position": [
         1687.56225585938,
@@ -179,7 +179,7 @@
         41.078125
       ]
     },
-    {
+    "seahouse": {
       "name": "Seahouse",
       "position": [
         713.171081542969,
@@ -187,7 +187,7 @@
         39.7092895507813
       ]
     },
-    {
+    "woodstorage": {
       "name": "Woodstorage",
       "position": [
         356.524627685547,
@@ -195,7 +195,7 @@
         62.2039794921875
       ]
     },
-    {
+    "waterstorage": {
       "name": "Waterstorage",
       "position": [
         -221.212661743164,
@@ -203,7 +203,7 @@
         63.4124755859375
       ]
     },
-    {
+    "harbour": {
       "name": "Harbour",
       "position": [
         1525.44580078125,
@@ -212,7 +212,7 @@
       ],
       "group": "health"
     },
-    {
+    "trash_2": {
       "name": "Trash House 2",
       "position": [
         2163.94580078125,
@@ -220,7 +220,7 @@
         44.7356567382813
       ]
     },
-    {
+    "trash": {
       "name": "Trash House",
       "position": [
         2391.82299804688,
@@ -228,7 +228,7 @@
         46.3668823242188
       ]
     },
-    {
+    "merryweather": {
       "name": "Merryweather",
       "position": [
         3551.70727539063,
@@ -237,7 +237,7 @@
       ],
       "group": "ammo"
     },
-    {
+    "querry": {
       "name": "Querry",
       "position": [
         2624.68798828125,
@@ -245,6 +245,24 @@
         32.5967407226563
       ],
       "group": "armor"
+    },
+    "aircraft": {
+      "name": "Aircraft Carrier",
+      "radius": 3.75,
+      "position": [
+        3091.30224609375,
+        -4722.287109375,
+        26.1
+      ],
+      "spawns": [
+        [ 3096.35888671875, -4706.57958984375, 12.244046211242676, 26.790699005126953 ],
+        [ 3095.1142578125, -4702.04150390625, 12.244046211242676, 145.25079345703125 ],
+        [ 3083.555908203125, -4708.689453125, 15.245096206665039, 358.9415283203125 ],
+        [ 3083.698974609375, -4731.25, 10.74206829071045, 10.77796745300293 ],
+        [ 3103.5009765625, -4756.865234375, 3.9822685718536377, 250.86227416992188 ],
+        [ 3062.30810546875, -4639.6337890625, 11.584602355957031, 110.49080657958984 ]
+      ],
+      "group": "world"
     }
-  ]
+  }
 }

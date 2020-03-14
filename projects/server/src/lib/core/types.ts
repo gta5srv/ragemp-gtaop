@@ -13,6 +13,11 @@ namespace Types {
     position: Vector3Mp,
     rotation: Vector3Mp
   }
+
+  export enum Spawn {
+    BASE,
+    ZONE
+  }
 }
 
 export default Types

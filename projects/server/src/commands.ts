@@ -5,6 +5,8 @@ import Util from '@core/util'
 import Client from '@lib/client'
 import WorldLocations from '@lib/world-locations'
 import Team from '@lib/team'
+import Vehicle from './lib/vehicle';
+import Zone from './lib/zone';
 
 Server.addCommand('savepos', (client: Client, description: string) => {
 	let coords = [ client.position, client.heading ]
@@ -25,6 +27,36 @@ Server.addCommand('savepos', (client: Client, description: string) => {
 		client.sendMessage(`!{#ff0000}${append} ` + (description ? `!{#ffff00}(${description}) ` : '') + `!{#ffffff}has been saved.`)
 		Server.log(append + ' has been saved.')
 	})
+})
+
+Server.addCommand('v', (client: Client, modelName: string) => {
+	let newVehicle = new Vehicle(modelName, client.position, null)
+	client.putInVehicle(newVehicle)
+})
+
+Server.addCommand('setspawnzone', (client: Client, zoneSlug: string) => {
+	if (!zoneSlug || typeof zoneSlug !== 'string') {
+		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/setspawnzone !{#dddddd}[zone_slug]`);
+		return;
+	}
+
+	const zone = Zone.all.bySlug(zoneSlug)
+	if (!zone) {
+		client.sendMessage(`!{#ff0000}[SPAWN ZONE] !{#ffffff}Zone !{#ffff00}"${zoneSlug}"!{#ffffff} couldn't be found...`)
+		return;
+	}
+
+	const validSpawnZone = client.setSpawnZone(zone)
+
+	if (validSpawnZone) {
+		client.sendMessage(`!{#00ff00}[SPAWN ZONE] !{#ffffff}Zone !{#ffff00}"${zoneSlug}"!{#ffffff} has been set as your spawn zone.`)
+	} else {
+		client.sendMessage(`!{#ff0000}[SPAWN ZONE] !{#ffffff}Zone !{#ffff00}"${zoneSlug}"!{#ffffff} doesn't contain any spawns and is therefore unavailable.`)
+	}
+})
+
+Server.addCommand('weapon', (client: Client, modelName: string, ammo?: number) => {
+	client.giveWeapon(modelName, ammo || 10000)
 })
 
 Server.addCommand('tp', (client: Client, ...args: string[]) => {
@@ -49,6 +81,23 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 				client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}"${location.name}"!{#ffffff} (${location.position}).`)
 			} else {
 				client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Location !{#ffff00}"${locationName}"!{#ffffff} couldn't be found...`)
+			}
+
+			return
+		}
+
+		// Is zone
+		if (params[0] === 'zone' && typeof params[1] === 'string') {
+			const zoneSlug = params[1]
+			const zone = Zone.all.bySlug(zoneSlug)
+
+			if (zone) {
+				let zonePosition: Vector3Mp = zone.position
+				zonePosition.z += 0.4
+				client.position = zonePosition
+				client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to zone !{#ffff00}"${zone.name}"!{#ffffff} (${zone.slug}).`)
+			} else {
+				client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Zone !{#ffff00}"${zoneSlug}"!{#ffffff} couldn't be found...`)
 			}
 
 			return
@@ -110,6 +159,7 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 
 	// Print usage if no specific action could be determined
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp location !{#dddddd}[location_name]`)
+	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp zone !{#dddddd}[zone_slug]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp saved !{#dddddd}[saved_position_name]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[x] [y]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[x] [y] [z]`)

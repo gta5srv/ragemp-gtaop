@@ -5,6 +5,10 @@ export default class List<T> implements Iterable<T> {
     return this._items
   }
 
+  get count () {
+    return this._items.length
+  }
+
   public add (...args: T[]): void {
     const items = [ ...args ]
 

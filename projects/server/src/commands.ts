@@ -30,7 +30,10 @@ Server.addCommand('savepos', (client: Client, description: string) => {
 })
 
 Server.addCommand('v', (client: Client, modelName: string) => {
-	let newVehicle = new Vehicle(modelName, client.position, null)
+	let clientPosition = client.position
+	clientPosition.z += 1
+
+	let newVehicle = new Vehicle(modelName, clientPosition, null)
 	client.putInVehicle(newVehicle)
 })
 
@@ -125,6 +128,7 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 				})
 
 				client.position = new mp.Vector3(position[0], position[1], position[2])
+				client.heading = position[3]
 			})
 
 			if (!foundLocation) {

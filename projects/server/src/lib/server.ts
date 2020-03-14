@@ -1,11 +1,13 @@
-import Config from '@root/config'
-import Util from '@core/util'
-import HeightMap from '@lib/height-map'
-import Client from '@lib/client'
-import Interval from '@lib/algebra/interval'
-import Rectangle from '@lib/algebra/rectangle'
-import Random from '@lib/algebra/random'
-import * as Listeners from '@lib/listeners'
+import Config from '@root/config';
+import Util from '@core/util';
+import HeightMap from '@lib/height-map';
+import Client from '@lib/client';
+import Team from '@lib/team';
+import Zone from '@lib/zone';
+import Interval from '@lib/algebra/interval';
+import Rectangle from '@lib/algebra/rectangle';
+import Random from '@lib/algebra/random';
+import * as Listeners from '@lib/listeners';
 import { WorldLocations } from './world-locations';
 
 
@@ -21,18 +23,20 @@ class Server implements Listeners.TickListener {
 
   static get instance () {
     if (!Server._instance) {
-      Server._instance = new Server()
+      Server._instance = new Server();
     }
 
-    return Server._instance
+    return Server._instance;
   }
 
   constructor () {
-    Server.listeners.add(this)
-    Server.Time.randomize()
-    WorldLocations.load()
+    Server.listeners.add(this);
+    Server.Time.randomize();
+    WorldLocations.load();
 
-    Server.log(`OPPOSING FORCES started (Ingame time: ${Server.Time})`)
+    Server.log(`Started (Ingame time: ${Server.Time})`);
+    Server.log(`Loaded ${Team.all.items.length} teams`);
+    Server.log(`Loaded ${Zone.all.items.length} zones`);
   }
 
   /**
@@ -55,7 +59,7 @@ class Server implements Listeners.TickListener {
    * @param ...args Message parts
    */
   public static log (...args: any[]): void {
-    console.log(...args)
+    console.log('[OPPOSING FORCES]', ...args)
   }
 
 

@@ -4,6 +4,7 @@ import FSHelper from '@core/fs-helper'
 import Team from '@lib/team'
 import Zone from '@lib/zone'
 import { WorldLocations, WorldLocation } from '@lib/world-locations'
+import Vehicle from '../vehicle';
 
 export default class Loader {
   static run (rootDirectory: string): void {
@@ -90,7 +91,25 @@ export default class Loader {
         });
       }
 
-      new Zone(
+      let zoneVehicles: Vehicle[] = []
+      if (zoneInfo.vehicles) {
+        zoneInfo.vehicles.forEach((zoneVehicleInfo: Loader.ZoneVehicleModel) => {
+          zoneVehicleInfo.spawns.forEach((zoneVehicleLocationInfo: Loader.VehicleLocationModel) => {
+            const l = zoneVehicleLocationInfo;
+
+            const position = new mp.Vector3(l.position[0], l.position[1], l.position[2]);
+            const rotation = new mp.Vector3(l.rotation[1], l.rotation[1], l.rotation[2]);
+
+            zoneVehicles.push(new Vehicle(
+              zoneVehicleInfo.model,
+              position,
+              rotation
+            ))
+          })
+        })
+      }
+
+      const zone = new Zone(
         zoneInfo.name,
         zoneSlug,
         zoneBase,
@@ -98,6 +117,8 @@ export default class Loader {
         zoneInfo.group,
         zoneInfo.radius
       );
+
+      zone.vehicles.add(...zoneVehicles);
     }
   }
 
@@ -131,17 +152,23 @@ export default class Loader {
 }
 
 namespace Loader {
+  export interface VehicleLocationModel {
+    position: Array3d
+    rotation: Array3d
+  }
+
+  export interface ZoneVehicleModel {
+    model: string,
+    spawns: VehicleLocationModel[]
+  }
+
   export interface ZoneModel {
     name: string
     position: Array3d,
     radius?: number,
     spawns?: Array4d[],
+    vehicles?: ZoneVehicleModel[],
     group?: string
-  }
-
-  export interface VehicleLocationModel {
-    position: Array3d
-    rotation: Array3d
   }
 
   export interface VehicleGroupModel {

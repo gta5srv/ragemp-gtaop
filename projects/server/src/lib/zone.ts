@@ -22,7 +22,7 @@ export default class Zone extends Spawnable implements Listeners.ZoneListener/*,
   public static readonly DEFAULT_BLIP_COLOR: 4
 
   public static readonly all: Manager.Zone = new Manager.Zone()
-  public static readonly vehicles: Manager.Vehicle = new Manager.Vehicle()
+  public readonly vehicles: Manager.Vehicle = new Manager.Vehicle()
 
   constructor (name: string, slug: string,
                position: Vector3Mp, spawns: Types.Location[] = [],

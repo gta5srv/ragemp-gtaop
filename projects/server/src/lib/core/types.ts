@@ -18,6 +18,13 @@ namespace Types {
     BASE,
     ZONE
   }
+
+  export enum Fonts {
+    ChaletLondon,
+    HouseScript,
+    Monospace,
+    CharletComprimeColonge
+  }
 }
 
 export default Types

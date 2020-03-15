@@ -5,48 +5,74 @@ import Vehicle from '@lib/vehicle'
 import * as Manager from '@lib/managers'
 
 export class Team {
-  private _name: string
-  private _slug: string
-  private _base: Vector3Mp
-  private _blipColor: number
-  private _vehicleColors: [RGB, RGB]
-  private _models: Array<string> = []
-  private _spawns: Array<any> = [] // TODO: Adjust type
-  private _vehicles: Team.VehicleGroupManager
-  private _blip: BlipMp | null = null
-  private _label: TextLabelMp | null = null
-  private _checkpoint: MarkerMp | null = null
+  private _name: string;
+  private _slug: string;
+  private _base: Vector3Mp;
+  private _blipColor: number;
+  private _markerColor: RGB;
+  private _vehicleColors: [RGB, RGB];
+  private _gtaColor: string = Team.DEFAULT_GTA_COLOR;
+  private _models: Array<string>;
+  private _spawns: Array<any>; // TODO: Adjust type
+  private _vehicles: Team.VehicleGroupManager;
+  private _blip: BlipMp | null = null;
+  private _label: TextLabelMp | null = null;
+  private _checkpoint: MarkerMp | null = null;
 
-  private static readonly DEFAULT_BLIP_COLOR: number = 0
-  private static readonly DEFAULT_VEHICLE_COLORS: [RGB, RGB] = [[ 0, 0, 0 ], [ 0, 0, 0 ]]
+  private static readonly DEFAULT_BLIP_COLOR: number = 0;
+  private static readonly DEFAULT_MARKER_COLOR: RGB = [ 255, 255, 255 ];
+  private static readonly DEFAULT_VEHICLE_COLORS: [RGB, RGB] = [[ 0, 0, 0 ], [ 0, 0, 0 ]];
+  private static readonly DEFAULT_GTA_COLOR: string = '~u~';
 
-  public static all: Manager.Team = new Manager.Team()
+  public static all: Manager.Team = new Manager.Team();
 
   constructor (name: string, slug: string, base: Vector3Mp,
                blipColor: number = Team.DEFAULT_BLIP_COLOR,
+               markerColor: RGB = Team.DEFAULT_MARKER_COLOR,
                vehicleColors: [RGB, RGB] = Team.DEFAULT_VEHICLE_COLORS,
                models: string[] = [], spawns: any[] = [],
                vehicles: Team.VehicleGroupManager = new Team.VehicleGroupManager()) {
-    this._name = name
-    this._slug = slug
-    this._base = base
-    this._blipColor = blipColor
-    this._vehicleColors = vehicleColors
-    this._models = models
-    this._spawns = spawns
-    this._vehicles = vehicles
+    this._name = name;
+    this._slug = slug;
+    this._base = base;
+    this._blipColor = blipColor;
+    this._markerColor = markerColor;
+    this._vehicleColors = vehicleColors;
+    this._models = models;
+    this._spawns = spawns;
+    this._vehicles = vehicles;
 
-    this._init()
+    this._init();
 
-    Team.all.add(this)
+    Team.all.add(this);
   }
 
   get name () {
-    return this._name
+    return this._name;
   }
 
   get slug () {
-    return this._slug
+    return this._slug;
+  }
+
+  get blipColor () {
+    return this._blipColor;
+  }
+
+  get markerColor () {
+    return this._markerColor;
+  }
+
+  get vehicleColors () {
+    return this._vehicleColors;
+  }
+
+  get gtaColor () {
+    return this._gtaColor;
+  }
+
+  set gtaColor (gtaColor) {
+    this._gtaColor = gtaColor;
   }
 
   _init (): void {
@@ -88,6 +114,10 @@ export class Team {
   getSpawn (): any { // TODO: Change type
     const spawnIndex = Math.floor(Math.random() * this._spawns.length)
     return this._spawns[spawnIndex]
+  }
+
+  toString (): string {
+    return `(Team "${this.name}" <${this.slug}>)`
   }
 }
 

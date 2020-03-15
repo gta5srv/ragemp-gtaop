@@ -11,6 +11,7 @@ export default class Client implements Listeners.ClientListener {
   public _player: PlayerMp
   private _team?: Team
   private _respawnTimer: any
+  private _currentZone: Zone|null = null
   private _spawnZone: Zone|null = null
 
   public static all: Manager.Client = new Manager.Client()
@@ -69,6 +70,14 @@ export default class Client implements Listeners.ClientListener {
 
   get name () {
     return this._player.name
+  }
+
+  get currentZone () {
+    return this._currentZone
+  }
+
+  set currentZone(currentZone) {
+    this._currentZone = currentZone
   }
 
   get spawnZone () {
@@ -138,12 +147,17 @@ export default class Client implements Listeners.ClientListener {
 
   onClientCreateWaypoint(x: number, y: number): void {
     Server.heightMap.getZ(x, y, (z: number) => {
-      this.position = new mp.Vector3(x, y, z + 0.5)
+      this.position = new mp.Vector3(x, y, z + 0.5);
     })
   }
 
   onClientDeath(_reason: number, _killer: Client): void {
-    this.spawn(5000)
+    if (this.currentZone) {
+      Server.broadcast(`Client ${this.name} died in zone ${this.currentZone.name}`);
+      this.currentZone.onZoneExit(this);
+    }
+
+    this.spawn(5000);
   }
 
   onClientReady(): void {

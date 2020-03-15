@@ -60,6 +60,24 @@ Server.addCommand('setspawnzone', (client: Client, zoneSlug: string) => {
 
 Server.addCommand('weapon', (client: Client, modelName: string, ammo?: number) => {
 	client.giveWeapon(modelName, ammo || 10000)
+});
+
+Server.addCommand('zonelabel', (client: Client, zoneSlug: string, text: string) => {
+
+	if (!(zoneSlug && text)) {
+		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/zonelabel !{#dddddd}[zone_slug] [text]`);
+		return;
+	}
+
+	Server.broadcast('zonelabel', 'slug', typeof zoneSlug, 'text', typeof text)
+	const zone = Zone.all.bySlug(zoneSlug);
+
+	if (zone) {
+		zone.label.text = text
+		client.sendMessage(`!{#00ff00}[ZONE LABEL] !{#ffffff}Text for zone !{#ffff00}"${zone.name}"!{#ffffff}'s label was set to "${text}".`);
+	} else {
+		client.sendMessage(`!{#ff0000}[ZONE LABEL] !{#ffffff}Zone !{#ffff00}"${zoneSlug}"!{#ffffff} couldn't be found...`);
+	}
 })
 
 Server.addCommand('tp', (client: Client, ...args: string[]) => {
@@ -167,7 +185,7 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp saved !{#dddddd}[saved_position_name]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[x] [y]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[x] [y] [z]`)
-})
+}, false)
 
 Server.addCommand('kill', (client: Client) => {
 	client.kill()

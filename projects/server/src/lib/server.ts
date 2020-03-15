@@ -15,11 +15,11 @@ import { WorldLocations } from './world-locations';
  * The Gamemode's heart
  */
 class Server implements Listeners.TickListener {
-  private static _instance?: Server
-  private static msSinceTimeIncrease: number = 0
+  private static _instance?: Server;
+  private static msSinceTimeIncrease: number = 0;
 
-  public static heightMap: HeightMap
-  public static listeners: Listeners.Callback = new Listeners.Callback()
+  public static heightMap: HeightMap;
+  public static listeners: Listeners.Callback = new Listeners.Callback();
 
   static get instance () {
     if (!Server._instance) {
@@ -45,11 +45,11 @@ class Server implements Listeners.TickListener {
    * @param heightMapPath The file path to the hmap.dat file
    */
   public static initHeightMap (heightMapPath: string): void {
-    const v = new mp.Vector3(-4100, -4300, 0)
-    const v2 = v.add(new mp.Vector3(300 * 30, 150 * 90, 0))
-    const area = new Rectangle(new Interval(v.x, v2.x), new Interval(v.y, v2.y))
+    const v = new mp.Vector3(-4100, -4300, 0);
+    const v2 = v.add(new mp.Vector3(300 * 30, 150 * 90, 0));
+    const area = new Rectangle(new Interval(v.x, v2.x), new Interval(v.y, v2.y));
 
-    Server.heightMap = new HeightMap(heightMapPath, area)
+    Server.heightMap = new HeightMap(heightMapPath, area);
   }
 
 
@@ -59,7 +59,7 @@ class Server implements Listeners.TickListener {
    * @param ...args Message parts
    */
   public static log (...args: any[]): void {
-    console.log('[OPPOSING FORCES]', ...args)
+    console.log('[OPPOSING FORCES]', ...args);
   }
 
 
@@ -70,7 +70,7 @@ class Server implements Listeners.TickListener {
    */
   public static debug (...args: any[]): void {
     if (Config.DEBUG_MODE) {
-      Server.log(...args)
+      Server.log(...args);
     }
   }
 
@@ -81,8 +81,8 @@ class Server implements Listeners.TickListener {
    * @param ...args Message parts
    */
   public static broadcast (...args: any[]): void {
-    Server.log(...args)
-    Client.all.sendMessage(...args)
+    Server.log(...args);
+    Client.all.sendMessage(...args);
   }
 
 
@@ -90,28 +90,29 @@ class Server implements Listeners.TickListener {
    * Adds a command (wrapper for mp.events.addCommand) and calls callback
    * with first argument as Client instance instead of PlayerMp
    */
-  public static addCommand (command: string, callback: Function): void {
+  public static addCommand (command: string, callback: Function, test: boolean = true): void {
     mp.events.addCommand(command, function (...args: any[]) {
-      callback.apply(null, Util.convertRageMPInstances(...args))
-    })
+      let params = Util.convertRageMPInstances(...args);
+      callback(...(test ? params.filter((_v, i) => i !== 1) : params));
+    });
   }
 
   public onTick(msElapsed: number): void {
-    Server.msSinceTimeIncrease += msElapsed
+    Server.msSinceTimeIncrease += msElapsed;
 
     // At least a second has passed since last in-game time increase
-    const gameMsSinceTimeIncreased = Server.msSinceTimeIncrease * Config.GAME_TIME_MULTIPLIER
+    const gameMsSinceTimeIncreased = Server.msSinceTimeIncrease * Config.GAME_TIME_MULTIPLIER;
 
     if (gameMsSinceTimeIncreased > 1000) {
-      const gameSecsToIncrease = Math.floor(gameMsSinceTimeIncreased / 1000)
+      const gameSecsToIncrease = Math.floor(gameMsSinceTimeIncreased / 1000);
 
-      Server.Time.add(gameSecsToIncrease)
-      Server.msSinceTimeIncrease -= gameSecsToIncrease * 1000 / Config.GAME_TIME_MULTIPLIER
+      Server.Time.add(gameSecsToIncrease);
+      Server.msSinceTimeIncrease -= gameSecsToIncrease * 1000 / Config.GAME_TIME_MULTIPLIER;
     }
   }
 
   public static requestIpl (ipl: string) {
-    mp.world.requestIpl(ipl)
+    mp.world.requestIpl(ipl);
   }
 }
 

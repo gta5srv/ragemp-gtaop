@@ -46,16 +46,22 @@ export default class Loader {
       return new mp.Vector3(spawn[0], spawn[1], spawn[2])
     })
 
-    return new Team(
+    const team = new Team(
       info.name,
       info.slug,
       base,
       info.blipColorID,
+      info.markerColor,
       info.vehicleColors,
       info.models,
       spawns,
       vehicleGroupManager
-    )
+    );
+
+    // TODO: Add more constructor parameters as properties
+    team.gtaColor = info.gtaColor;
+
+    return team;
   }
 
   static teams (): void {
@@ -70,16 +76,16 @@ export default class Loader {
   }
 
   static zones (): void {
-    let zonesInfo = require('@config/zones').zones
+    const zonesInfo = require('@config/zones').zones;
 
     for (const zoneSlug in zonesInfo) {
-      const zoneInfo = zonesInfo[zoneSlug]
+      const zoneInfo = zonesInfo[zoneSlug];
 
       const zoneBase = new mp.Vector3(
         zoneInfo.position[0],
         zoneInfo.position[1],
         zoneInfo.position[2]
-      )
+      );
 
       let zoneSpawns: Types.Location[] = []
       if (zoneInfo.spawns) {
@@ -97,16 +103,18 @@ export default class Loader {
           zoneVehicleInfo.spawns.forEach((zoneVehicleLocationInfo: Loader.VehicleLocationModel) => {
             const l = zoneVehicleLocationInfo;
 
-            const position = new mp.Vector3(l.position[0], l.position[1], l.position[2]);
+            const position = new mp.Vector3(l.position[0], l.position[1], l.position[2] + 1);
             const rotation = new mp.Vector3(l.rotation[1], l.rotation[1], l.rotation[2]);
 
             zoneVehicles.push(new Vehicle(
               zoneVehicleInfo.model,
               position,
-              rotation
-            ))
-          })
-        })
+              rotation,
+              Zone.DEFAULT_VEHICLE_COLORS,
+              'ZONE'
+            ));
+          });
+        });
       }
 
       const zone = new Zone(
@@ -123,31 +131,31 @@ export default class Loader {
   }
 
   static worldLocations (): void {
-    let worldLocationsInfo = require('@config/world-locations').world_locations
-    let worldLocations: WorldLocation[] = []
+    let worldLocationsInfo = require('@config/world-locations').world_locations;
+    let worldLocations: WorldLocation[] = [];
 
     worldLocationsInfo.forEach((worldVehicleLocationModel: Loader.WorldLocationModel) => {
       const worldLocationPosition = new mp.Vector3(
         worldVehicleLocationModel.position[0],
         worldVehicleLocationModel.position[1],
         worldVehicleLocationModel.position[2]
-      )
+      );
 
       const worldLocation = new WorldLocation(
         worldVehicleLocationModel.name,
         worldLocationPosition,
         worldVehicleLocationModel.ipls,
         worldVehicleLocationModel.interior_props
-      )
+      );
 
-      worldLocations.push(worldLocation)
+      worldLocations.push(worldLocation);
     })
 
-    WorldLocations.add(...worldLocations)
+    WorldLocations.add(...worldLocations);
   }
 
   static heightMap (): void {
-    Server.initHeightMap(FSHelper.path('assets/hmap.dat'))
+    Server.initHeightMap(FSHelper.path('assets/hmap.dat'));
   }
 }
 
@@ -183,7 +191,9 @@ namespace Loader {
     slug: string
     base: Array3d,
     blipColorID: number,
+    markerColor: RGB,
     vehicleColors: [RGB, RGB],
+    gtaColor: string,
     models: Array<string>,
     spawns: Array3d[],
     vehicles: VehicleGroupModel[][]

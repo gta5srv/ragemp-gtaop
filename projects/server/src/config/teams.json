@@ -3,9 +3,10 @@
     "fib": {
       "name": "FIB",
       "base": [ 2392.095458984375, 3069.139892578125, 48.65838623046875 ],
-      "colorRGB": [ 242, 173, 46 ],
       "blipColorID": 58,
-      "vehicleColors": [ [ 242, 173, 46 ], [242, 173, 46 ] ],
+      "markerColor": [ 76, 66, 117 ],
+      "vehicleColors": [ [ 76, 66, 117 ], [ 76, 66, 117 ] ],
+      "gtaColor": "~p~",
       "models": [
         "ig_fbisuit_01",
         "mp_m_fibsec_01",
@@ -31,9 +32,10 @@
     "marines": {
       "name": "Marines",
       "base": [ 1358.175537109375, 4330.44580078125, 38.7794075012207 ],
-      "colorRGB": [ 242, 173, 46 ],
       "blipColorID": 69,
-      "vehicleColors": [[ 242, 173, 46 ], [242, 173, 46 ]],
+      "markerColor": [ 121, 206, 121 ],
+      "vehicleColors": [[ 121, 206, 121 ], [ 121, 206, 121 ]],
+      "gtaColor": "~g~",
       "models": [
         "s_m_m_marine_01",
         "s_m_y_marine_01",
@@ -60,7 +62,9 @@
       "base": [ 57.64225387573242, 3690.93212890625, 38.92129135131836 ],
       "colorRGB": [ 242, 121, 46 ],
       "blipColorID": 47,
+      "markerColor": [ 242, 121, 46 ],
       "vehicleColors": [[ 242, 121, 46 ], [ 242, 121, 46 ]],
+      "gtaColor": "~o~",
       "models": [
         "g_m_y_lost_01",
         "g_m_y_lost_02",

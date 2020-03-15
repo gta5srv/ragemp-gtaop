@@ -9,24 +9,28 @@ export default class List<T> implements Iterable<T> {
     return this._items.length
   }
 
-  public add (...args: T[]): void {
-    const items = [ ...args ]
+  public add (...args: T[]): boolean {
+    const newItems = [ ...args ]
+    const count = this.count
 
-    items.forEach((item: T) => {
-      if (this._items.indexOf(item) === -1) {
-        this._items.push(item)
+    newItems.forEach((newItem: T) => {
+      if (this._items.indexOf(newItem) === -1) {
+        this._items.push(newItem)
       }
     })
+
+    return this.count !== count
   }
 
-  public remove (item: T): void {
-    let itemIndex = this._items.indexOf(item)
+  public remove (item: T): boolean {
+    const itemIndex = this._items.indexOf(item)
+    const count = this.count
 
-    if (itemIndex === -1) {
-      return
-    }
+    this._items = this._items.filter((_item: T, i) => {
+      return i !== itemIndex
+    })
 
-    delete this._items[itemIndex]
+    return this.count !== count
   }
 
   public contains (item: T): boolean {

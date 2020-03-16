@@ -35,7 +35,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   public static readonly DEFAULT_VEHICLE_COLORS: [RGB, RGB] = [[ 255, 255, 255 ], [ 255, 255, 255 ]];
 
   public static readonly PROGRESS_PER_SECOND: number = 1/15; // 15 seconds till complete
-  public static readonly TICK_LIMIT: number = 1;
+  public static readonly TICK_LIMIT: number = 10;
   public static readonly COLSHAPE_RADIUS_MULTIPLIER: number = 0.65; // TODO: Improve logic
   public static readonly MARKER_OPACITY: number = 60;
 
@@ -136,18 +136,36 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   }
 
   public onProgress(progress: number, targetState: Zone.State): void {
-    const count = Math.floor(progress * 10);
-
     Server.broadcast('TARGET is !{#ff0000}' + Zone.State[targetState]);
 
-    if (targetState === Zone.State.NEUTRAL && this._progressingTeamBefore) {
-      const gtaColor = this._progressingTeamBefore.gtaColor;
-      this.label.text = gtaColor + "'".repeat(10 - count) + "~w~" + "'".repeat(count);
-    }
-
-    if (targetState === Zone.State.OWNED && this._progressingTeam) {
-      const gtaColor = this._progressingTeam.gtaColor;
-      this.label.text = gtaColor + "'".repeat(count) + "~w~" + "'".repeat(10 - count);
+    switch (targetState) {
+      case Zone.State.NEUTRAL: { // Going back to neutral (was capturing before)
+        if (!this._progressingTeamBefore) return;
+        const count = Math.floor((1 - progress) * 10);
+        const color = this._progressingTeamBefore.gtaColor;
+        this.label.text = color + "'".repeat(10 - count) + "~w~" + "'".repeat(count);
+        break;
+      }
+      case Zone.State.OWNED: { // Going back to owned (was neutralizing before)
+        if (!this._owner) return;
+        const count = Math.floor((1 - progress) * 10);
+        const color = this._owner.gtaColor;
+        this.label.text = color + "'".repeat(count) + "~w~" + "'".repeat(10 - count);
+        break;
+      }
+      case Zone.State.NEUTRALIZING: { // Neutralizing
+        if (!(this._owner && this._progressingTeam)) return;
+        const count = Math.floor(progress * 10);
+        const color = this._owner.gtaColor;
+        this.label.text = color + "'".repeat(10 - count) + "~w~" + "'".repeat(count);
+        break;
+      }
+      case Zone.State.CAPTURING: { // Capturing
+        if (!this._progressingTeam) return;
+        const count = Math.floor(progress * 10);
+        const color = this._progressingTeam.gtaColor;
+        this.label.text = color + "'".repeat(count) + "~w~" + "'".repeat(10 - count);
+      }
     }
   }
 
@@ -181,9 +199,9 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
       this._blip.color = owner.blipColor;
 
       this._marker.setColor(
-        owner.markerColor[0],
-        owner.markerColor[1],
-        owner.markerColor[2],
+        owner.color[0],
+        owner.color[1],
+        owner.color[2],
         Zone.MARKER_OPACITY
       );
 
@@ -198,14 +216,14 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
       return [];
     }
 
-    let teamCounters: any = {}
+    let teamCounters: any = {};
 
     this.clientsInside.items.forEach((client: Client) => {
       if (client.team) {
-        const slug = client.team.slug
+        const slug = client.team.slug;
         teamCounters[slug] = slug in Object.keys(teamCounters) ? teamCounters[slug] + 1 : 1;
       }
-    })
+    });
 
     var teamCountsArray = [];
     for (let teamSlug in teamCounters) {
@@ -226,9 +244,9 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
 
       let teams: Team[] = [];
 
-      let count = i
+      let count = i;
       while (a[count] && a[count][1] === v[1]) {
-        const teamFound = Team.all.bySlug(a[count][0])
+        const teamFound = Team.all.bySlug(a[count][0]);
         if (teamFound) teams.push(teamFound);
 
         count++;
@@ -250,24 +268,22 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
       return;
     }
 
-    const teamPresences = this.getTeamPresences()
-    let potentialState: Zone.State = this._state
-    let reverseProgress: boolean = false
+    const teamPresences = this.getTeamPresences();
+    let potentialState: Zone.State = this._state;
+    let reverseProgress: boolean = false;
+    let paused: boolean = false;
 
-    this.clientsInside.sendMessage(String(teamPresences))
+    this.clientsInside.sendMessage(String(teamPresences));
 
     // Teams are present
     if (teamPresences.length) {
-      Server.broadcast(this._slug, 'Teams are present');
-
-      Server.broadcast(typeof teamPresences[0].team, String(teamPresences[0].team))
+      // Server.broadcast(this._slug, 'Teams are present');
+      // Server.broadcast(typeof teamPresences[0].team, String(teamPresences[0].team))
 
       // Several teams have equal zone presence
       if (Array.isArray(teamPresences[0].team)) {
         Server.broadcast(this._slug, 'Several teams are equally present');
-        potentialState = Zone.State.PAUSED;
-
-        this._progressingTeam = null;
+        paused = true;
       } else { // One team has most zone presence
         Server.broadcast(this._slug, `Team ${teamPresences[0].team.name} has the most presence`);
 
@@ -278,6 +294,8 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
           // Most present team wasn't neutralizing before
           if (this._progressingTeam !== teamPresences[0].team) {
             Server.broadcast(this._slug, `Most present team wasn't neutralizing before`);
+            this._progressingTeam = teamPresences[0].team; // NEW
+            Server.sendMessage(`!{#ff0000}Progressing team is now ${this._progressingTeam}`);
 
             // Owner wants to prevent neutralizing
             if (this._owner === teamPresences[0].team) {
@@ -319,22 +337,24 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     const progressForThisTick = msElapsed / 1000 * Zone.PROGRESS_PER_SECOND * Zone.TICK_LIMIT
     const progressBefore = this._progress;
 
-    if (reverseProgress) {
-      Server.broadcast(this._slug,
-        'Progress ' + this._progress + ' - '
-        + (progressForThisTick * 2) + ' = !{#ff0000}'
-        + (this._progress - progressForThisTick * 1.5)
-      );
-      this._progress -= progressForThisTick * 1.5;
-    } else {
-      if (potentialState === Zone.State.CAPTURING || potentialState === Zone.State.NEUTRALIZING) {
-        this._progress += progressForThisTick;
-
+    if (!paused) {
+      if (reverseProgress) {
         Server.broadcast(this._slug,
-          'Progress ' + this._progress + ' + '
-          + (progressForThisTick) + ' = '
-          + (this._progress + progressForThisTick)
+          'Progress ' + this._progress + ' - '
+          + (progressForThisTick * 2) + ' = !{#ff0000}'
+          + (this._progress - progressForThisTick * 1.5)
         );
+        this._progress -= progressForThisTick * 1.5;
+      } else {
+        if (potentialState === Zone.State.CAPTURING || potentialState === Zone.State.NEUTRALIZING) {
+          this._progress += progressForThisTick;
+
+          Server.broadcast(this._slug,
+            'Progress ' + this._progress + ' + '
+            + (progressForThisTick) + ' = '
+            + (this._progress + progressForThisTick)
+          );
+        }
       }
     }
 
@@ -384,8 +404,7 @@ export namespace Zone {
     NEUTRAL,
     OWNED,
     CAPTURING,
-    NEUTRALIZING,
-    PAUSED
+    NEUTRALIZING
   }
 
   export interface TeamPresence {

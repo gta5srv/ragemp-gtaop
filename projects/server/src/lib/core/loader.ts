@@ -51,7 +51,7 @@ export default class Loader {
       info.slug,
       base,
       info.blipColorID,
-      info.markerColor,
+      info.color,
       info.vehicleColors,
       info.models,
       spawns,
@@ -191,7 +191,7 @@ namespace Loader {
     slug: string
     base: Array3d,
     blipColorID: number,
-    markerColor: RGB,
+    color: RGB,
     vehicleColors: [RGB, RGB],
     gtaColor: string,
     models: Array<string>,

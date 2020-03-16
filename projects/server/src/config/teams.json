@@ -4,7 +4,7 @@
       "name": "FIB",
       "base": [ 2392.095458984375, 3069.139892578125, 48.65838623046875 ],
       "blipColorID": 58,
-      "markerColor": [ 76, 66, 117 ],
+      "color": [ 76, 66, 117 ],
       "vehicleColors": [ [ 76, 66, 117 ], [ 76, 66, 117 ] ],
       "gtaColor": "~p~",
       "models": [
@@ -33,7 +33,7 @@
       "name": "Marines",
       "base": [ 1358.175537109375, 4330.44580078125, 38.7794075012207 ],
       "blipColorID": 69,
-      "markerColor": [ 121, 206, 121 ],
+      "color": [ 121, 206, 121 ],
       "vehicleColors": [[ 121, 206, 121 ], [ 121, 206, 121 ]],
       "gtaColor": "~g~",
       "models": [
@@ -60,9 +60,8 @@
     "lost_mc": {
       "name": "Lost MC",
       "base": [ 57.64225387573242, 3690.93212890625, 38.92129135131836 ],
-      "colorRGB": [ 242, 121, 46 ],
       "blipColorID": 47,
-      "markerColor": [ 242, 121, 46 ],
+      "color": [ 242, 121, 46 ],
       "vehicleColors": [[ 242, 121, 46 ], [ 242, 121, 46 ]],
       "gtaColor": "~o~",
       "models": [

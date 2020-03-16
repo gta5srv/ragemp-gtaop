@@ -147,6 +147,10 @@ export default class Client implements Listeners.ClientListener {
   }
 
   onClientChat(message: string): void {
+    const color = this.team ? '!{' + Util.rgbToHex(...this.team.color) + '}' : '';
+
+    Server.log(`${this.name}: ${message}`);
+    Server.sendMessage(`${color}${this.name}: !{#ffffff}${message}`);
   }
 
   onClientCreateWaypoint(x: number, y: number): void {

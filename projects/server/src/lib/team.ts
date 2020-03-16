@@ -1,5 +1,6 @@
 import Types from '@core/types';
 import List from '@core/list'
+import Util from '@core/util';
 import Client from '@lib/client'
 import Vehicle from '@lib/vehicle'
 import * as Manager from '@lib/managers'
@@ -9,7 +10,7 @@ export class Team {
   private _slug: string;
   private _base: Vector3Mp;
   private _blipColor: number;
-  private _markerColor: RGB;
+  private _color: RGB;
   private _vehicleColors: [RGB, RGB];
   private _gtaColor: string = Team.DEFAULT_GTA_COLOR;
   private _models: Array<string>;
@@ -28,7 +29,7 @@ export class Team {
 
   constructor (name: string, slug: string, base: Vector3Mp,
                blipColor: number = Team.DEFAULT_BLIP_COLOR,
-               markerColor: RGB = Team.DEFAULT_MARKER_COLOR,
+               color: RGB = Team.DEFAULT_MARKER_COLOR,
                vehicleColors: [RGB, RGB] = Team.DEFAULT_VEHICLE_COLORS,
                models: string[] = [], spawns: any[] = [],
                vehicles: Team.VehicleGroupManager = new Team.VehicleGroupManager()) {
@@ -36,7 +37,7 @@ export class Team {
     this._slug = slug;
     this._base = base;
     this._blipColor = blipColor;
-    this._markerColor = markerColor;
+    this._color = color;
     this._vehicleColors = vehicleColors;
     this._models = models;
     this._spawns = spawns;
@@ -59,8 +60,12 @@ export class Team {
     return this._blipColor;
   }
 
-  get markerColor () {
-    return this._markerColor;
+  get color () {
+    return this._color;
+  }
+
+  get colorHex (): string {
+    return Util.rgbToHex(...this._color);
   }
 
   get vehicleColors () {

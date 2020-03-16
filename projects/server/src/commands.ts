@@ -59,7 +59,7 @@ Server.addCommand('setspawnzone', (client: Client, zoneSlug: string) => {
 })
 
 Server.addCommand('weapon', (client: Client, modelName: string, ammo?: number) => {
-	client.giveWeapon(modelName, ammo || 10000)
+	client.giveWeapon('weapon_' + modelName, ammo || 10000)
 });
 
 Server.addCommand('zonelabel', (client: Client, zoneSlug: string, text: string) => {

@@ -37,4 +37,11 @@ export default class Util {
 
     return args
   }
+
+  public static rgbToHex (r: number, g: number, b: number): string {
+    return '#' + [r, g, b].map(x => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    }).join('');
+  }
 }

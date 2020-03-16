@@ -25,6 +25,13 @@ namespace Types {
     Monospace,
     CharletComprimeColonge
   }
+
+  export enum Seat {
+    DRIVER,
+    PASSENGER1,
+    PASSENGER2,
+    PASSENGER3
+  }
 }
 
 export default Types

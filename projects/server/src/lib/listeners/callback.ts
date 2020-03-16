@@ -31,41 +31,51 @@ export default class Callback extends List<Listener<any>> {
     mp.events.add(event, (...args: any[]) => {
       this.subscribers.forEach((subscriber: Listener<any>) => {
         if (!subscriberCheckCb(subscriber)) {
-          return true
+          return true;
         }
 
-        let params = Util.convertRageMPInstances(...args)
-        if (stripFirstParameter) {
-          params.shift() // Strip first argument
+        let params = Util.convertRageMPInstances(...args);
+
+        if (subscriberCheckCb === Listeners.isClientListener) {
+          if (params[0] instanceof Client && params[0] != subscriber) {
+            return true;
+          }
+
+          params.shift(); // Strip first argument
         }
 
         // Prepend issueing subscriber to parameters
-        params.unshift(subscriber)
-        callback(...params)
-      })
-    })
+        params.unshift(subscriber);
+        callback(...params);
+      });
+    });
   }
 
   private init (): void {
     mp.events.add('playerJoin', (player: PlayerMp) => {
-      new Client(player)
-    })
+      new Client(player);
+    });
 
     mp.events.add('playerQuit', (player: PlayerMp) => {
-      Client.all.removeByPlayerMp(player)
-    })
+      Client.all.removeByPlayerMp(player);
+    });
   }
 
   private register (): void {
     this.addEvent('playerReady', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener) => {
-      subscriber.onClientReady()
-    })
+      subscriber.onClientReady();
+    });
 
     this.addEvent('playerDeath', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener, reason: number, killer: Client) => {
-      subscriber.onClientDeath(reason, killer)
-    })
+      subscriber.onClientDeath(reason, killer);
+    });
+
+    this.addEvent("playerChat", Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, text: string) => {
+      subscriber.onClientChat(text);
+    });
 
     this.addEvent('playerEnterColshape', Listeners.isZoneListener,
                   (zone: Zone, client: Client, colshape: ColshapeMp) => {

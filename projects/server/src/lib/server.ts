@@ -75,6 +75,11 @@ class Server implements Listeners.TickListener {
   }
 
 
+  public static sendMessage (...args: any[]): void {
+    Client.all.sendMessage(...args);
+  }
+
+
   /**
    * Broadcasts a message to console and players
    *
@@ -82,7 +87,7 @@ class Server implements Listeners.TickListener {
    */
   public static broadcast (...args: any[]): void {
     Server.log(...args);
-    Client.all.sendMessage(...args);
+    Server.sendMessage(...args);
   }
 
 

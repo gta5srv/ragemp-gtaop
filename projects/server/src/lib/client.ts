@@ -1,3 +1,4 @@
+import Util from '@core/util';
 import Types from '@core/types';
 import Team from '@lib/team'
 import Vehicle from '@lib/vehicle'
@@ -132,8 +133,8 @@ export default class Client implements Listeners.ClientListener {
     this._player.health = 0;
   }
 
-  putInVehicle(v: Vehicle) {
-    this._player.putIntoVehicle(v.vehicleMp, -1)
+  putInVehicle(v: Vehicle, seat: Types.Seat = Types.Seat.DRIVER) {
+    this._player.putIntoVehicle(v.vehicleMp, seat);
   }
 
   giveWeapon(weaponName: HashOrString, ammo: number): void {
@@ -145,10 +146,13 @@ export default class Client implements Listeners.ClientListener {
     this._player.call('loadInteriorProps', [ worldLocation.position, worldLocation.interiorProps ])
   }
 
+  onClientChat(message: string): void {
+  }
+
   onClientCreateWaypoint(x: number, y: number): void {
     Server.heightMap.getZ(x, y, (z: number) => {
       this.position = new mp.Vector3(x, y, z + 0.5);
-    })
+    });
   }
 
   onClientDeath(_reason: number, _killer: Client): void {

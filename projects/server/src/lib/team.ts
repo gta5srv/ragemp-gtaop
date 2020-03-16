@@ -3,20 +3,21 @@ import List from '@core/list'
 import Util from '@core/util';
 import Client from '@lib/client'
 import Vehicle from '@lib/vehicle'
+import Blip from '@lib/blip';
 import * as Manager from '@lib/managers'
 
 export class Team {
   private _name: string;
   private _slug: string;
   private _base: Vector3Mp;
-  private _blipColor: number;
   private _color: RGB;
   private _vehicleColors: [RGB, RGB];
   private _gtaColor: string = Team.DEFAULT_GTA_COLOR;
   private _models: Array<string>;
   private _spawns: Array<any>; // TODO: Adjust type
   private _vehicles: Team.VehicleGroupManager;
-  private _blip: BlipMp | null = null;
+  private _blip: Blip;
+  private _blipColor: number;
   private _label: TextLabelMp | null = null;
   private _checkpoint: MarkerMp | null = null;
 
@@ -36,12 +37,14 @@ export class Team {
     this._name = name;
     this._slug = slug;
     this._base = base;
-    this._blipColor = blipColor;
     this._color = color;
     this._vehicleColors = vehicleColors;
     this._models = models;
     this._spawns = spawns;
     this._vehicles = vehicles;
+
+    this._blip = new Blip(40, this._base, this._name + ' base', blipColor);
+    this._blipColor = blipColor;
 
     this._init();
 
@@ -56,12 +59,16 @@ export class Team {
     return this._slug;
   }
 
-  get blipColor () {
-    return this._blipColor;
-  }
-
   get color () {
     return this._color;
+  }
+
+  get blip () {
+    return this._blip;
+  }
+
+  get blipColor () {
+    return this._blipColor;
   }
 
   get colorHex (): string {
@@ -82,11 +89,6 @@ export class Team {
 
   _init (): void {
     // TODO: Implement proper classes
-    this._blip = mp.blips.new(40, this._base, {
-      name: this._name + ' base',
-      color: this._blipColor
-    })
-
     this._label = mp.labels.new(
       `${this._name.toUpperCase()} base menu`,
       new mp.Vector3(this._base.x, this._base.y, this._base.z + 0.6), {

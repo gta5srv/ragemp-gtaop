@@ -2,18 +2,19 @@ import Types from '@core/types';
 import Server from '@lib/server'
 import Marker from '@lib/marker'
 import Team from '@lib/team'
+import Vehicle from '@lib/vehicle';
+import Blip from '@lib/blip';
 import Client from '@lib/client'
 import Spawnable from '@lib/interfaces/spawnable'
 import * as Manager from '@lib/managers'
 import * as Listeners from '@lib/listeners'
-import Vehicle from './vehicle';
 
 export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners.TickListener {
   private _name: string;
   private _slug: string;
   private _position: Vector3Mp;
   private _radius: number;
-  private _blip: BlipMp;
+  private _blip: Blip;
   private _marker: MarkerMp;
   private _colshape: ColshapeMp;
   private _label: TextLabelMp
@@ -30,12 +31,11 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
 
   public static readonly DEFAULT_RADIUS: number = 5;
   public static readonly DEFAULT_BLIP_MODEL: number = 38;
-  public static readonly DEFAULT_BLIP_COLOR: number = 4;
   public static readonly DEFAULT_MARKER_COLOR: RGB = [ 255, 255, 255 ];
   public static readonly DEFAULT_VEHICLE_COLORS: [RGB, RGB] = [[ 255, 255, 255 ], [ 255, 255, 255 ]];
 
   public static readonly PROGRESS_PER_SECOND: number = 1/15; // 15 seconds till complete
-  public static readonly TICK_LIMIT: number = 10;
+  public static readonly TICK_LIMIT: number = 1;
   public static readonly COLSHAPE_RADIUS_MULTIPLIER: number = 0.65; // TODO: Improve logic
   public static readonly MARKER_OPACITY: number = 60;
 
@@ -56,10 +56,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     this._position = position;
     this._radius = radius;
 
-    this._blip = mp.blips.new(blipModel, position, {
-      name: name,
-      color: Zone.DEFAULT_BLIP_COLOR
-    });
+    this._blip = new Blip(blipModel, position, name);
 
     this._marker = mp.markers.new(Marker.Type.VerticalCylinder, position, radius);
 
@@ -179,7 +176,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     }
 
     if (newState === Zone.State.NEUTRAL) {
-      this._blip.color = Zone.DEFAULT_BLIP_COLOR;
+      this._blip.color = Blip.DEFAULT_BLIP_COLOR;
 
       this._marker.setColor(
         Zone.DEFAULT_MARKER_COLOR[0],
@@ -287,35 +284,40 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
       } else { // One team has most zone presence
         Server.broadcast(this._slug, `Team ${teamPresences[0].team.name} has the most presence`);
 
+        if (this._progressingTeam !== teamPresences[0].team) {
+          this._progressingTeam = teamPresences[0].team; // NEW
+          Server.sendMessage(`!{#ff0000}Progressing team is now ${this._progressingTeam}`.toUpperCase());
+        }
+
         // Was being neutralized
         if (this._state === Zone.State.NEUTRALIZING) {
           Server.broadcast(this._slug, `Was being neutralized`);
 
           // Most present team wasn't neutralizing before
-          if (this._progressingTeam !== teamPresences[0].team) {
+          //if (this._progressingTeam !== teamPresences[0].team) {
             Server.broadcast(this._slug, `Most present team wasn't neutralizing before`);
-            this._progressingTeam = teamPresences[0].team; // NEW
-            Server.sendMessage(`!{#ff0000}Progressing team is now ${this._progressingTeam}`);
+            //this._progressingTeam = teamPresences[0].team; // NEW
+
 
             // Owner wants to prevent neutralizing
             if (this._owner === teamPresences[0].team) {
               Server.broadcast(this._slug, `Most present team is owner, will therefore reverse progression`);
               reverseProgress = true;
             }
-          }
+        //  }
         }
 
         if (this._state === Zone.State.OWNED && this._owner != teamPresences[0].team) {
           Server.broadcast(this._slug, `Zone is owned by ${this._owner} and will be neutralized by ${teamPresences[0].team.name} now`);
 
-          this._progressingTeam = teamPresences[0].team;
+          //this._progressingTeam = teamPresences[0].team;
           potentialState = Zone.State.NEUTRALIZING;
         }
 
         if (this._state === Zone.State.NEUTRAL) {
           Server.broadcast(this._slug, `Zone is neutral and will be captured by ${teamPresences[0].team.name} now`);
 
-          this._progressingTeam = teamPresences[0].team;
+          //this._progressingTeam = teamPresences[0].team;
           potentialState = Zone.State.CAPTURING;
         }
       }

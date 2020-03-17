@@ -90,6 +90,9 @@ function build (project) {
       buildSignale.success(`Successfully built! (${secondsElapsed}s)`)
       return
     }
+	
+	console.log(chalk.red('ERROR'), errorLog)
+	console.log(chalk.red('EXCEPTION'), exceptionLog)
 
     // Unsuccessfull exit code
     buildSignale.fatal(

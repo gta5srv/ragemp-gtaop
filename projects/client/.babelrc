@@ -9,8 +9,7 @@
       "alias": {
         "@lib": "./lib",
         "@core": "./lib/core",
-        "@config": "./config",
-        "@assets": "./assets"
+        "@root": "./"
       }
     }],
     "@babel/plugin-proposal-class-properties",

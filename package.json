@@ -14,11 +14,13 @@
     "@babel/preset-typescript": "^7.8.3",
     "@types/gulp": "^4.0.6",
     "@types/node": "^13.9.0",
-    "@types/ragemp-c": "github:CocaColaBear/types-ragemp-c#master",
-    "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#master",
+    "@types/ragemp-c": "github:CocaColaBear/types-ragemp-c#v1.0",
+    "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#v1.0",
     "@types/yargs": "^15.0.4",
     "ascii-box": "^1.1.2",
     "babel-plugin-module-resolver": "^4.0.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.0",
     "chalk": "^3.0.0",
     "cross-env": "^7.0.2",
     "del": "^5.1.0",
@@ -37,7 +39,9 @@
     "signale": "^1.4.0",
     "strftime": "^0.10.0",
     "strip-ansi": "^6.0.0",
+    "tsify": "^4.0.1",
     "typescript": "^3.8.3",
+    "vinyl-source-stream": "^2.0.0",
     "yargs": "^15.3.0"
   }
 }

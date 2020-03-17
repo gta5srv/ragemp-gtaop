@@ -4,6 +4,9 @@ const babel = require('gulp-babel')
 const del = require('del')
 const path = require('path')
 const newer = require('gulp-newer')
+const browserify = require("browserify");
+const source = require("vinyl-source-stream");
+const tsify = require("tsify");
 
 
 if (!process.env.PROJECT_ROOT) {
@@ -25,11 +28,20 @@ function clean (cb) {
 
 function typeScript () {
   const tsProject = ts.createProject('tsconfig.json')
+  const tsConfig = require('./tsconfig.json');
 
-  return gulp.src('**/*.ts', { cwd: 'src' })
-    .pipe(tsProject())
-    .js
-    .pipe(babel())
+  return browserify('./src/index.ts', {
+      basedir: "./",
+      debug: true,
+      cache: {},
+      packageCache: {}
+    })
+    .plugin(tsify, tsConfig.compilerOptions)
+    .transform("babelify", {
+       extensions: [".ts"]
+     })
+    .bundle()
+    .pipe(source("index.js"))
     .pipe(gulp.dest('build/client', { cwd: PROJECT_ROOT }))
 }
 

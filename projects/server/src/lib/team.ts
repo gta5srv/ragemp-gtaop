@@ -15,7 +15,8 @@ export class Team {
   private _gtaColor: string = Team.DEFAULT_GTA_COLOR;
   private _models: Array<string>;
   private _spawns: Array<any>; // TODO: Adjust type
-  private _vehicles: Team.VehicleGroupManager;
+  private _vehicles: Manager.Vehicle = new Manager.Vehicle();
+  private _vehicleGroups: Team.VehicleGroupManager;
   private _blip: Blip;
   private _blipColor: number;
   private _label: TextLabelMp | null = null;
@@ -41,7 +42,7 @@ export class Team {
     this._vehicleColors = vehicleColors;
     this._models = models;
     this._spawns = spawns;
-    this._vehicles = vehicles;
+    this._vehicleGroups = vehicles;
 
     this._blip = new Blip(40, this._base, this._name + ' base', blipColor);
     this._blipColor = blipColor;
@@ -87,6 +88,10 @@ export class Team {
     this._gtaColor = gtaColor;
   }
 
+  get vehicles () {
+    return this._vehicles;
+  }
+
   _init (): void {
     // TODO: Implement proper classes
     this._label = mp.labels.new(
@@ -106,9 +111,17 @@ export class Team {
     })
     this._checkpoint.visible = true
 
-    this._vehicles.items.forEach((vehicleGroup: Team.VehicleGroup) => {
+    this._vehicleGroups.items.forEach((vehicleGroup: Team.VehicleGroup) => {
       vehicleGroup.spawns.forEach((spawn: Types.Location) => {
-        new Vehicle(vehicleGroup.model, spawn.position, spawn.rotation, this._vehicleColors, this._name.toUpperCase())
+        const vehicle = new Vehicle(
+          vehicleGroup.model,
+          spawn.position,
+          spawn.rotation,
+          this._vehicleColors,
+          this._name.toUpperCase()
+        );
+
+        this._vehicles.add(vehicle);
       })
     })
   }
@@ -125,6 +138,15 @@ export class Team {
 
   toString (): string {
     return `(Team "${this.name}" <${this.slug}>)`
+  }
+
+  toJSON () {
+    return {
+      slug: this.slug,
+      name: this.name,
+      blipColor: this.blipColor,
+      vehicleIds: this.vehicles.idArray()
+    }
   }
 }
 

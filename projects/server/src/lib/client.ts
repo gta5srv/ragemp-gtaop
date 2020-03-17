@@ -8,8 +8,9 @@ import * as Manager from '@lib/managers'
 import * as Listeners from '@lib/listeners'
 import Zone from '@lib/zone';
 
-export default class Client implements Listeners.ClientListener {
-  public _player: PlayerMp
+export default class Client implements EntityAdapter, Listeners.ClientListener, Listeners.VehicleListener {
+  public readonly mp: PlayerMp;
+
   private _team?: Team
   private _respawnTimer: any
   private _currentZone: Zone|null = null
@@ -18,35 +19,31 @@ export default class Client implements Listeners.ClientListener {
   public static all: Manager.Client = new Manager.Client()
 
   constructor (player: PlayerMp) {
-    this._player = player
+    this.mp = player
     this._respawnTimer = null
 
     Client.all.add(this)
     Server.listeners.add(this)
   }
 
-  get player () {
-    return this._player
-  }
-
   get position () {
-    return this._player.position
+    return this.mp.position
   }
 
   set position (position) {
-    this._player.position = position
+    this.mp.position = position
   }
 
   get heading () {
-    return this._player.heading
+    return this.mp.heading
   }
 
   set heading (heading) {
-    this._player.heading = heading
+    this.mp.heading = heading
   }
 
   get vehicle (): Vehicle | null {
-    return this._player.vehicle ? Vehicle.all.byVehicleMp(this._player.vehicle) : null
+    return this.mp.vehicle ? Vehicle.all.byVehicleMp(this.mp.vehicle) : null
   }
 
   get team () {
@@ -62,15 +59,15 @@ export default class Client implements Listeners.ClientListener {
   }
 
   get model () {
-    return this._player.model
+    return this.mp.model
   }
 
   set model (model) {
-    this._player.model = model
+    this.mp.model = model
   }
 
   get name () {
-    return this._player.name
+    return this.mp.name
   }
 
   get currentZone () {
@@ -98,7 +95,7 @@ export default class Client implements Listeners.ClientListener {
     let texts = [...args];
     let textsPutTogether = texts.map(text => String(text)).join(' ');
 
-    this._player.outputChatBox(textsPutTogether);
+    this.mp.outputChatBox(textsPutTogether);
   }
 
   spawn (timeMs?: number): void {
@@ -121,29 +118,33 @@ export default class Client implements Listeners.ClientListener {
     }
 
     if (this._team === undefined) {
-      this._player.spawn(new mp.Vector3(1408.315673828125, 3099.702880859375, 52.74652099609375));
+      this.mp.spawn(new mp.Vector3(1408.315673828125, 3099.702880859375, 52.74652099609375));
       return;
     }
 
-    this._player.spawn(this._team.getSpawn())
-    this._player.giveWeapon(mp.joaat('weapon_compactlauncher'), 50);
+    this.mp.spawn(this._team.getSpawn())
+    this.mp.giveWeapon(mp.joaat('weapon_compactlauncher'), 50);
   }
 
   kill (): void {
-    this._player.health = 0;
+    this.mp.health = 0;
+  }
+
+  call (eventName: string, ...args: any[]) {
+    this.mp.call(eventName, args);
   }
 
   putInVehicle(v: Vehicle, seat: Types.Seat = Types.Seat.DRIVER) {
-    this._player.putIntoVehicle(v.vehicleMp, seat);
+    this.mp.putIntoVehicle(v.vehicleMp, seat);
   }
 
   giveWeapon(weaponName: HashOrString, ammo: number): void {
     const weaponHash = mp.joaat(String(weaponName))
-    this._player.giveWeapon(weaponHash, ammo)
+    this.mp.giveWeapon(weaponHash, ammo)
   }
 
   loadWorldLocation(worldLocation: WorldLocation) {
-    this._player.call('loadInteriorProps', [ worldLocation.position, worldLocation.interiorProps ])
+    this.call('loadInteriorProps', worldLocation.position, worldLocation.interiorProps);
   }
 
   onClientChat(message: string): void {
@@ -170,9 +171,22 @@ export default class Client implements Listeners.ClientListener {
 
   onClientReady(): void {
     WorldLocations.all.forEach((worldLocation: WorldLocation) => {
-      this.loadWorldLocation(worldLocation)
-    })
+      this.loadWorldLocation(worldLocation);
+    });
+
+    this.call('vehiclesAdded', JSON.stringify(Vehicle.all));
+    this.call('teamsAdd', JSON.stringify(Team.all));
+    this.call('zonesAdd', JSON.stringify(Zone.all));
 
     this.spawn()
+  }
+
+  onVehicleDeath(vehicle: Vehicle): void {
+    console.log('VEHICLE DEATH', vehicle.mp.model);
+  }
+
+  onVehicleAdd(vehicle: Vehicle): void {
+    console.log('VEHICLE ADDED');
+    this.call('vehiclesAdded', JSON.stringify([ vehicle ]));
   }
 }

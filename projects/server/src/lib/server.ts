@@ -8,7 +8,8 @@ import Interval from '@lib/algebra/interval';
 import Rectangle from '@lib/algebra/rectangle';
 import Random from '@lib/algebra/random';
 import * as Listeners from '@lib/listeners';
-import { WorldLocations } from './world-locations';
+import { WorldLocations } from '@lib/world-locations';
+import BlipStreamer from '@lib//streamers/blip-streamer';
 
 
 /**
@@ -19,7 +20,8 @@ class Server implements Listeners.TickListener {
   private static msSinceTimeIncrease: number = 0;
 
   public static heightMap: HeightMap;
-  public static listeners: Listeners.Callback = new Listeners.Callback();
+  private static blipStreamer: BlipStreamer;
+  public static readonly listeners: Listeners.Callback = new Listeners.Callback();
 
   static get instance () {
     if (!Server._instance) {
@@ -32,6 +34,7 @@ class Server implements Listeners.TickListener {
   constructor () {
     Server.listeners.add(this);
     Server.Time.randomize();
+    Server.blipStreamer = new BlipStreamer();
     WorldLocations.load();
 
     Server.log(`Started (Ingame time: ${Server.Time})`);
@@ -87,7 +90,7 @@ class Server implements Listeners.TickListener {
    */
   public static broadcast (...args: any[]): void {
     Server.log(...args);
-    Server.sendMessage(...args);
+    //Server.sendMessage(...args);
   }
 
 

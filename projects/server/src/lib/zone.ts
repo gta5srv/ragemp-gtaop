@@ -14,7 +14,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   private _slug: string;
   private _position: Vector3Mp;
   private _radius: number;
-  private _blip: Blip;
+  // private _blip: Blip;
   private _marker: MarkerMp;
   private _colshape: ColshapeMp;
   private _label: TextLabelMp
@@ -30,7 +30,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   private _savedState: Zone.State;
 
   public static readonly DEFAULT_RADIUS: number = 5;
-  public static readonly DEFAULT_BLIP_MODEL: number = 38;
+  // public static readonly DEFAULT_BLIP_MODEL: number = 38;
   public static readonly DEFAULT_MARKER_COLOR: RGB = [ 255, 255, 255 ];
   public static readonly DEFAULT_VEHICLE_COLORS: [RGB, RGB] = [[ 255, 255, 255 ], [ 255, 255, 255 ]];
 
@@ -46,8 +46,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   constructor (name: string, slug: string,
                position: Vector3Mp, spawns: Types.Location[] = [],
                group?: string,
-               radius: number = Zone.DEFAULT_RADIUS,
-               blipModel: number = Zone.DEFAULT_BLIP_MODEL) {
+               radius: number = Zone.DEFAULT_RADIUS) {
     super();
     super.spawns = spawns;
 
@@ -56,7 +55,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     this._position = position;
     this._radius = radius;
 
-    this._blip = new Blip(blipModel, position, name);
+    // this._blip = new Blip(blipModel, position, name);
 
     this._marker = mp.markers.new(Marker.Type.VerticalCylinder, position, radius);
 
@@ -96,8 +95,8 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     return this._radius;
   }
 
-  get blip () {
-    return this._blip;
+  get owner () {
+    return this._owner;
   }
 
   get marker () {
@@ -109,7 +108,11 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   }
 
   get label () {
-    return this._label
+    return this._label;
+  }
+
+  get state () {
+    return this._state;
   }
 
   public onZoneEnter(client: Client): void {
@@ -167,7 +170,9 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   }
 
   public OnStateChange(oldState: Zone.State|null, newState: Zone.State): void {
-    Server.broadcast(`State changed from ${oldState ? Zone.State[oldState] : 'none'} to ${Zone.State[newState]}`);
+    if (oldState !== null) {
+      Server.broadcast(`State changed from ${oldState ? Zone.State[oldState] : 'none'} to ${Zone.State[newState]}`);
+    }
 
     if (newState === Zone.State.NEUTRAL || newState === Zone.State.OWNED) {
       this.label.text = '';
@@ -176,7 +181,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     }
 
     if (newState === Zone.State.NEUTRAL) {
-      this._blip.color = Blip.DEFAULT_BLIP_COLOR;
+      // this._blip.color = Blip.DEFAULT_BLIP_COLOR;
 
       this._marker.setColor(
         Zone.DEFAULT_MARKER_COLOR[0],
@@ -193,7 +198,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     if (newState === Zone.State.OWNED && this._owner != null) {
       const owner: Team = this._owner
 
-      this._blip.color = owner.blipColor;
+      // this._blip.color = owner.blipColor;
 
       this._marker.setColor(
         owner.color[0],
@@ -206,6 +211,10 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
         vehicle.colors = owner.vehicleColors
       });
     }
+
+    Client.all.items.forEach((client: Client) => {
+      client.call('zoneUpdate', JSON.stringify(this.zoneUpdateObject()));
+    });
   }
 
   getTeamPresences (): Zone.TeamPresence[] {
@@ -270,7 +279,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     let reverseProgress: boolean = false;
     let paused: boolean = false;
 
-    this.clientsInside.sendMessage(String(teamPresences));
+    //this.clientsInside.sendMessage(String(teamPresences));
 
     // Teams are present
     if (teamPresences.length) {
@@ -286,7 +295,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
 
         if (this._progressingTeam !== teamPresences[0].team) {
           this._progressingTeam = teamPresences[0].team; // NEW
-          Server.sendMessage(`!{#ff0000}Progressing team is now ${this._progressingTeam}`.toUpperCase());
+          Server.broadcast(`!{#ff0000}Progressing team is now ${this._progressingTeam}`.toUpperCase());
         }
 
         // Was being neutralized
@@ -394,10 +403,29 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
 
     if (this._state !== potentialState) {
       // State is going to change
-      const oldState = this._state
-      this._state = potentialState
-      this.OnStateChange(oldState, potentialState)
+      const oldState = this._state;
+      this._state = potentialState;
+      this.OnStateChange(oldState, potentialState);
     }
+  }
+
+  private zoneUpdateObject (): any {
+    return {
+      slug: this.slug,
+      state: this.state,
+      owner: this.owner ? this.owner.slug : null
+    };
+  }
+
+  public toJSON () {
+    return {
+      slug: this.slug,
+      name: this.name,
+      position: this.position,
+      state: this.state,
+      owner: this.owner ? this.owner.slug : null,
+      vehicleIds: this.vehicles.idArray()
+    };
   }
 }
 

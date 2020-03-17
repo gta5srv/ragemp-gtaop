@@ -1,67 +1,80 @@
-import * as Manager from '@lib/managers'
+import * as Manager from '@lib/managers';
+import Server from '@lib/server';
+import Blip from '@lib/blip';
 
-export default class Vehicle {
-  private _vehicleMp: VehicleMp
+export default class Vehicle implements EntityAdapter {
+  public readonly mp: VehicleMp;
   private _colors: any
+  // private _blip: Blip
 
   public static all: Manager.Vehicle = new Manager.Vehicle()
 
   constructor (model: HashOrString,
                position: Vector3Mp, rotation: Vector3Mp | null = null,
                colors?: [RGB,RGB], numberPlate?: string) {
-    this._vehicleMp = mp.vehicles.new(model, position, {})
+    this.mp = mp.vehicles.new(model, position, {});
 
     if (rotation) {
-      this._vehicleMp.rotation = rotation
+      this.mp.rotation = rotation;
     }
 
     if (colors) {
-      this.colors = colors
+      this.colors = colors;
     }
 
     if (numberPlate) {
-      this._vehicleMp.numberPlate = numberPlate
+      this.mp.numberPlate = numberPlate;
     }
 
-    Vehicle.all.add(this)
+    // this._blip = new Blip(225, new mp.Vector3(0, 0, 0));
+    // this._blip.attachedTo = this;
+
+    Vehicle.all.add(this);
+    Server.listeners.triggerVehicleAdded(this);
   }
 
   get vehicleMp () {
-    return this._vehicleMp
+    return this.mp;
   }
 
   get colors () {
-    return this._colors
+    return this._colors;
   }
 
   set colors (colors) {
-    this._colors = colors
+    this._colors = colors;
 
-    const colorsArray: any = [].concat(...colors)
-    this._vehicleMp.setColorRGB.apply(this._vehicleMp, colorsArray)
+    const colorsArray: any = [].concat(...colors);
+    this.mp.setColorRGB.apply(this.mp, colorsArray);
   }
 
   get rotation (): Vector3Mp {
-    const { x, y, z } = this._vehicleMp.rotation
-    const rx = (360 - z) / 180 * Math.PI
-    const ry = z / 180 * Math.PI
+    const { x, y, z } = this.mp.rotation;
+    const rx = (360 - z) / 180 * Math.PI;
+    const ry = z / 180 * Math.PI;
 
     return new mp.Vector3(
         x * -Math.cos(rx) + y * Math.sin(rx),
         y * -Math.cos(ry) + x * Math.sin(ry),
         z
-    )
+    );
   }
 
   set rotation (rotation: Vector3Mp) {
-    this._vehicleMp.rotation = rotation
+    this.mp.rotation = rotation;
   }
 
   set position (position: Vector3Mp) {
-    this._vehicleMp.position = position
+    this.mp.position = position;
   }
 
   get position () {
-    return this._vehicleMp.position
+    return this.mp.position;
+  }
+
+  toJSON () {
+    return {
+      id: this.mp.id
+    };
   }
 }

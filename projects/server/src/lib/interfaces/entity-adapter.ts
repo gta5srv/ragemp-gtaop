@@ -1,0 +1,3 @@
+interface EntityAdapter {
+  mp: EntityMp
+}

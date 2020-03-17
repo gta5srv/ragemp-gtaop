@@ -2,11 +2,11 @@ import List from '@core/list'
 import Client from '@lib/client'
 
 export class ClientManager extends List<Client> {
-   byPlayerMp (player: PlayerMp): Client | null {
+   public byPlayerMp (player: PlayerMp): Client | null {
      let foundClient = null
 
      super.items.forEach((client: Client) => {
-       if (client.player == player) {
+       if (client.mp == player) {
          foundClient = client
        }
      })
@@ -14,7 +14,7 @@ export class ClientManager extends List<Client> {
      return foundClient
    }
 
-   removeByPlayerMp (player: PlayerMp): void {
+   public removeByPlayerMp (player: PlayerMp): void {
      const client = this.byPlayerMp(player)
 
      if (client) {
@@ -22,9 +22,13 @@ export class ClientManager extends List<Client> {
      }
    }
 
-   sendMessage (...args: any[]) {
+   public sendMessage (...args: any[]): void {
      super.items.forEach((client: Client) => {
        client.sendMessage(...args)
      })
+   }
+
+   public call (eventName: string, args: any[]) {
+     super.items.forEach((client: Client) => client.call(eventName, args));
    }
 }

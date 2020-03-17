@@ -5,7 +5,8 @@ import Loop from '@core/loop';
 import List from '@core/list'
 import Util from '@core/util'
 import Client from '@lib/client'
-import Zone from '../zone';
+import Zone from '@lib/zone';
+import Vehicle from '@lib/vehicle';
 
 export default class Callback extends List<Listener<any>> {
   private _loop: Loop = new Loop(Config.TICK_RATE, this.tick, this)
@@ -82,27 +83,40 @@ export default class Callback extends List<Listener<any>> {
       if (zone.colshape === colshape) {
         zone.onZoneEnter(client);
       }
-    }, false);
+    });
 
     this.addEvent('playerExitColshape', Listeners.isZoneListener,
                   (zone: Zone, client: Client, colshape: ColshapeMp) => {
       if (zone.colshape === colshape) {
         zone.onZoneExit(client);
       }
-    }, false);
+    });
 
     this.addEvent('playerCreateWaypoint', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener, position: string) => {
-      let coords = JSON.parse(position)
-      subscriber.onClientCreateWaypoint(coords.x, coords.y)
-    })
+      let coords = JSON.parse(position);
+      subscriber.onClientCreateWaypoint(coords.x, coords.y);
+    });
+
+    this.addEvent('vehicleDeath', Listeners.isVehicleListener,
+                  (subscriber: Listeners.VehicleListener, vehicle: Vehicle) => {
+      subscriber.onVehicleDeath(vehicle);
+    });
+  }
+
+  public triggerVehicleAdded (vehicle: Vehicle): void {
+    this.subscribers.forEach((subscriber: Listener<any>) => {
+      if (Listeners.isVehicleListener(subscriber)) {
+        subscriber.onVehicleAdd(vehicle);
+      }
+    });
   }
 
   public tick (msElapsed: number): void {
     this.subscribers.forEach((subscriber: Listener<any>) => {
       if (Listeners.isTickListener(subscriber)) {
-        subscriber.onTick(msElapsed)
+        subscriber.onTick(msElapsed);
       }
-    })
+    });
   }
 }

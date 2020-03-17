@@ -15,8 +15,7 @@
 		"paths": {
 			"@lib/*": ["lib/*"],
 			"@core/*": ["lib/core/*"],
-			"@config/*": ["config/*"],
-			"@assets/*": ["assets/*"]
+			"@root/*": ["./*"]
 		},
 		"module": "commonjs",
 		"resolveJsonModule": true,

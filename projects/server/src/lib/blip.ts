@@ -6,9 +6,6 @@ export default class Blip {
   private _position: Vector3Mp;
   private _name?: string;
   private _color: number;
-  private _flashing: boolean = false;
-  private _flashingColor?: number;
-  private _flashingSprite?: number;
   private _range: number = Blip.DEFAULT_RANGE;
   private _attachedTo?: EntityAdapter;
 
@@ -60,22 +57,6 @@ export default class Blip {
     this._color = color;
   }
 
-  get flashing () {
-    return this._flashing;
-  }
-
-  set flashing (flashing) {
-    this._flashing = flashing;
-  }
-
-  get flashingSprite () {
-    return this._flashingSprite;
-  }
-
-  set flashingSprite (flashingSprite) {
-    this._flashingSprite = flashingSprite;
-  }
-
   get range () {
     return this._range;
   }
@@ -98,10 +79,7 @@ export default class Blip {
       position: this._position,
       name: this._name,
       color: this._color,
-      attachedEntityId: this._attachedTo ? this._attachedTo.mp.id : undefined,
-      flashing: this._flashing,
-      flashingColor: this._flashingColor,
-      flashingSprite: this._flashingSprite
+      attachedEntityId: this._attachedTo ? this._attachedTo.mp.id : undefined
     }
   }
 }

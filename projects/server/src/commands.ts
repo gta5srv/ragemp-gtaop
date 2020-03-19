@@ -92,6 +92,31 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 
 	// Two parameters given
 	if (params.length === 2) {
+		if (params[0] === 'base') {
+			if (typeof params[1] === 'string') {
+				const teamSlug = params[1];
+				const team = Team.all.bySlug(teamSlug);
+
+				if (!team) {
+					client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Team slug !{#ffff00}"${teamSlug}"!{#ffffff} couldn't be found...`)
+					return
+				}
+
+				client.position = team.getSpawn();
+
+				client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Teleported to team !{#ffff00}"${team.name}"!{#ffffff} base.`);
+				return;
+			}
+
+			if (!client.team) {
+				client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}You don't have a team yet, so your base couldn't be detected.`);
+				return
+			}
+
+			client.position = client.team.getSpawn();
+			return;
+		}
+
 		// Is location
 		if (params[0] === 'location' && typeof params[1] === 'string') {
 			const locationName = params[1]
@@ -191,6 +216,14 @@ Server.addCommand('kill', (client: Client) => {
 	client.kill()
 })
 
+Server.addCommand('help', (client: Client) => {
+	client.sendMessage(`!{#ffff00}Teleport: !{#ffffff}/tp`);
+	client.sendMessage(`!{#ffff00}Set team: !{#ffffff}/setteam`);
+	client.sendMessage(`!{#ffff00}Spawn vehicle: !{#ffffff}/v`);
+	client.sendMessage(`!{#ffff00}Set spawn zone: !{#ffffff}/setspawnzone`);
+	client.sendMessage(`!{#ffff00}Give weapon: !{#ffffff}/weapon`);
+	client.sendMessage(`!{#ffff00}Save position to file: !{#ffffff}/savepos`);
+});
 Server.addCommand('setteam', (client: Client, teamSlug: string) => {
 	const team = Team.all.bySlug(teamSlug)
 

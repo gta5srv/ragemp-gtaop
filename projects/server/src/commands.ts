@@ -30,11 +30,17 @@ Server.addCommand('savepos', (client: Client, description: string) => {
 })
 
 Server.addCommand('v', (client: Client, modelName: string) => {
+	if (!modelName || typeof modelName !== 'string') {
+		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/v !{#dddddd}[vehicle_model]`);
+		return;
+	}
+
 	let clientPosition = client.position
 	clientPosition.z += 1
 
 	let newVehicle = new Vehicle(modelName, clientPosition, null)
 	client.putInVehicle(newVehicle)
+	client.sendMessage(`!{#00ff00}[VEHICLE] !{#ffffff}Successfully spawned !{#ffff00}"${modelName}"!{#ffffff}.`)
 })
 
 Server.addCommand('setspawnzone', (client: Client, zoneSlug: string) => {
@@ -59,36 +65,23 @@ Server.addCommand('setspawnzone', (client: Client, zoneSlug: string) => {
 })
 
 Server.addCommand('weapon', (client: Client, modelName: string, ammo?: number) => {
-	client.giveWeapon('weapon_' + modelName, ammo || 10000)
-});
-
-Server.addCommand('zonelabel', (client: Client, zoneSlug: string, text: string) => {
-
-	if (!(zoneSlug && text)) {
-		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/zonelabel !{#dddddd}[zone_slug] [text]`);
+	if (!modelName || typeof modelName !== 'string') {
+		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/weapon !{#dddddd}[weapon_model]`);
 		return;
 	}
 
-	Server.broadcast('zonelabel', 'slug', typeof zoneSlug, 'text', typeof text)
-	const zone = Zone.all.bySlug(zoneSlug);
-
-	if (zone) {
-		zone.label.text = text
-		client.sendMessage(`!{#00ff00}[ZONE LABEL] !{#ffffff}Text for zone !{#ffff00}"${zone.name}"!{#ffffff}'s label was set to "${text}".`);
-	} else {
-		client.sendMessage(`!{#ff0000}[ZONE LABEL] !{#ffffff}Zone !{#ffff00}"${zoneSlug}"!{#ffffff} couldn't be found...`);
-	}
-})
+	client.giveWeapon(modelName, ammo || 10000)
+});
 
 Server.addCommand('tp', (client: Client, ...args: string[]) => {
 	// Prepare given arguments as suitable array
-	let params: any[] = [...args]
+	let params: any[] = [...args];
 	// Remove first argument (which only contains all latter ones)
-	params.shift()
+	params.shift();
 	// Convert numeric values to floats
 	params = params.map((param: string): number|string => {
-		return Util.isNumeric(param) ? parseFloat(param) : param
-	})
+		return Util.isNumeric(param) ? parseFloat(param) : param;
+	});
 
 	// Two parameters given
 	if (params.length === 2) {
@@ -119,14 +112,14 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 
 		// Is location
 		if (params[0] === 'location' && typeof params[1] === 'string') {
-			const locationName = params[1]
-			const location = WorldLocations.byName(locationName)
+			const locationName = params[1];
+			const location = WorldLocations.byName(locationName);
 
 			if (location) {
-				WorldLocations.tp(client, location)
-				client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}"${location.name}"!{#ffffff} (${location.position}).`)
+				WorldLocations.tp(client, location);
+				client.sendMessage(`!{#00ff00}[TELEPORT] !{#ffffff}Going to !{#ffff00}"${location.name}"!{#ffffff} (${location.position}).`);
 			} else {
-				client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Location !{#ffff00}"${locationName}"!{#ffffff} couldn't be found...`)
+				client.sendMessage(`!{#ff0000}[TELEPORT] !{#ffffff}Location !{#ffff00}"${locationName}"!{#ffffff} couldn't be found...`);
 			}
 
 			return
@@ -208,6 +201,8 @@ Server.addCommand('tp', (client: Client, ...args: string[]) => {
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp location !{#dddddd}[location_name]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp zone !{#dddddd}[zone_slug]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp saved !{#dddddd}[saved_position_name]`)
+	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}base`)
+	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}base [team_slug]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[x] [y]`)
 	client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/tp !{#dddddd}[x] [y] [z]`)
 }, false)

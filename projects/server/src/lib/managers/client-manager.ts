@@ -28,7 +28,7 @@ export class ClientManager extends List<Client> {
      })
    }
 
-   public call (eventName: string, args: any[]) {
-     super.items.forEach((client: Client) => client.call(eventName, args));
+   public call (eventName: string, ...args: any[]) {
+     super.items.forEach((client: Client) => client.call(eventName, ...args));
    }
 }

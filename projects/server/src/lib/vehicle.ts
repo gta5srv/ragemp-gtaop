@@ -1,13 +1,17 @@
 import * as Manager from '@lib/managers';
 import Server from '@lib/server';
-import Blip from '@lib/blip';
+import Types from '@core/types';
+import Random from './algebra/random';
 
 export default class Vehicle implements EntityAdapter {
   public readonly mp: VehicleMp;
-  private _colors: any
-  // private _blip: Blip
+  private _colors: any;
+  private _location: Types.Location;
+  public lastBodyHealth: number;
+  public lastEngineHealth: number;
+  public dead: boolean = false;
 
-  public static all: Manager.Vehicle = new Manager.Vehicle()
+  public static all: Manager.Vehicle = new Manager.Vehicle();
 
   constructor (model: HashOrString,
                position: Vector3Mp, rotation: Vector3Mp | null = null,
@@ -26,8 +30,12 @@ export default class Vehicle implements EntityAdapter {
       this.mp.numberPlate = numberPlate;
     }
 
-    // this._blip = new Blip(225, new mp.Vector3(0, 0, 0));
-    // this._blip.attachedTo = this;
+    this._location = {
+      position: position,
+      rotation: this.mp.rotation
+    };
+    this.lastBodyHealth = this.mp.bodyHealth;
+    this.lastEngineHealth = this.mp.engineHealth;
 
     Vehicle.all.add(this);
     Server.listeners.triggerVehicleAdded(this);
@@ -70,6 +78,28 @@ export default class Vehicle implements EntityAdapter {
 
   get position () {
     return this.mp.position;
+  }
+
+  public spawn () {
+    this.mp.repair();
+
+    this.mp.position = this._location.position;
+    this.mp.rotation = this._location.rotation;
+  }
+
+  public randomizeColors (): void {
+    let colorGroups: number[][] = [];
+
+    while (colorGroups.length < 2) {
+      let colors: number[] = [];
+
+      while (colors.length < 3) {
+        colors.push(Random.getIntInclusive(0, 255));
+      }
+      colorGroups.push(colors)
+    }
+
+    this.colors = colorGroups;
   }
 
   toJSON () {

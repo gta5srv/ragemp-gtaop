@@ -98,9 +98,15 @@ export default class Callback extends List<Listener<any>> {
       subscriber.onClientCreateWaypoint(coords.x, coords.y);
     });
 
-    this.addEvent('vehicleDeath', Listeners.isVehicleListener,
+    this.addEvent('OP.vehicleDeath', Listeners.isVehicleListener,
                   (subscriber: Listeners.VehicleListener, vehicle: Vehicle) => {
       subscriber.onVehicleDeath(vehicle);
+    });
+
+    this.addEvent('OP.vehicleDamage', Listeners.isVehicleListener,
+                  (subscriber: Listeners.VehicleListener,
+                   vehicle: Vehicle, bodyHealthLoss: number, engineHealthLoss: number) => {
+      subscriber.onVehicleDamage(vehicle, bodyHealthLoss, engineHealthLoss);
     });
   }
 
@@ -117,6 +123,30 @@ export default class Callback extends List<Listener<any>> {
       if (Listeners.isTickListener(subscriber)) {
         subscriber.onTick(msElapsed);
       }
+    });
+
+    Vehicle.all.items.forEach((vehicle: Vehicle) => {
+      if (vehicle.dead ||
+          (vehicle.lastBodyHealth === vehicle.mp.bodyHealth &&
+           vehicle.lastEngineHealth === vehicle.mp.engineHealth)) {
+        return;
+      }
+
+      mp.events.call(
+        'OP.vehicleDamage',
+        vehicle,
+        vehicle.lastBodyHealth - vehicle.mp.bodyHealth,
+        vehicle.lastEngineHealth - vehicle.mp.engineHealth
+      );
+
+      if (vehicle.mp.engineHealth <= 0) {
+        vehicle.dead = true;
+
+        mp.events.call('OP.vehicleDeath', vehicle);
+      }
+
+      vehicle.lastBodyHealth = vehicle.mp.bodyHealth;
+      vehicle.lastEngineHealth = vehicle.mp.engineHealth;
     });
   }
 }

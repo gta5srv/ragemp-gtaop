@@ -118,7 +118,14 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     }
 
     if (this._team === undefined) {
-      this.mp.spawn(new mp.Vector3(1408.315673828125, 3099.702880859375, 52.74652099609375));
+      const location = WorldLocations.byName('cocaine');
+
+      if (location) {
+        WorldLocations.tp(this, location);
+      } else {
+        this.mp.spawn(new mp.Vector3(1408.315673828125, 3099.702880859375, 45.74652099609375));
+      }
+
       return;
     }
 
@@ -179,14 +186,18 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     this.call('zonesAdd', JSON.stringify(Zone.all));
 
     this.spawn()
+    this.sendMessage('!{#34c6eb}Welcome to OPPOSING FORCES. To start exploring, use !{#ffff00}/help')
   }
 
   onVehicleDeath(vehicle: Vehicle): void {
-    console.log('VEHICLE DEATH', vehicle.mp.model);
+    console.log('client VEHICLE DEATH');
   }
 
   onVehicleAdd(vehicle: Vehicle): void {
-    console.log('VEHICLE ADDED');
+    console.log(vehicle.mp.id + 'was added')
     this.call('vehiclesAdded', JSON.stringify([ vehicle ]));
+  }
+
+  onVehicleDamage(vehicle: Vehicle, bodyHealthLoss: number, engineHealthLoss: number): void {
   }
 }

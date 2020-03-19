@@ -2,7 +2,6 @@ import Config from '@root/config';
 import Util from '@core/util';
 import HeightMap from '@lib/height-map';
 import Client from '@lib/client';
-import Team from '@lib/team';
 import Zone from '@lib/zone';
 import Interval from '@lib/algebra/interval';
 import Rectangle from '@lib/algebra/rectangle';
@@ -10,6 +9,7 @@ import Random from '@lib/algebra/random';
 import * as Listeners from '@lib/listeners';
 import { WorldLocations } from '@lib/world-locations';
 import BlipStreamer from '@lib//streamers/blip-streamer';
+import Loader from '@core/loader';
 
 
 /**
@@ -38,8 +38,10 @@ class Server implements Listeners.TickListener {
     WorldLocations.load();
 
     Server.log(`Started (Ingame time: ${Server.Time})`);
-    Server.log(`Loaded ${Team.all.items.length} teams`);
-    Server.log(`Loaded ${Zone.all.items.length} zones`);
+    Server.log(`Loaded ${Loader.counts.teams} teams`);
+    Server.log(`Loaded ${Loader.counts.zones} zones`);
+    Server.log(`Loaded ${Loader.counts.worldLocations} world locations`);
+    Server.log(`Loaded ${Loader.counts.worldVehicles} world vehicles`);
   }
 
   /**
@@ -90,7 +92,7 @@ class Server implements Listeners.TickListener {
    */
   public static broadcast (...args: any[]): void {
     Server.log(...args);
-    //Server.sendMessage(...args);
+    Server.sendMessage(...args);
   }
 
 

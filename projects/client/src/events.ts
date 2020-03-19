@@ -20,6 +20,20 @@ mp.events.add("playerEnterVehicle", (vehicle: VehicleMp, seat) => {
 });
 
 
+mp.events.add("vehicleDeath", (vehicleRemoteId: number) => {
+	const veh = Vehicle.all.byRemoteId(vehicleRemoteId);
+  if (!(veh && veh.blip)) return;
+  veh.blip.alpha = 122;
+});
+
+
+mp.events.add("vehicleSpawn", (vehicleRemoteId: number) => {
+	const veh = Vehicle.all.byRemoteId(vehicleRemoteId);
+  if (!(veh && veh.blip)) return;
+  veh.blip.alpha = 255;
+});
+
+
 /**
  * A workaround for PlayerCreateWaypoint event
  */
@@ -56,7 +70,7 @@ mp.events.add('teamsAdd', (teamsData: string) => {
       return;
     }
 
-    mp.gui.chat.push(`team add "${teamData.slug}"`);
+    // mp.gui.chat.push(`team add "${teamData.slug}"`);
 
     const teamVehicles = teamData.vehicleIds.map((vehicleId: number) => {
       const foundVehicle = Vehicle.all.byRemoteId(vehicleId);
@@ -115,11 +129,9 @@ mp.events.add('zoneUpdate', (zoneUpdateData: string) => {
     return;
   }
 
-  mp.gui.chat.push(`zone state change "${zoneUpdate.slug}" (${Zone.State[zoneUpdate.state]})`);
-
   const zone = Zone.all.bySlug(zoneUpdate.slug);
   if (zone) {
-    mp.gui.chat.push(`zone state change "${zoneUpdate.slug}" CONFIRM`);
+    // mp.gui.chat.push(`zone "${zoneUpdate.slug}" state change -> (${Zone.State[zoneUpdate.state]})`);
 
     zone.state = zoneUpdate.state;
     zone.owner = zoneUpdate.owner ? Team.all.bySlug(zoneUpdate.owner) : null;
@@ -127,13 +139,13 @@ mp.events.add('zoneUpdate', (zoneUpdateData: string) => {
 });
 
 mp.events.add('vehiclesAdded', (vehiclesDataJSON: string) => {
-  mp.gui.chat.push('Trying to add vehicles')
+  // mp.gui.chat.push('Trying to add vehicles')
   const vehiclesData = JSON.parse(vehiclesDataJSON);
   if (!Array.isArray(vehiclesData)) {
     return;
   }
 
-  mp.gui.chat.push("Vehicles added")
+  // mp.gui.chat.push("Vehicles added")
   vehiclesData.forEach((vehicleData: EventData.vehicleAdd) => {
     if (Vehicle.all.byRemoteId(vehicleData.id)) {
       return;
@@ -142,7 +154,7 @@ mp.events.add('vehiclesAdded', (vehiclesDataJSON: string) => {
     const vehicleMp = mp.vehicles.atRemoteId(vehicleData.id);
     if (vehicleMp) {
       new Vehicle(vehicleMp);
-      mp.gui.chat.push("Vehicle added")
+      // mp.gui.chat.push("Vehicle added")
     }
   })
 })

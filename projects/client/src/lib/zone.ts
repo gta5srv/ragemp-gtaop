@@ -14,7 +14,10 @@ export class Zone {
   private _owner: Team|null;
   private _vehicles: Managers.Vehicle = new Managers.Vehicle();
 
-  public static readonly DEFAULT_BLIP_SPRITE: number = 38;
+  public static readonly BLIP_SPRITES = {
+    default: 38,
+    hasVehicles: 315
+  };
 
   constructor (slug: string, name: string, position: Vector3Mp,
                state: Zone.State, owner: Team|null, vehicles: Vehicle[]) {
@@ -26,7 +29,7 @@ export class Zone {
     this._vehicles.add(...vehicles);
 
     this._blip = new Blip(
-      Zone.DEFAULT_BLIP_SPRITE,
+      this.getBlipSprite(),
       position,
       owner ? owner.blipColor : undefined,
       name
@@ -53,6 +56,15 @@ export class Zone {
 
   set state (state) {
     this._state = state;
+
+    if (this._blip.mp) {
+      if (state === Zone.State.NEUTRALIZING ||
+          state === Zone.State.CAPTURING) {
+        this._blip.mp.setFlashes(true);
+      } else {
+        this._blip.mp.setFlashes(false);
+      }
+    }
   }
 
   get owner () {
@@ -64,11 +76,19 @@ export class Zone {
     this._blip.color = owner ? owner.blipColor : Blip.DEFAULT_COLOR;
     this._vehicles.items.forEach((vehicle: Vehicle) => {
       vehicle.owner = owner;
-    })
+    });
   }
 
   get vehicles () {
     return this._vehicles;
+  }
+
+  private getBlipSprite (): number {
+    if (this.vehicles.count) {
+      return Zone.BLIP_SPRITES.hasVehicles;
+    }
+
+    return Zone.BLIP_SPRITES.default;
   }
 }
 

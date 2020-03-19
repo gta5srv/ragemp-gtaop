@@ -4,9 +4,10 @@ import * as Managers from '@lib/managers';
 
 export default class Blip {
   public readonly mp: BlipMp|null = null;
+  public readonly gtaBlip: GTABlip|null = null;
 
-  private _attachedToEntity?: EntityMp;
-  private _gtaBlip: GTABlip|null = null;
+  private _alpha: number;
+  private _color: number;
 
   public static readonly all: Managers.Blip = new Managers.Blip();
 
@@ -15,7 +16,7 @@ export default class Blip {
   constructor (sprite: number, position: Vector3Mp, color: number = Blip.DEFAULT_COLOR,
                name?: string, attachedToEntity?: EntityMp) {
     if (attachedToEntity) {
-      this._gtaBlip = new GTABlip(attachedToEntity, sprite, color);
+      this.gtaBlip = new GTABlip(attachedToEntity, sprite, color, true);
     } else {
       this.mp = mp.blips.new(sprite, position, {
           name: name,
@@ -23,24 +24,41 @@ export default class Blip {
       });
     }
 
+    this._color = color;
+    this._alpha = 255;
+
     Blip.all.add(this);
   }
 
-  get gtaBlip () {
-    return this._gtaBlip;
+  get alpha () {
+    return this._alpha;
   }
 
-  get color (): number {
-    return this.mp ? this.mp.getColour() : (this._gtaBlip ? this._gtaBlip.color : Blip.DEFAULT_COLOR);
+  set alpha (alpha) {
+    this._alpha = alpha;
+
+    if (this.mp) {
+      this.mp.setAlpha(alpha);
+    }
+
+    if (this.gtaBlip) {
+      this.gtaBlip.alpha = alpha;
+    }
+  }
+
+  get color () {
+    return this._color;
   }
 
   set color (color) {
+    this._color = color;
+
     if (this.mp) {
       this.mp.setColour(color);
     }
 
-    if (this._gtaBlip) {
-      this._gtaBlip.color = color;
+    if (this.gtaBlip) {
+      this.gtaBlip.color = color;
     }
   }
 
@@ -49,6 +67,10 @@ export default class Blip {
 
     if (this.mp) {
       this.mp.destroy();
+    }
+
+    if (this.gtaBlip) {
+      this.gtaBlip.alpha = 0;
     }
   }
 }

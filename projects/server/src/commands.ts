@@ -219,6 +219,21 @@ Server.addCommand('help', (client: Client) => {
 	client.sendMessage(`!{#ffff00}Give weapon: !{#ffffff}/weapon`);
 	client.sendMessage(`!{#ffff00}Save position to file: !{#ffffff}/savepos`);
 });
+
+// Server.addCommand('zones', (client: Client, page: number) => {
+// 	const ZONES_PER_PAGE = 10;
+//
+// 	if (!Number.isInteger(page) || page < 1) {
+// 		page = 1;
+// 	}
+// 	const zoneIndexStart = ZONES_PER_PAGE * page;
+//
+// 	const zones = Zone.all.items.slice(zoneIndexStart, ZONES_PER_PAGE);
+// 	if (!zones.length) {
+// 		client.sendMessage(`!{#ff0000}[TEAM] !{#ffffff}Team slug !{#ffff00}"${teamSlug}"!{#ffffff} couldn't be found...`)
+// 	}
+// })
+
 Server.addCommand('setteam', (client: Client, teamSlug: string) => {
 	const team = Team.all.bySlug(teamSlug)
 

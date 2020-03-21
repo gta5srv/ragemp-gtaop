@@ -1,77 +1,76 @@
-import Util from '@core/util';
-import Types from '@core/types';
-import Team from '@lib/team'
-import Vehicle from '@lib/vehicle'
-import Server from '@lib/server'
-import { WorldLocation, WorldLocations } from '@lib/world-locations'
-import * as Manager from '@lib/managers'
-import * as Listeners from '@lib/listeners'
+import Server from '@lib/server';
+import Team from '@lib/team';
+import Vehicle from '@lib/vehicle';
 import Zone from '@lib/zone';
+import * as Manager from '@lib/managers';
+import * as Listeners from '@lib/listeners';
+import { WorldLocation, WorldLocations } from '@lib/world-locations';
+import Util from '@shared/util';
 
 export default class Client implements EntityAdapter, Listeners.ClientListener, Listeners.VehicleListener {
   public readonly mp: PlayerMp;
 
-  private _team?: Team
-  private _respawnTimer: any
-  private _currentZone: Zone|null = null
-  private _spawnZone: Zone|null = null
+  private _team?: Team;
+  private _respawnTimer: any;
+  private _currentZone: Zone|null = null;
+  private _spawnZone: Zone|null = null;
 
-  public static all: Manager.Client = new Manager.Client()
+  public static all: Manager.Client = new Manager.Client();
 
   constructor (player: PlayerMp) {
-    this.mp = player
-    this._respawnTimer = null
+    this.mp = player;
+    this._respawnTimer = null;
 
-    Client.all.add(this)
-    Server.listeners.add(this)
+    Client.all.add(this);
+    Server.listeners.add(this);
   }
 
   get position () {
-    return this.mp.position
+    return this.mp.position;
   }
 
   set position (position) {
-    this.mp.position = position
+    this.mp.position = position;
   }
 
   get heading () {
-    return this.mp.heading
+    return this.mp.heading;
   }
 
   set heading (heading) {
-    this.mp.heading = heading
+    this.mp.heading = heading;
   }
 
   get vehicle (): Vehicle | null {
-    return this.mp.vehicle ? Vehicle.all.byVehicleMp(this.mp.vehicle) : null
+    return this.mp.vehicle ? Vehicle.all.byVehicleMp(this.mp.vehicle) : null;
   }
 
   get team () {
-    return this._team
+    return this._team;
   }
 
   set team (team) {
-    this._team = team
+    this._team = team;
 
     if (team instanceof Team) {
-      team.setupClient(this)
+      team.setupClient(this);
     }
   }
 
   get model () {
-    return this.mp.model
+    return this.mp.model;
   }
 
   set model (model) {
-    this.mp.model = model
+    this.mp.model = model;
   }
 
   get name () {
-    return this.mp.name
+    return this.mp.name;
   }
 
   get currentZone () {
-    return this._currentZone
+    return this._currentZone;
   }
 
   set currentZone(currentZone) {
@@ -141,7 +140,7 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     this.mp.call(eventName, args);
   }
 
-  putInVehicle(v: Vehicle, seat: Types.Seat = Types.Seat.DRIVER) {
+  putInVehicle(v: Vehicle, seat: RageEnums.VehicleSeat = RageEnums.VehicleSeat.DRIVER) {
     this.mp.putIntoVehicle(v.vehicleMp, seat);
   }
 

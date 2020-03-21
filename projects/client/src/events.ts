@@ -159,6 +159,14 @@ mp.events.add('vehiclesAdded', (vehiclesDataJSON: string) => {
   })
 })
 
+mp.events.add('vehicleRemoved', (vehicleRemoteId: number) => {
+  const vehicle = Vehicle.all.byRemoteId(vehicleRemoteId);
+  if (vehicle) {
+    mp.gui.chat.push('Vehicle removed');
+    Vehicle.all.remove(vehicle);
+  }
+})
+
 namespace EventData {
   export interface teamAdd {
     slug: string;

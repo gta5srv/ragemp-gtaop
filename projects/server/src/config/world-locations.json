@@ -141,6 +141,22 @@
         "counterfeit_medium",
         "counterfeit_large"
       ]
+    },
+    {
+      "name": "bunker",
+      "position": [ 899.5518,-3246.038, -98.04907 ]
+    },
+    {
+      "name": "mranch",
+      "position": [ 1399, 1150, 115 ]
+    },
+    {
+      "name": "motel",
+      "position": [ 152.2605, -1004.471, -98.99999 ]
+    },
+    {
+      "name": "submarine",
+      "position": [ 514.33, 4886.18, -62.59 ]
     }
   ]
 }

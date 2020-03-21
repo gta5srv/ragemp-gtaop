@@ -13,8 +13,15 @@ mp.events.add("OP.vehicleDeath", (vehicle: Vehicle) => {
   Client.all.call('vehicleDeath', vehicle.mp.id);
 
   setTimeout(() => {
-    vehicle.dead = false;
-    vehicle.spawn();
-    Client.all.call('vehicleSpawn', vehicle.mp.id);
+    if (vehicle.isRespawnable) {
+      vehicle.dead = false;
+      vehicle.spawn();
+      Client.all.call('vehicleSpawn', vehicle.mp.id);
+    } else {
+      Client.all.call('vehicleRemoved', vehicle.mp.id);
+      Vehicle.all.remove(vehicle);
+
+      setTimeout(() => vehicle.mp.destroy(), 500);
+    }
   }, 15000);
 });

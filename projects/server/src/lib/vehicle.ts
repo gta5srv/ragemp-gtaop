@@ -1,15 +1,16 @@
 import * as Manager from '@lib/managers';
 import Server from '@lib/server';
 import Types from '@core/types';
-import Random from './algebra/random';
+import Random from '@lib/algebra/random';
 
 export default class Vehicle implements EntityAdapter {
   public readonly mp: VehicleMp;
   private _colors: any;
   private _location: Types.Location;
-  public lastBodyHealth: number;
-  public lastEngineHealth: number;
-  public dead: boolean = false;
+  private _lastBodyHealth: number;
+  private _lastEngineHealth: number;
+  private _dead: boolean = false;
+  private _respawnable: boolean = true;
 
   public static all: Manager.Vehicle = new Manager.Vehicle();
 
@@ -32,10 +33,10 @@ export default class Vehicle implements EntityAdapter {
 
     this._location = {
       position: position,
-      rotation: this.mp.rotation
+      rotation: this.rotation
     };
-    this.lastBodyHealth = this.mp.bodyHealth;
-    this.lastEngineHealth = this.mp.engineHealth;
+    this._lastBodyHealth = this.mp.bodyHealth;
+    this._lastEngineHealth = this.mp.engineHealth;
 
     Vehicle.all.add(this);
     Server.listeners.triggerVehicleAdded(this);
@@ -78,6 +79,38 @@ export default class Vehicle implements EntityAdapter {
 
   get position () {
     return this.mp.position;
+  }
+
+  get lastBodyHealth () {
+    return this._lastBodyHealth;
+  }
+
+  set lastBodyHealth (lastBodyHealth) {
+    this._lastBodyHealth = lastBodyHealth;
+  }
+
+  get lastEngineHealth () {
+    return this._lastEngineHealth;
+  }
+
+  set lastEngineHealth (lastEngineHealth) {
+    this._lastEngineHealth = lastEngineHealth;
+  }
+
+  set dead (dead) {
+    this._dead = dead;
+  }
+
+  get dead () {
+    return this._dead;
+  }
+
+  get isRespawnable (): boolean {
+    return this._respawnable;
+  }
+
+  set respawnable (respawnable: boolean) {
+    this._respawnable = respawnable;
   }
 
   public spawn () {

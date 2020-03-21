@@ -5,8 +5,8 @@ import Util from '@core/util'
 import Client from '@lib/client'
 import WorldLocations from '@lib/world-locations'
 import Team from '@lib/team'
-import Vehicle from './lib/vehicle';
-import Zone from './lib/zone';
+import Vehicle from '@lib/vehicle';
+import Zone from '@lib/zone';
 
 Server.addCommand('savepos', (client: Client, description: string) => {
 	let coords = [ client.position, client.heading ]
@@ -35,12 +35,13 @@ Server.addCommand('v', (client: Client, modelName: string) => {
 		return;
 	}
 
-	let clientPosition = client.position
-	clientPosition.z += 1
+	let clientPosition = client.position;
+	clientPosition.z += 1;
 
-	let newVehicle = new Vehicle(modelName, clientPosition, null)
-	client.putInVehicle(newVehicle)
-	client.sendMessage(`!{#00ff00}[VEHICLE] !{#ffffff}Successfully spawned !{#ffff00}"${modelName}"!{#ffffff}.`)
+	let newVehicle = new Vehicle(modelName, clientPosition, null);
+	newVehicle.respawnable = false;
+	client.putInVehicle(newVehicle);
+	client.sendMessage(`!{#00ff00}[VEHICLE] !{#ffffff}Successfully spawned !{#ffff00}"${modelName}"!{#ffffff}.`);
 })
 
 Server.addCommand('setspawnzone', (client: Client, zoneSlug: string) => {

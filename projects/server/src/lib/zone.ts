@@ -3,7 +3,6 @@ import Server from '@lib/server'
 import Marker from '@lib/marker'
 import Team from '@lib/team'
 import Vehicle from '@lib/vehicle';
-import Blip from '@lib/blip';
 import Client from '@lib/client'
 import Spawnable from '@lib/interfaces/spawnable'
 import * as Manager from '@lib/managers'
@@ -53,7 +52,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     this._position = position;
     this._radius = radius;
 
-    this._marker = mp.markers.new(Marker.Type.VerticalCylinder, position, radius);
+    this._marker = mp.markers.new(RageEnums.Marker.VERTICAL_CYLINDER, position, radius);
 
     this._colshape = mp.colshapes.newSphere(
       position.x,
@@ -132,8 +131,6 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   }
 
   public onProgress(progress: number, targetState: Zone.State): void {
-    Server.log('TARGET is !{#ff0000}' + Zone.State[targetState]);
-
     switch (targetState) {
       case Zone.State.NEUTRAL: { // Going back to neutral (was capturing before)
         if (!this._progressingTeamBefore) return;
@@ -142,6 +139,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
         this.label.text = color + "'".repeat(10 - count) + "~w~" + "'".repeat(count);
         break;
       }
+
       case Zone.State.OWNED: { // Going back to owned (was neutralizing before)
         if (!this._owner) return;
         const count = Math.floor((1 - progress) * 10);
@@ -149,6 +147,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
         this.label.text = color + "'".repeat(count) + "~w~" + "'".repeat(10 - count);
         break;
       }
+
       case Zone.State.NEUTRALIZING: { // Neutralizing
         if (!(this._owner && this._progressingTeam)) return;
         const count = Math.floor(progress * 10);
@@ -156,6 +155,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
         this.label.text = color + "'".repeat(10 - count) + "~w~" + "'".repeat(count);
         break;
       }
+
       case Zone.State.CAPTURING: { // Capturing
         if (!this._progressingTeam) return;
         const count = Math.floor(progress * 10);
@@ -291,7 +291,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
 
         if (this._progressingTeam !== teamPresences[0].team) {
           this._progressingTeam = teamPresences[0].team; // NEW
-          this.clientsInside.sendMessage(`!{#ff0000}Progressing team is now ${this._progressingTeam}`.toUpperCase());
+          // this.clientsInside.sendMessage(`!{#ff0000}Progressing team is now ${this._progressingTeam}`.toUpperCase());
         }
 
         // Was being neutralized

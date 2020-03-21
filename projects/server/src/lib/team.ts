@@ -47,7 +47,7 @@ export class Team {
     this._blip = new Blip(40, this._base, this._name + ' base', blipColor);
     this._blipColor = blipColor;
 
-    this._init();
+    this.init();
 
     Team.all.add(this);
   }
@@ -92,8 +92,8 @@ export class Team {
     return this._vehicles;
   }
 
-  _init (): void {
-    // TODO: Implement proper classes
+  private init (): void {
+    // TODO: Implement proper class
     this._label = mp.labels.new(
       `${this._name.toUpperCase()} base menu`,
       new mp.Vector3(this._base.x, this._base.y, this._base.z + 0.6), {
@@ -101,10 +101,10 @@ export class Team {
         drawDistance: 200,
         color: [ 255, 0, 0, 255 ]
       })
-
     this._label.los = false
 
-    this._checkpoint = mp.markers.new(1, this._base, 3, {
+    // TODO: Implement proper class
+    this._checkpoint = mp.markers.new(RageEnums.Marker.VERTICAL_CYLINDER, this._base, 3, {
       direction: this._base,
       color: [ 255, 0, 0, 255 ],
       dimension: 0
@@ -113,40 +113,40 @@ export class Team {
 
     this._vehicleGroups.items.forEach((vehicleGroup: Team.VehicleGroup) => {
       vehicleGroup.spawns.forEach((spawn: Types.Location) => {
-        const vehicle = new Vehicle(
-          vehicleGroup.model,
-          spawn.position,
-          spawn.rotation,
-          this._vehicleColors,
-          this._name.toUpperCase()
+        this._vehicles.add(
+          new Vehicle(
+            vehicleGroup.model,
+            spawn.position,
+            spawn.rotation,
+            this._vehicleColors,
+            this._name.toUpperCase()
+          )
         );
-
-        this._vehicles.add(vehicle);
       })
     })
   }
 
-  setupClient (client: Client): void {
-    const modelIndex = Math.floor(Math.random() * this._models.length)
-    client.model = mp.joaat(this._models[modelIndex])
+  public setupClient (client: Client): void {
+    const modelIndex = Math.floor(Math.random() * this._models.length);
+    client.model = mp.joaat(this._models[modelIndex]);
   }
 
-  getSpawn (): any { // TODO: Change type
-    const spawnIndex = Math.floor(Math.random() * this._spawns.length)
-    return this._spawns[spawnIndex]
+  public getSpawn (): any { // TODO: Change type
+    const spawnIndex = Math.floor(Math.random() * this._spawns.length);
+    return this._spawns[spawnIndex];
   }
 
-  toString (): string {
-    return `(Team "${this.name}" <${this.slug}>)`
+  public toString (): string {
+    return `(Team "${this.name}" <${this.slug}>)`;
   }
 
-  toJSON () {
+  public toJSON () {
     return {
       slug: this.slug,
       name: this.name,
       blipColor: this.blipColor,
       vehicleIds: this.vehicles.idArray()
-    }
+    };
   }
 }
 
@@ -162,4 +162,4 @@ export namespace Team {
   }
 }
 
-export default Team
+export default Team;

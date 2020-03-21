@@ -13,7 +13,8 @@ class Vehicle {
     default: 225,
     motorcycle: 226,
     helicopter: 43,
-    plane: 16
+    plane: 16,
+    boat: 427
   };
 
   public static readonly all: Managers.Vehicle = new Managers.Vehicle();
@@ -74,6 +75,8 @@ class Vehicle {
         return Vehicle.BLIP_SPRITES.helicopter;
       case Vehicle.Classes.Planes:
         return Vehicle.BLIP_SPRITES.plane;
+      case Vehicle.Classes.Boats:
+        return Vehicle.BLIP_SPRITES.boat;
       default:
         return Vehicle.BLIP_SPRITES.default;
     }

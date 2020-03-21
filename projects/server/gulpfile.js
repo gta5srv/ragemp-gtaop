@@ -26,7 +26,10 @@ function clean (cb) {
 function typeScript () {
   const tsProject = ts.createProject('tsconfig.json')
 
-  return gulp.src('**/*.ts', { cwd: 'src' })
+  return gulp.src('**/*.ts', {
+      	cwd: 'src',
+        nodir: true
+      })
     .pipe(tsProject())
     .js
     .pipe(babel())
@@ -38,7 +41,10 @@ function static () {
   return gulp.src([
       '**/*',
       '!**/*.ts'
-    ], { cwd: 'src'})
+    ], {
+      cwd: 'src',
+      nodir: true
+    })
     .pipe(newer(path.join(PROJECT_ROOT, 'build/server')))
     .pipe(gulp.dest('build/server', { cwd: PROJECT_ROOT }))
 }

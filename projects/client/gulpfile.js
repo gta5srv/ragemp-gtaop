@@ -50,7 +50,10 @@ function static () {
   return gulp.src([
       '**/*',
       '!**/*.ts'
-    ], { cwd: 'src'})
+    ], {
+      cwd: 'src',
+      nodir: true
+    })
     .pipe(newer(path.join(PROJECT_ROOT, 'build/client')))
     .pipe(gulp.dest('build/client', { cwd: PROJECT_ROOT }))
 }

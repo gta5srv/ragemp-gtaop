@@ -18,10 +18,13 @@ mp.events.add("OP.vehicleDeath", (vehicle: Vehicle) => {
       vehicle.spawn();
       Client.all.call('vehicleSpawn', vehicle.mp.id);
     } else {
-      Client.all.call('vehicleRemoved', vehicle.mp.id);
-      Vehicle.all.remove(vehicle);
-
-      setTimeout(() => vehicle.mp.destroy(), 500);
+      // TODO: Fix below
+      // Client.all.call('vehicleRemoved', vehicle.mp.id);
+      //
+      // setTimeout(() => {
+      //   Vehicle.all.remove(vehicle);
+      //   vehicle.mp.destroy();
+      // }, 1000);
     }
   }, 15000);
 });

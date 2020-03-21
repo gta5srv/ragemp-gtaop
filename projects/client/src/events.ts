@@ -159,12 +159,14 @@ mp.events.add('vehiclesAdded', (vehiclesDataJSON: string) => {
   })
 })
 
+// TODO: Fix below
 mp.events.add('vehicleRemoved', (vehicleRemoteId: number) => {
-  const vehicle = Vehicle.all.byRemoteId(vehicleRemoteId);
-  if (vehicle) {
-    mp.gui.chat.push('Vehicle removed');
-    Vehicle.all.remove(vehicle);
-  }
+  // const vehicle = Vehicle.all.byRemoteId(vehicleRemoteId);
+  // if (vehicle) {
+  //   Vehicle.all.remove(vehicle);
+  //   vehicle.mp.destroy();
+  //   mp.gui.chat.push('Vehicle removed');
+  // }
 })
 
 namespace EventData {

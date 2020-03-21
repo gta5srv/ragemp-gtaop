@@ -9,21 +9,21 @@ import Zone from '@lib/zone';
 import Vehicle from '@lib/vehicle';
 
 export default class Callback extends List<Listener<any>> {
-  private _loop: Loop = new Loop(Config.TICK_RATE, this.tick, this)
+  private _loop: Loop = new Loop(Config.TICK_RATE, this.tick, this);
 
   constructor () {
-    super()
+    super();
 
-    this.init()
-    this.register()
+    this.init();
+    this.register();
   }
 
   get subscribers () {
-    return this.items
+    return this.items;
   }
 
   get loop () {
-    return this._loop
+    return this._loop;
   }
 
   public addEvent (event: string,

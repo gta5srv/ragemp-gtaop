@@ -193,7 +193,6 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
   }
 
   onVehicleAdd(vehicle: Vehicle): void {
-    console.log(vehicle.mp.id + 'was added')
     this.call('vehiclesAdded', JSON.stringify([ vehicle ]));
   }
 

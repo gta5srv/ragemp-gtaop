@@ -22,8 +22,5 @@ positions.txt
 *~
 .idea
 
-# Node package lock
-package-lock.json
-
 # ETC
 yarn-error.log

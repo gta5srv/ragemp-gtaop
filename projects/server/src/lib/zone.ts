@@ -1,11 +1,10 @@
 import Types from '@core/types';
 import Server from '@lib/server'
-import Marker from '@lib/marker'
-import Team from '@lib/team'
+import Team from '@lib/team';
 import Vehicle from '@lib/vehicle';
-import Client from '@lib/client'
-import Spawnable from '@lib/interfaces/spawnable'
-import * as Manager from '@lib/managers'
+import Client from '@lib/client';
+import Spawnable from '@lib/interfaces/spawnable';
+import * as Manager from '@lib/managers';
 import * as Listeners from '@lib/listeners'
 
 export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners.TickListener {
@@ -15,7 +14,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   private _radius: number;
   private _marker: MarkerMp;
   private _colshape: ColshapeMp;
-  private _label: TextLabelMp
+  private _label: TextLabelMp;
 
   private _tickCount: number = 0;
 
@@ -79,7 +78,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
   }
 
   get slug () {
-    return this._slug
+    return this._slug;
   }
 
   get position () {
@@ -116,7 +115,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
       return;
     }
 
-    client.currentZone = this
+    client.currentZone = this;
     Server.log('enter zone', this.name, `(${this.slug})`, client.name, this.clientsInside.count);
   }
 
@@ -126,7 +125,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
       return;
     }
 
-    client.currentZone = null
+    client.currentZone = null;
     Server.log('exit zone', this.name, `(${this.slug})`, client.name, this.clientsInside.count);
   }
 
@@ -177,8 +176,6 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     }
 
     if (newState === Zone.State.NEUTRAL) {
-      // this._blip.color = Blip.DEFAULT_BLIP_COLOR;
-
       this._marker.setColor(
         Zone.DEFAULT_MARKER_COLOR[0],
         Zone.DEFAULT_MARKER_COLOR[1],
@@ -192,9 +189,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     }
 
     if (newState === Zone.State.OWNED && this._owner !== null) {
-      const owner: Team = this._owner
-
-      // this._blip.color = owner.blipColor;
+      const owner: Team = this._owner;
 
       this._marker.setColor(
         owner.color[0],
@@ -204,7 +199,7 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
       );
 
       this.vehicles.items.forEach((vehicle: Vehicle) => {
-        vehicle.colors = owner.vehicleColors
+        vehicle.colors = owner.vehicleColors;
       });
     }
 
@@ -383,12 +378,12 @@ export class Zone extends Spawnable implements Listeners.ZoneListener, Listeners
     } else if (this._progress >= 1) {
       if (potentialState === Zone.State.CAPTURING) {
         this._owner = this._progressingTeam;
-        potentialState = Zone.State.OWNED
+        potentialState = Zone.State.OWNED;
       }
 
       if (potentialState === Zone.State.NEUTRALIZING) {
         this._owner = null;
-        potentialState = Zone.State.NEUTRAL
+        potentialState = Zone.State.NEUTRAL;
       }
 
       this._progressingTeam = null;
@@ -434,8 +429,8 @@ export namespace Zone {
   }
 
   export interface TeamPresence {
-    team: Team|Team[]
-    count: number
+    team: Team|Team[];
+    count: number;
   }
 }
 

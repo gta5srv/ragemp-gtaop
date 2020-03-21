@@ -1,10 +1,10 @@
-import * as Listeners from './'
-import { Listener } from './'
+import * as Listeners from './';
+import { Listener } from './';
 import Config from '@root/config'
 import Loop from '@core/loop';
-import List from '@core/list'
-import Util from '@core/util'
-import Client from '@lib/client'
+import List from '@core/list';
+import Util from '@core/util';
+import Client from '@lib/client';
 import Zone from '@lib/zone';
 import Vehicle from '@lib/vehicle';
 

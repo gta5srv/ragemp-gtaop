@@ -2,7 +2,6 @@ import Config from '@root/config';
 import Util from '@core/util';
 import HeightMap from '@lib/height-map';
 import Client from '@lib/client';
-import Zone from '@lib/zone';
 import Interval from '@lib/algebra/interval';
 import Rectangle from '@lib/algebra/rectangle';
 import Random from '@lib/algebra/random';
@@ -129,31 +128,31 @@ class Server implements Listeners.TickListener {
 namespace Server {
   export class Time {
     static get hour () {
-      return mp.world.time.hour
+      return mp.world.time.hour;
     }
 
     static set hour (hour: number) {
-      mp.world.time.hour = hour
+      mp.world.time.hour = hour;
     }
 
     static get minute () {
-      return mp.world.time.minute
+      return mp.world.time.minute;
     }
 
     static set minute (minute: number) {
-      mp.world.time.minute = minute
+      mp.world.time.minute = minute;
     }
 
     static get second () {
-      return mp.world.time.second
+      return mp.world.time.second;
     }
 
     static set second (second: number) {
-      mp.world.time.second = second
+      mp.world.time.second = second;
     }
 
     public static set (hour: number, minute: number, second: number): void {
-      mp.world.time.set(hour, minute, second)
+      mp.world.time.set(hour, minute, second);
     }
 
     public static randomize (): void {
@@ -161,33 +160,33 @@ namespace Server {
         Random.getIntInclusive(0, 23),
         Random.getIntInclusive(0, 59),
         Random.getIntInclusive(0, 59)
-      )
+      );
     }
 
     public static add (secondsToAdd: number): void {
-      secondsToAdd = Math.floor(secondsToAdd)
+      secondsToAdd = Math.floor(secondsToAdd);
 
-      let hour = Server.Time.hour
-      let minute = Server.Time.minute
-      let second = Server.Time.second + secondsToAdd
+      let hour = Server.Time.hour;
+      let minute = Server.Time.minute;
+      let second = Server.Time.second + secondsToAdd;
 
       if (second > 59) {
-        minute += Math.floor(second / 60)
-        second = second % 60
+        minute += Math.floor(second / 60);
+        second = second % 60;
 
         if (minute > 59) {
-          hour += Math.floor(minute / 60)
-          minute = minute % 60
+          hour += Math.floor(minute / 60);
+          minute = minute % 60;
 
           if (hour > 23) {
-            hour = hour % 24
+            hour = hour % 24;
           }
         }
       }
 
-      Server.Time.hour = hour
-      Server.Time.minute = minute
-      Server.Time.second = second
+      Server.Time.hour = hour;
+      Server.Time.minute = minute;
+      Server.Time.second = second;
     }
 
     public static toString () {
@@ -196,12 +195,10 @@ namespace Server {
         Server.Time.minute,
         Server.Time.second
       ].map((timeValue: number): string => {
-        return ('0' + timeValue).slice(-2)
-      }).join(':')
+        return ('0' + timeValue).slice(-2);
+      }).join(':');
     }
-
-
   }
 }
 
-export default Server
+export default Server;

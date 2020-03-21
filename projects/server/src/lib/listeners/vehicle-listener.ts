@@ -1,5 +1,5 @@
-import Listener from './listener'
-import Vehicle from '@lib/vehicle'
+import Listener from './listener';
+import Vehicle from '@lib/vehicle';
 
 interface VehicleListener extends Listener<Vehicle> {
   onVehicleAdd(vehicle: Vehicle): void;

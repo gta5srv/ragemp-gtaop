@@ -1,3 +1,3 @@
 interface EntityAdapter {
-  mp: EntityMp
+  mp: EntityMp;
 }

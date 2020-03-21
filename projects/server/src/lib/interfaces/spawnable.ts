@@ -9,7 +9,7 @@ export default class Spawnable {
   }
 
   set spawns (spawns)  {
-    this._spawns = spawns
+    this._spawns = spawns;
   }
 
   get randomSpawn (): Types.Location {
@@ -17,7 +17,7 @@ export default class Spawnable {
   }
 
   public spawn (client: Client, spawnId?: number): void {
-    const spawn = spawnId ? this._spawns[spawnId] : this.randomSpawn
+    const spawn = spawnId ? this._spawns[spawnId] : this.randomSpawn;
 
     client.mp.spawn(spawn.position);
     client.heading = spawn.rotation.z;

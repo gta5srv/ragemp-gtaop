@@ -80,6 +80,6 @@ export default class Blip {
       name: this._name,
       color: this._color,
       attachedEntityId: this._attachedTo ? this._attachedTo.mp.id : undefined
-    }
+    };
   }
 }

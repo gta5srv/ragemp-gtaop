@@ -1,10 +1,10 @@
 import Types from '@core/types';
-import List from '@core/list'
+import List from '@core/list';
 import Util from '@core/util';
-import Client from '@lib/client'
-import Vehicle from '@lib/vehicle'
+import Client from '@lib/client';
+import Vehicle from '@lib/vehicle';
 import Blip from '@lib/blip';
-import * as Manager from '@lib/managers'
+import * as Manager from '@lib/managers';
 
 export class Team {
   private _name: string;
@@ -100,16 +100,16 @@ export class Team {
         font: 4,
         drawDistance: 200,
         color: [ 255, 0, 0, 255 ]
-      })
-    this._label.los = false
+      });
+    this._label.los = false;
 
     // TODO: Implement proper class
     this._checkpoint = mp.markers.new(RageEnums.Marker.VERTICAL_CYLINDER, this._base, 3, {
       direction: this._base,
       color: [ 255, 0, 0, 255 ],
       dimension: 0
-    })
-    this._checkpoint.visible = true
+    });
+    this._checkpoint.visible = true;
 
     this._vehicleGroups.items.forEach((vehicleGroup: Team.VehicleGroup) => {
       vehicleGroup.spawns.forEach((spawn: Types.Location) => {
@@ -122,8 +122,8 @@ export class Team {
             this._name.toUpperCase()
           )
         );
-      })
-    })
+      });
+    });
   }
 
   public setupClient (client: Client): void {
@@ -152,10 +152,10 @@ export class Team {
 
 export namespace Team {
   export interface VehicleGroup {
-    model: string
-    name: string
-    spawns: Types.Location[]
-    price?: number
+    model: string;
+    name: string;
+    spawns: Types.Location[];
+    price?: number;
   }
 
   export class VehicleGroupManager extends List<Team.VehicleGroup> {

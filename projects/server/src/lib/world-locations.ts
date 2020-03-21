@@ -1,84 +1,84 @@
-import Client from '@lib/client'
-import Server from '@lib/server'
+import Client from '@lib/client';
+import Server from '@lib/server';
 
 export class WorldLocation {
-  private _name: string
-  private _position: Vector3Mp
-  private _ipls: string[]
-  private _interiorProps: string[]
+  private _name: string;
+  private _position: Vector3Mp;
+  private _ipls: string[];
+  private _interiorProps: string[];
 
   constructor (name: string, position: Vector3Mp,
                ipls: string[] = [], interiorProps: string[] = []) {
-    this._name = name
-    this._position = position
-    this._ipls = ipls
-    this._interiorProps = interiorProps
+    this._name = name;
+    this._position = position;
+    this._ipls = ipls;
+    this._interiorProps = interiorProps;
   }
 
   get name () {
-    return this._name
+    return this._name;
   }
 
   get position () {
-    return this._position
+    return this._position;
   }
 
   get ipls () {
-    return this._ipls
+    return this._ipls;
   }
 
   get interiorProps () {
-    return this._interiorProps
+    return this._interiorProps;
   }
 }
 
 export class WorldLocations {
-  private static _list: WorldLocation[] = []
+  private static _list: WorldLocation[] = [];
 
   static get all () {
-    return this._list
+    return this._list;
   }
 
   static load () {
     this.all.forEach((wl: WorldLocation) => {
       wl.ipls.forEach((ipl: string) => {
-        Server.requestIpl(ipl)
+        Server.requestIpl(ipl);
       })
     })
   }
 
   public static byName (name: string): WorldLocation | null {
-    let foundLocation: WorldLocation | null = null
+    let foundLocation: WorldLocation | null = null;
 
     this._list.forEach((location: WorldLocation) => {
       if (location.name === name) {
-        foundLocation = location
+        foundLocation = location;
       }
     })
 
-    return foundLocation
+    return foundLocation;
   }
 
   public static tp (client: Client, nameOrWorldLocation: string|WorldLocation): boolean {
-    let location: WorldLocation | null = null
+    let location: WorldLocation | null = null;
 
     if (nameOrWorldLocation instanceof WorldLocation) {
-      location = nameOrWorldLocation
+      location = nameOrWorldLocation;
     } else {
-      location = this.byName(String(nameOrWorldLocation))
+      location = this.byName(String(nameOrWorldLocation));
     }
 
     if (location == null) {
-      return false
+      return false;
     }
 
-    client.position = location.position
-    return true
+    client.position = location.position;
+    return true;
   }
 
   public static add (...worldLocations: WorldLocation[]) {
-    this._list = this._list.concat(worldLocations)
+    this._list = this._list.concat(worldLocations);
   }
 }
 
-export default WorldLocations
+export default WorldLocations;

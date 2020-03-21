@@ -1,5 +1,5 @@
-import List from '@core/list'
-import Vehicle from '@lib/vehicle'
+import List from '@core/list';
+import Vehicle from '@lib/vehicle';
 
 export class VehicleManager extends List<Vehicle> {
   byVehicleMp (vehicleMp: VehicleMp): Vehicle | null {
@@ -10,14 +10,14 @@ export class VehicleManager extends List<Vehicle> {
         foundVehicle = vehicle;
         return false;
       }
-    })
+    });
 
     return foundVehicle;
   }
 
   idArray (): number[] {
     return super.items.map((vehicle: Vehicle) => {
-      return vehicle.mp.id
+      return vehicle.mp.id;
     });
   }
 }

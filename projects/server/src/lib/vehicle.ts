@@ -129,7 +129,7 @@ export default class Vehicle implements EntityAdapter {
       while (colors.length < 3) {
         colors.push(Random.getIntInclusive(0, 255));
       }
-      colorGroups.push(colors)
+      colorGroups.push(colors);
     }
 
     this.colors = colorGroups;

@@ -1,5 +1,5 @@
-import Listener from './listener'
-import Client from '@lib/client'
+import Listener from './listener';
+import Client from '@lib/client';
 
 interface ClientListener extends Listener<Client> {
   onClientReady(): void;
@@ -15,4 +15,4 @@ function isClientListener(listener: Listener<any>): listener is ClientListener {
 export {
   ClientListener,
   isClientListener
-}
+};

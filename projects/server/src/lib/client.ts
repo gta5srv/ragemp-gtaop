@@ -5,7 +5,7 @@ import Zone from '@lib/zone';
 import * as Manager from '@lib/managers';
 import * as Listeners from '@lib/listeners';
 import { WorldLocation, WorldLocations } from '@lib/world-locations';
-import Util from '@shared/util';
+import Util from '@core/util';
 
 export default class Client implements EntityAdapter, Listeners.ClientListener, Listeners.VehicleListener {
   public readonly mp: PlayerMp;

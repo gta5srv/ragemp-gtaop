@@ -1,26 +1,26 @@
-import fs from 'fs'
-import readline from 'readline'
-import path from 'path'
+import fs from 'fs';
+import readline from 'readline';
+import path from 'path';
 
 export default class FSHelper {
-  static rootDirectory?: string
+  static rootDirectory?: string;
 
   static path (_path: string): string {
-    return path.join(FSHelper.rootDirectory || '', _path)
+    return path.join(FSHelper.rootDirectory || '', _path);
   }
 
   static appendFile (file: string, append: any, cb: Function): void {
     fs.readFile(file, 'utf-8', (err: NodeJS.ErrnoException | null, data: string) => {
       if (err) {
-        data = ''
+        data = '';
       }
 
       fs.writeFile(file, data + append, (err: any) => {
-          if(err) {
-              return cb(err)
-          }
+        if(err) {
+          return cb(err);
+        }
 
-          cb()
+        cb();
       })
     })
   }
@@ -31,7 +31,7 @@ export default class FSHelper {
       output: process.stdout,
       terminal: false
     }).on('line', function(line) {
-      lineCallback(line)
-    })
+      lineCallback(line);
+    });
   }
 }

@@ -24,3 +24,4 @@ $ npm run build # Build once
 $ npm run dev # Build once and watch afterwards
 $ npm run production # Build once in production mode (compression enabled, debugging removed)
 $ npm run clear # Empty build directory
+```

@@ -1,4 +1,6 @@
-Grand Theft Auto - Opposing Forces
+![logo](logo.png)
+
+Opposing Forces
 ===
 
 A [Rage MP](https://rage.mp) based multiplayer server offering a unique TDM experience.
@@ -6,6 +8,7 @@ A [Rage MP](https://rage.mp) based multiplayer server offering a unique TDM expe
 # Requirements
 * Windows
 * [Node JS](https://nodejs.org)
+* [Rage MP](https://rage.mp) server
 
 # Installation
 ```bash

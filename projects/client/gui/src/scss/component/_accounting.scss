@@ -1,0 +1,89 @@
+@import '../config/fonts';
+@import '../core/util';
+
+.accounting-container {
+  @extend %centered;
+
+  display: flex;
+  align-items: stretch;
+
+  width: 65%;
+  height: 70%;
+  border-radius: 10px;
+
+  .accounting-background,
+  .accounting-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .accounting-background {
+    position: relative;
+    width: 40%;
+    background: rgba(#b8c1d1, 0.4);
+    border-radius: 10px 0 0 10px;
+    border-right: 5px solid #fbc845;
+
+    .accounting-logo {
+      width: 60%;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  .accounting-content {
+    width: 60%;
+    background: #3b98be;
+    color: #fff;
+    border-radius: 0 10px 10px 0;
+
+    .accounting-content-inner {
+      width: 50%;
+      text-align: center;
+    }
+
+    @include headings {
+      line-height: 1.5;
+      text-align: center;
+      margin-bottom: 3em;
+      color: #fff;
+    }
+
+    form {
+      display: none;
+      color: mix(#fff, #3b98be, 70%);
+
+      &.active {
+        display: block;
+      }
+
+      label {
+        span {
+          color: #fbc845;
+        }
+
+        input {
+          border-color: mix(#fff, #3b98be, 42%);
+          color: mix(#fff, #3b98be, 42%);
+
+          &:focus, &:active:not(:disabled) {
+            border-color: #fff;
+            color: #fff;
+          }
+        }
+
+        .label-info {
+          color: #fbc845;
+        }
+      }
+    }
+  }
+
+  &:after {
+    @extend %pseudo-clear;
+  }
+}

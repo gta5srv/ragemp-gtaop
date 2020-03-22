@@ -4,9 +4,10 @@ const babel = require('gulp-babel')
 const del = require('del')
 const path = require('path')
 const newer = require('gulp-newer')
-const browserify = require("browserify");
-const source = require("vinyl-source-stream");
-const tsify = require("tsify");
+const browserify = require("browserify")
+const source = require("vinyl-source-stream")
+const tsify = require("tsify")
+const merge = require('merge-stream')
 
 
 if (!process.env.PROJECT_ROOT) {
@@ -47,15 +48,24 @@ function typeScript () {
 
 
 function static () {
-  return gulp.src([
-      '**/*',
-      '!**/*.ts'
-    ], {
-      cwd: 'src',
-      nodir: true
-    })
-    .pipe(newer(path.join(PROJECT_ROOT, 'build/client')))
-    .pipe(gulp.dest('build/client', { cwd: PROJECT_ROOT }))
+  return merge(
+    gulp.src([
+        '**/*',
+        '!**/*.ts'
+      ], {
+        cwd: 'src',
+        nodir: true
+      })
+      .pipe(newer(path.join(PROJECT_ROOT, 'build/client')))
+      .pipe(gulp.dest('build/client', { cwd: PROJECT_ROOT })),
+      
+    gulp.src('**/*', {
+        cwd: 'gui/build',
+        nodir: true
+      })
+      .pipe(newer(path.join(PROJECT_ROOT, 'build/client/gui')))
+      .pipe(gulp.dest('build/client/gui', { cwd: PROJECT_ROOT }))
+  )
 }
 
 

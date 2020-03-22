@@ -36,6 +36,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-uglify": "^3.0.2",
+    "merge-stream": "^2.0.0",
     "path-posix": "^1.0.0",
     "signale": "^1.4.0",
     "strftime": "^0.10.0",

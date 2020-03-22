@@ -1,0 +1,25 @@
+// 3rd party styles
+@import 'vendor/reset';
+
+// Core
+@import 'core/util';
+// Fonts
+@import 'fonts/work-sans';
+// Base
+@import 'base/body';
+@import 'base/inputs';
+@import 'base/forms';
+@import 'base/popups';
+// Components
+@import 'component/accounting';
+
+// Misc (to be removed)
+body.demo {
+  background: url(../img/bg.jpg) center center;
+  background-size: cover;
+
+  .backdrop {
+    @extend %cover;
+    background: rgba(#000, 0.5);
+  }
+}

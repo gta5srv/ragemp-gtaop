@@ -1,0 +1,73 @@
+@import '../core/util';
+
+form {
+  text-align: left;
+
+  button {
+    margin-bottom: 1em;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 3em;
+    font-weight: bold;
+    font-size: floor($font-size * 0.75);
+    text-transform: uppercase;
+
+    span {
+      color: #fbc845;
+      padding-left: 0.2em;
+    }
+
+    .label-description {
+      font-size: floor($font-size * 0.65);
+      margin: 0.5em 0;
+      font-weight: normal;
+      text-transform: none;
+      opacity: 0.8;
+    }
+
+    input {
+      width: 100%;
+
+      background: transparent;
+      border: 0;
+      outline: 0;
+
+      margin-top: 0.5em;
+      padding: 0 0 0.5em 0;
+      font-family: inherit;
+      font-size: $font-size;
+      border-bottom: 1px solid mix(#fff, #3b98be, 42%);
+      color: mix(#fff, #3b98be, 42%);
+
+      transition: 0.3s;
+
+      &:focus, &:active:not(:disabled) {
+        border-color: #fff;
+        color: #fff;
+      }
+    }
+
+    .label-info {
+      display: none;
+      color: #fbc845;
+      padding-top: 0.5em;
+
+      &.visible {
+        display: block;
+      }
+    }
+  }
+
+  .label-group {
+    display: flex;
+    margin: 0 -0.5em;
+
+    label {
+      box-sizing: border-box;
+      width: 50%;
+      padding: 0 0.5em;
+    }
+  }
+}

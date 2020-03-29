@@ -15,35 +15,38 @@
     <div class="accounting-container">
       <div class="accounting-background">
         <div class="accounting-logo">
-          <img src="assets/img/logo_tired.png">
+          <img src="assets/img/logot.webp">
         </div>
       </div>
 
       <div class="accounting-content">
         <div class="accounting-content-inner">
-          <form class="form-login" novalidate>
+          <form class="form-login" novalidate autocomplete="off">
             <h2>Welcome back to paradise.</h2>
 
             <label>
               Username<span>*</span>
-              <input id="username" type="text" required disabled />
+              <div class="label-description">
+                Always your Social Club name.
+              </div>
+              <input data-placeholder="socialclub" name="username" type="text" required disabled maxlength="32" />
             </label>
 
             <label>
               Password<span>*</span>
-              <input id="password" type="password" minlength="5" required />
+              <input name="password" type="password" minlength="5" maxlength="64" required />
             </label>
 
-            <button type="submit" class="button-light" action="submit">
+            <button type="submit" class="button-light">
               Login
             </button>
 
-            <button type="button" onclick="forgotPassword()">
+            <button type="button" onclick="onForgotPassword()">
               Forgot password
             </button>
           </form>
 
-          <form class="form-register" novalidate>
+          <form class="form-register" novalidate autocomplete="off">
             <h2>School's out for summer,<br />school's out forever.</h2>
 
             <label>
@@ -51,7 +54,7 @@
               <div class="label-description">
                 Always your Social Club name.
               </div>
-              <input id="register-username" type="text" required disabled />
+              <input data-placeholder="socialclub" name="username" type="text" required disabled maxlength="32" />
             </label>
 
             <label>
@@ -59,30 +62,36 @@
               <div class="label-description">
                 We need this in case you want to reset your password.
               </div>
-              <input id="register-email" type="email" required />
+              <input name="email" type="email" required maxlength="64" />
             </label>
 
             <div class="label-group">
               <label>
                 Password<span>*</span>
-                <input id="register-password" type="password" minlength="5" required />
+                <input name="password" id="register-password" type="password" minlength="5" maxlength="64" required />
               </label>
 
               <label>
                 Repeat password<span>*</span>
-                <input id="register-password-repeat" type="password" required />
+                <input type="password" data-like="register-password" />
               </label>
             </div>
 
-            <button type="submit" class="button-light" action="submit">
+            <button type="submit" class="button-light">
               Register
+            </button>
+
+            <button type="button" onclick="onPlayAsGuest()">
+              Play as guest
             </button>
           </form>
         </div>
       </div>
     </div>
 
-    <script src="assets/js/index.bundle.js"></script>
+    <script>window.OPPOSING_FORCES = {};</script>
+    <script src="assets/js/index.js"></script>
+    <script src="assets/js/accounting.js"></script>
 
   </body>
 </html>

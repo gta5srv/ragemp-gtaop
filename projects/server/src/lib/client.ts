@@ -186,6 +186,23 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
 
     this.spawn()
     this.sendMessage('!{#34c6eb}Welcome to OPPOSING FORCES. To start exploring, use !{#ffff00}/help')
+
+    console.log('TEST23')
+    Server.db.getUserBySocialClub(this.mp.socialClub, (userData) => {
+      console.log('OP.accountStatusUpdate', userData !== null, this.mp.socialClub);
+      this.call('OP.accountStatusUpdate', userData !== null, this.mp.socialClub);
+    });
+  }
+
+  onClientRequestAccountStatus (): void {
+  }
+
+  onClientRequestSalt(): void {
+    throw new Error("Method not implemented.");
+  }
+
+  onClientTryRegister(email: string, hash: string, salt: string): void {
+
   }
 
   onVehicleDeath(vehicle: Vehicle): void {

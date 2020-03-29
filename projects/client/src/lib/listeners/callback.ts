@@ -68,6 +68,32 @@ export default class Callback extends List<Listener<any>> {
                   (subscriber: Listeners.ClientListener, vehicle: Vehicle) => {
       subscriber.onExitVehicle(vehicle);
     });
+
+    this.addEvent('OP.GUI.ready', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onBrowserReady();
+    });
+
+    this.addEvent('OP.GUI.tryLogin', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, hash: string) => {
+      subscriber.onTryLogin(hash);
+    });
+
+    this.addEvent('OP.GUI.tryRegister', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, email: string, hash: string, salt: string) => {
+      subscriber.onTryRegister(email, hash, salt);
+    });
+
+    this.addEvent('OP.GUI.debug', Listeners.isGuiListener,
+                  (subscriber: Listeners.GuiListener, text: string) => {
+      subscriber.onGuiDebug(text);
+    });
+
+    this.addEvent('OP.accountStatusUpdate', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, isRegistered: boolean, socialClubName: string) => {
+      mp.gui.chat.push('UPDATE EVENT')
+      subscriber.onAccountStatusUpdate(isRegistered, socialClubName);
+    });
   }
 
   public tick (msElapsed: number): void {

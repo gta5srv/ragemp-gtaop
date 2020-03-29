@@ -1,34 +1,49 @@
-const gulp = require('gulp')
-const ts = require('gulp-typescript')
-const babel = require('gulp-babel')
-const del = require('del')
-const path = require('path')
-const newer = require('gulp-newer')
-const browserify = require("browserify")
-const source = require("vinyl-source-stream")
-const tsify = require("tsify")
-const merge = require('merge-stream')
+const gulp = require('gulp');
+const fs = require('fs-extra');
+const del = require('del');
+const path = require('path');
+const newer = require('gulp-newer');
+const ts = require('gulp-typescript');
+const babel = require('gulp-babel');
+const browserify = require("browserify");
+const source = require("vinyl-source-stream");
+const tsify = require("tsify");
+const merge = require('merge-stream');
+const spawn = require('cross-spawn');
 
 
 if (!process.env.PROJECT_ROOT) {
-  throw Error("Environmental variable 'PROJECT_ROOT' is required")
+  throw Error("Environmental variable 'PROJECT_ROOT' is required");
 }
 
 
-const PROJECT_ROOT = process.env.PROJECT_ROOT
+const PROJECT_ROOT = process.env.PROJECT_ROOT;
 
 
 function clean (cb) {
   del.sync(path.join(PROJECT_ROOT, 'build/client/*'), {
     force: true
-  })
+  });
 
-  cb()
+  cb();
+}
+
+
+function gui (cb) {
+  // const guiBuild = spawn(
+  //   path.join(PROJECT_ROOT, 'node_modules/gulp-cli/bin/gulp.js'),
+  //   ['--gulpfile', `gui/gulpfile.js`], {
+  //     env: { NODE_ENV: 'production' },
+  //   });
+  //
+  // guiBuild.on('exit', function() {
+    cb();
+  // });
 }
 
 
 function typeScript () {
-  const tsProject = ts.createProject('tsconfig.json')
+  const tsProject = ts.createProject('tsconfig.json');
   const tsConfig = require('./tsconfig.json');
 
   return browserify('./src/index.ts', {
@@ -43,7 +58,7 @@ function typeScript () {
      })
     .bundle()
     .pipe(source("index.js"))
-    .pipe(gulp.dest('build/client', { cwd: PROJECT_ROOT }))
+    .pipe(gulp.dest('build/client', { cwd: PROJECT_ROOT }));
 }
 
 
@@ -58,27 +73,28 @@ function static () {
       })
       .pipe(newer(path.join(PROJECT_ROOT, 'build/client')))
       .pipe(gulp.dest('build/client', { cwd: PROJECT_ROOT })),
-      
+
     gulp.src('**/*', {
         cwd: 'gui/build',
         nodir: true
       })
       .pipe(newer(path.join(PROJECT_ROOT, 'build/client/gui')))
       .pipe(gulp.dest('build/client/gui', { cwd: PROJECT_ROOT }))
-  )
+  );
 }
 
 
 function watch () {
-  gulp.watch('**/*.ts', { cwd: 'src' }, typeScript)
+  gulp.watch('**/*.ts', { cwd: 'src' }, typeScript);
   gulp.watch([
     '**/*',
     '!**/*.ts'
-  ], { cwd: 'src' }, typeScript)
+  ], { cwd: 'src' }, typeScript);
 }
 
 
 module.exports = {
-  default: gulp.series(clean, gulp.parallel(typeScript, static)),
+  gui: gui,
+  default: gulp.series(clean, gulp.parallel(typeScript, gui), static),
   watch: gulp.series(watch)
-}
+};

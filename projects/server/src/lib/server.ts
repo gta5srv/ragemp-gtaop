@@ -1,5 +1,6 @@
 import Config from '@root/config';
 import Util from '@core/util';
+import Database from '@lib/database';
 import HeightMap from '@lib/height-map';
 import Client from '@lib/client';
 import Interval from '@lib/algebra/interval';
@@ -18,6 +19,7 @@ class Server implements Listeners.TickListener {
   private static _instance?: Server;
   private static msSinceTimeIncrease: number = 0;
 
+  public static db: Database;
   public static heightMap: HeightMap;
   private static blipStreamer: BlipStreamer;
   public static readonly listeners: Listeners.Callback = new Listeners.Callback();
@@ -35,6 +37,20 @@ class Server implements Listeners.TickListener {
     Server.Time.randomize();
     Server.blipStreamer = new BlipStreamer();
     WorldLocations.load();
+
+    const mysqlConfig = require('@config/mysql').mysql;
+    Server.db = new Database(
+      mysqlConfig.host,
+      mysqlConfig.user,
+      mysqlConfig.password,
+      mysqlConfig.database
+    );
+    Server.db.on('ready', () => {
+      console.log('REAAAADYYYY')
+      // const salt = bcrypt.genSaltSync();
+      // const hash = bcrypt.hashSync('PENIS', salt);
+      // Server.db.addUser('penisFucker69', 'aroidl@crusoe.com', hash, salt);
+    })
 
     Server.log(`Started (Ingame time: ${Server.Time})`);
     Server.log(`Loaded ${Loader.counts.teams} teams`);

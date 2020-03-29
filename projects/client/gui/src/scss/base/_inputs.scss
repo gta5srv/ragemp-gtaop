@@ -19,7 +19,7 @@ button {
   cursor: pointer;
   transition: 0.3s;
 
-  &:hover {
+  &:hover, &:focus {
     color: #fff;
   }
 
@@ -27,7 +27,7 @@ button {
     background: mix(#fff, #3b98be, 70%);
     color: darken(#3b98be, 10%);
 
-    &:hover {
+    &:hover, &:focus {
       background: #fff;
       color: darken(#3b98be, 10%);
     }
@@ -37,7 +37,7 @@ button {
     background: darken(#3b98be, 10%);
     color: mix(#fff, #3b98be, 70%);
 
-    &:hover {
+    &:hover, &:focus {
       background: darken(#3b98be, 25%);
       color: mix(#fff, #3b98be, 70%);
     }

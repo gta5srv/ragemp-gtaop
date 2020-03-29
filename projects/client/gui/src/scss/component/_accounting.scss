@@ -7,9 +7,18 @@
   display: flex;
   align-items: stretch;
 
-  width: 65%;
+  width: 90%;
   height: 70%;
   border-radius: 10px;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.5s;
+
+  &.visible {
+    visibility: visible;
+    opacity: 1;
+  }
 
   .accounting-background,
   .accounting-content {
@@ -21,13 +30,13 @@
 
   .accounting-background {
     position: relative;
-    width: 40%;
+    width: 30%;
     background: rgba(#b8c1d1, 0.4);
     border-radius: 10px 0 0 10px;
     border-right: 5px solid #fbc845;
 
     .accounting-logo {
-      width: 60%;
+      width: 80%;
 
       img {
         width: 100%;
@@ -36,13 +45,13 @@
   }
 
   .accounting-content {
-    width: 60%;
+    width: 70%;
     background: #3b98be;
     color: #fff;
     border-radius: 0 10px 10px 0;
 
     .accounting-content-inner {
-      width: 50%;
+      width: 85%;
       text-align: center;
     }
 
@@ -85,5 +94,31 @@
 
   &:after {
     @extend %pseudo-clear;
+  }
+
+  @media (min-width: 768px) {
+    width: 75%;
+
+    .accounting-background {
+      width: 40%;
+
+      .accounting-logo {
+        width: 60%;
+      }
+    }
+
+    .accounting-content {
+      width: 60%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    width: 65%;
+
+    .accounting-content {
+      .accounting-content-inner {
+        width: 50%;
+      }
+    }
   }
 }

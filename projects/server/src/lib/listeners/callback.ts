@@ -63,10 +63,10 @@ export default class Callback extends List<Listener<any>> {
   }
 
   private register (): void {
-    this.addEvent('playerReady', Listeners.isClientListener,
-                  (subscriber: Listeners.ClientListener) => {
-      subscriber.onClientReady();
-    });
+    // this.addEvent('playerReady', Listeners.isClientListener,
+    //               (subscriber: Listeners.ClientListener) => {
+    //   subscriber.onClientReady();
+    // });
 
     this.addEvent('playerDeath', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener, reason: number, killer: Client) => {
@@ -107,6 +107,27 @@ export default class Callback extends List<Listener<any>> {
                   (subscriber: Listeners.VehicleListener,
                    vehicle: Vehicle, bodyHealthLoss: number, engineHealthLoss: number) => {
       subscriber.onVehicleDamage(vehicle, bodyHealthLoss, engineHealthLoss);
+    });
+
+    this.addEvent('OP.CLIENT.ready', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onClientReady();
+    });
+
+    this.addEvent('OP.CLIENT.requestAccountStatus', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onClientRequestAccountStatus();
+    });
+
+    this.addEvent('OP.CLIENT.tryRegister', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener,
+                  email: string, hash:string, salt: string) => {
+      subscriber.onClientTryRegister(email, hash, salt);
+    });
+
+    this.addEvent('OP.CLIENT.requestSalt', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onClientRequestSalt();
     });
   }
 

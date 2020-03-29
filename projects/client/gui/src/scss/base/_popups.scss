@@ -6,7 +6,10 @@
   background: #fff;
   border-radius: 5px;
   text-align: center;
-  padding: 2em 4em;
+  padding: 2em;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
 
   visibility: hidden;
   opacity: 0;
@@ -28,6 +31,10 @@
     }
   }
 
+  .popup-content {
+    line-height: 1.5;
+  }
+
   .popup-buttons {
     margin-top: 3em;
     font-size: $font-size;
@@ -42,5 +49,9 @@
         margin: 0 0.5em;
       }
     }
+  }
+
+  @media (min-width: 768px) {
+    padding: 2em 4em;
   }
 }

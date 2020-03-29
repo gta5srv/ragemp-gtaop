@@ -24,7 +24,7 @@
 		"removeComments": true,
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
-		"types" : ["node", "ragemp-s"],
+		"types" : ["node", "ragemp-s", "mysql", "bcryptjs", "sha256"],
 		"allowSyntheticDefaultImports": true,
 		"sourceMap": true
 	},

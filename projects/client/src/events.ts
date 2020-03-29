@@ -1,6 +1,7 @@
 import Zone from "@lib/zone";
 import Team from "@lib/team";
 import Vehicle from "@lib/vehicle";
+import Client from "@lib/client";
 
 mp.events.add('loadInteriorProps', (position: Vector3Mp, props: string[]) => {
   const interiorID = mp.game.interior.getInteriorAtCoords(position.x, position.y, position.z);
@@ -25,7 +26,6 @@ mp.events.add("vehicleDeath", (vehicleRemoteId: number) => {
   if (!(veh && veh.blip)) return;
   veh.blip.alpha = 122;
 });
-
 
 mp.events.add("vehicleSpawn", (vehicleRemoteId: number) => {
 	const veh = Vehicle.all.byRemoteId(vehicleRemoteId);
@@ -70,8 +70,6 @@ mp.events.add('teamsAdd', (teamsData: string) => {
       return;
     }
 
-    // mp.gui.chat.push(`team add "${teamData.slug}"`);
-
     const teamVehicles = teamData.vehicleIds.map((vehicleId: number) => {
       const foundVehicle = Vehicle.all.byRemoteId(vehicleId);
       return foundVehicle ? foundVehicle : new Vehicle(mp.vehicles.atRemoteId(vehicleId));
@@ -97,7 +95,7 @@ mp.events.add('zonesAdd', (zonesData: string) => {
       return;
     }
 
-    // mp.gui.chat.push(`zone add "${zone.slug}"`);
+    // mp.gui.chat.push('Adding zone ' + zone.slug)
 
     const zonePosition = new mp.Vector3(
       zone.position.x,
@@ -131,8 +129,6 @@ mp.events.add('zoneUpdate', (zoneUpdateData: string) => {
 
   const zone = Zone.all.bySlug(zoneUpdate.slug);
   if (zone) {
-    // mp.gui.chat.push(`zone "${zoneUpdate.slug}" state change -> (${Zone.State[zoneUpdate.state]})`);
-
     zone.state = zoneUpdate.state;
     zone.owner = zoneUpdate.owner ? Team.all.bySlug(zoneUpdate.owner) : null;
   }

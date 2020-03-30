@@ -1,4 +1,6 @@
 @import '../config/fonts';
+@import '../config/breakpoints';
+@import '../config/container';
 @import '../core/util';
 
 .accounting-container {
@@ -7,7 +9,7 @@
   display: flex;
   align-items: stretch;
 
-  width: 90%;
+  width: $container-width;
   height: 70%;
   border-radius: 10px;
 
@@ -96,8 +98,8 @@
     @extend %pseudo-clear;
   }
 
-  @media (min-width: 768px) {
-    width: 75%;
+  @media (min-width: #{$md}) {
+    width: $container-width-md;
 
     .accounting-background {
       width: 40%;
@@ -112,8 +114,8 @@
     }
   }
 
-  @media (min-width: 992px) {
-    width: 65%;
+  @media (min-width: #{$lg}) {
+    width: $container-width-lg;
 
     .accounting-content {
       .accounting-content-inner {

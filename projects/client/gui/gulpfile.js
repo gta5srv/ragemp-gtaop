@@ -79,8 +79,7 @@ function styles () {
 function html () {
   const browserCfgRegExp = new RegExp(/(window\.OPPOSING_FORCES) ?= ?(.*?);/);
   const browserOptions = JSON.stringify({
-    isProduction: Boolean(IS_PRODUCTION),
-    isTruth: 42
+    isProduction: Boolean(IS_PRODUCTION)
   });
 
   return gulp.src('static/**/*.html', {

@@ -29,6 +29,17 @@ Server.addCommand('savepos', (client: Client, description: string) => {
 	})
 })
 
+Server.addCommand('register', (client: Client) => {
+	Server.db.getUserBySocialClub(client.mp.socialClub, (userData: any) => {
+		if (userData != null) {
+			client.sendMessage("!{#ff0000}You're already registered.");
+			return;
+		}
+
+		client.onClientRequestAccountStatus();
+	});
+})
+
 Server.addCommand('v', (client: Client, modelName: string) => {
 	if (!modelName || typeof modelName !== 'string') {
 		client.sendMessage(`!{#ffff00}Usage: !{#ffffff}/v !{#dddddd}[vehicle_model]`);

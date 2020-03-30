@@ -114,20 +114,21 @@ export default class Callback extends List<Listener<any>> {
       subscriber.onClientReady();
     });
 
-    this.addEvent('OP.CLIENT.requestAccountStatus', Listeners.isClientListener,
-                  (subscriber: Listeners.ClientListener) => {
-      subscriber.onClientRequestAccountStatus();
+    this.addEvent('OP.CLIENT.tryLogin', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener,
+                  hash: string) => {
+      subscriber.onClientTryLogin(hash);
     });
 
     this.addEvent('OP.CLIENT.tryRegister', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener,
-                  email: string, hash:string, salt: string) => {
+                  email: string, hash: string, salt: string) => {
       subscriber.onClientTryRegister(email, hash, salt);
     });
 
-    this.addEvent('OP.CLIENT.requestSalt', Listeners.isClientListener,
+    this.addEvent('OP.CLIENT.requestAccountStatus', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener) => {
-      subscriber.onClientRequestSalt();
+      subscriber.onClientRequestAccountStatus();
     });
   }
 

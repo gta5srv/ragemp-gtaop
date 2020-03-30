@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@eisengrind/v-rpc": "^1.0.1",
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
     "babelify": "^10.0.0",
     "bcryptjs": "^2.4.3",

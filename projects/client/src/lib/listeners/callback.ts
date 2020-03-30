@@ -84,15 +84,48 @@ export default class Callback extends List<Listener<any>> {
       subscriber.onTryRegister(email, hash, salt);
     });
 
+    this.addEvent('OP.GUI.confirmLogin', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onConfirmLogin();
+    });
+
+    this.addEvent('OP.GUI.confirmRegister', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onConfirmRegister();
+    });
+
+    this.addEvent('OP.GUI.forgotPassword', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onForgotPassword();
+    });
+
+    this.addEvent('OP.GUI.playAsGuest', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onPlayAsGuest();
+    });
+
+    this.addEvent('OP.loginResponse', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, success: boolean, message?: string) => {
+      subscriber.onLoginResponse(success, message);
+    });
+
+    this.addEvent('OP.registerResponse', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, success: boolean, message?: string) => {
+      subscriber.onRegisterResponse(success, message);
+    });
+
     this.addEvent('OP.GUI.debug', Listeners.isGuiListener,
                   (subscriber: Listeners.GuiListener, text: string) => {
       subscriber.onGuiDebug(text);
     });
 
+
+
+
+
     this.addEvent('OP.accountStatusUpdate', Listeners.isClientListener,
-                  (subscriber: Listeners.ClientListener, isRegistered: boolean, socialClubName: string) => {
-      mp.gui.chat.push('UPDATE EVENT')
-      subscriber.onAccountStatusUpdate(isRegistered, socialClubName);
+                  (subscriber: Listeners.ClientListener, socialClubName: string, isLoggedIn: boolean, registeredSalt?: string) => {
+      subscriber.onAccountStatusUpdate(socialClubName, isLoggedIn, registeredSalt);
     });
   }
 

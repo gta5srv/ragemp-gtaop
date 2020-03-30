@@ -14,6 +14,7 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
   private _respawnTimer: any;
   private _currentZone: Zone|null = null;
   private _spawnZone: Zone|null = null;
+  private _isLoggedIn: boolean = false;
 
   public static all: Manager.Client = new Manager.Client();
 
@@ -184,25 +185,55 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     this.call('teamsAdd', JSON.stringify(Team.all));
     this.call('zonesAdd', JSON.stringify(Zone.all));
 
-    this.spawn()
-    this.sendMessage('!{#34c6eb}Welcome to OPPOSING FORCES. To start exploring, use !{#ffff00}/help')
+    this.spawn();
+    this.sendMessage('!{#34c6eb}Welcome to OPPOSING FORCES. To start exploring, use !{#ffff00}/help');
+  }
 
-    console.log('TEST23')
+  onClientRequestAccountStatus () {
     Server.db.getUserBySocialClub(this.mp.socialClub, (userData) => {
-      console.log('OP.accountStatusUpdate', userData !== null, this.mp.socialClub);
-      this.call('OP.accountStatusUpdate', userData !== null, this.mp.socialClub);
+      const salt = userData ? userData.PasswordSalt : undefined;
+      this.call('OP.accountStatusUpdate', this.mp.socialClub, this._isLoggedIn, salt);
     });
   }
 
-  onClientRequestAccountStatus (): void {
-  }
+  onClientTryLogin (hash: string): void {
+    Server.db.checkUserPassword(this.mp.socialClub, hash, (success: boolean) => {
+      this._isLoggedIn = success;
 
-  onClientRequestSalt(): void {
-    throw new Error("Method not implemented.");
+      if (success) {
+        this.call('OP.loginResponse', true);
+      } else {
+        this.call('OP.loginResponse', false, 'Wrong password given.');
+      }
+    });
   }
 
   onClientTryRegister(email: string, hash: string, salt: string): void {
+    let errors = [];
 
+    if (!Util.isEmail(email)) {
+      errors.push('Email invalid');
+    }
+    if (!(typeof hash === 'string' && hash.length)) {
+      errors.push('Invalid hash provided');
+    }
+    if (!(typeof salt === 'string' && salt.length)) {
+      errors.push('Invalid salt provided');
+    }
+
+    if (errors.length) {
+      this.call('OP.registerResponse', false, errors.join(', '));
+      return;
+    }
+
+    Server.db.addUser(this.mp.socialClub, email, hash, salt, (err?: string) => {
+      if (err) {
+        this.call('OP.registerResponse', false, err);
+        return;
+      }
+
+      this.call('OP.registerResponse', true);
+    });
   }
 
   onVehicleDeath(vehicle: Vehicle): void {

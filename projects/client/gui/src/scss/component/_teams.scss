@@ -1,0 +1,120 @@
+@import '../config/fonts';
+@import '../config/breakpoints';
+@import '../config/container';
+@import '../core/util';
+
+$teams-count: 3;
+
+.teams-container {
+  @extend %centered;
+
+  user-select: none;
+
+  width: $container-width;
+  height: 70%;
+
+  .teams-list {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    transform: translateX(33.33% / $teams-count);
+
+    li {
+      position: relative;
+      box-sizing: border-box;
+      width: 33.33%;
+      height: 100%;
+
+      cursor: pointer;
+      filter: grayscale(100%) contrast(115%);
+      clip-path: polygon(0% 100%, 35% 0%, 100% 0%, 65% 100%);
+
+      transition: 0.5s;
+
+      @for $i from 1 through $teams-count {
+        //translateX(11.5%)
+        &:nth-child(#{$i}) {
+          transform: translateX(#{($i - 1) * -35%});
+        }
+      }
+
+      .teams-bg {
+        @extend %centered;
+
+        background: center center;
+        background-size: cover;
+
+        width: 100%;
+        height: 100%;
+
+        transition: width 0.4s, height 0.4s;
+
+        &:after {
+          @extend %cover;
+
+          content: '';
+          background: rgba(#3b98be, 0.5);
+
+          visibility: hidden;
+          opacity: 0;
+          transition: 0.5s;
+        }
+      }
+
+      .teams-content {
+        position: relative;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        h2 {
+          visibility: hidden;
+          opacity: 0;
+          transition: 0.5s;
+
+          position: relative;
+
+          font-family: Pacifico;
+          font-size: floor($font-size * 3);
+          font-style: italic;
+          color: #fbc845;
+          text-shadow: 0 3px 1px rgba(#000, 0.7);
+
+          transform: translateX(-100%);
+          transition-delay: 0.3s;
+        }
+      }
+
+      &:hover {
+        box-shadow: 0px 10px 5px #fbc845, 0px -10px 5px #fbc845;
+        filter: grayscale(25%) contrast(150%);
+
+        .teams-bg:after,
+        .teams-content h2 {
+          visibility: visible;
+          opacity: 1;
+        }
+
+        .teams-bg {
+          width: 105%;
+          height: 105%;
+        }
+
+        h2 {
+          transform: translateX(0);
+        }
+      }
+    }
+  }
+
+  @media (min-width: #{$md}) {
+    width: $container-width-md;
+  }
+
+  @media (min-width: #{$lg}) {
+    width: ($container-width-lg + 20%);
+  }
+}

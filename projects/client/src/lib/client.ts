@@ -1,6 +1,5 @@
 import Vehicle from "@lib/vehicle";
 import * as Listeners from '@lib/listeners';
-// import bcrypt from 'bcryptjs';
 import Gui from "@lib/gui";
 
 export default class Client implements Listeners.ClientListener {
@@ -11,7 +10,10 @@ export default class Client implements Listeners.ClientListener {
   public static readonly mp: PlayerMp = mp.players.local;
   public static readonly gui: Gui = new Gui();
   public static lastVehicle: Vehicle|null = null;
+
   private isGuiReady: boolean = false;
+  private awaitingLogin: boolean = false;
+  private awaitingRegister: boolean = false;
 
   constructor () {
     this.listeners = new Listeners.Callback();
@@ -42,33 +44,68 @@ export default class Client implements Listeners.ClientListener {
     lastVehicle.hiddenOnMap = false;
   }
 
-  onTryLogin(hash: string): boolean {
-    throw new Error("Method not implemented.");
+  public onTryLogin(hash: string): void {
+    if (this.awaitingLogin) {
+      return;
+    }
+
+    this.awaitingLogin = true;
+    mp.events.callRemote('OP.CLIENT.tryLogin', hash);
   }
 
-  onTryRegister(email: string, hash: string, salt: string): void {
-    mp.gui.chat.push('TRY REGISTER ' + email);
-    mp.gui.chat.push('HASH: ' + hash);
-    mp.gui.chat.push('SALT: ' + salt);
+  public onLoginResponse (success: boolean, message?: string): void {
+    this.awaitingLogin = false;
+    Client.gui.loginResult(success, message);
   }
 
-  onBrowserReady(): void {
-    mp.gui.chat.push('BROWSER READY')
+  public onConfirmLogin (): void {
+    mp.events.callRemote('OP.CLIENT.requestAccountStatus');
+  }
 
+  public onTryRegister (email: string, hash: string, salt: string): void {
+    if (this.awaitingRegister) {
+      return;
+    }
+
+    this.awaitingRegister = true;
+    mp.events.callRemote('OP.CLIENT.tryRegister', email, hash, salt);
+  }
+
+  public onRegisterResponse (success: boolean, message?: string): void {
+    this.awaitingRegister = false;
+    Client.gui.registerResult(success, message);
+  }
+
+  public onConfirmRegister (): void {
+    mp.events.callRemote('OP.CLIENT.requestAccountStatus');
+  }
+
+  public onBrowserReady(): void {
     if (!this.isGuiReady) {
       this.isGuiReady = true;
 
       mp.events.callRemote('OP.CLIENT.ready');
+      mp.events.callRemote('OP.CLIENT.requestAccountStatus');
     }
   }
 
-  onAccountStatusUpdate(isRegistered: boolean, socialClubName: string): void {
-    mp.gui.chat.push('Is registered? ' + Boolean(isRegistered));
+  public onForgotPassword (): void {
+    mp.events.callRemote('OP.CLIENT.forgotPassword');
+  }
 
-    if (isRegistered) {
-      Client.gui.showLogin(socialClubName);
-    } else {
-      Client.gui.showRegister(socialClubName);
+  public onPlayAsGuest (): void {
+    Client.gui.toggleLoginRegister(false);
+  }
+
+  public onAccountStatusUpdate(socialClubName: string, isLoggedIn: boolean, registeredSalt?: string): void {
+    if (!isLoggedIn) {
+      if (registeredSalt != null) {
+        Client.gui.showLogin(socialClubName, registeredSalt);
+      } else {
+        Client.gui.showRegister(socialClubName);
+      }
     }
+
+    Client.gui.toggleLoginRegister(!isLoggedIn);
   }
 }

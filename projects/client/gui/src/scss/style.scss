@@ -3,6 +3,7 @@
 
 // Core
 @import 'core/util';
+@import 'core/animations';
 // Fonts
 @import 'fonts/work-sans';
 @import 'fonts/pacifico';
@@ -13,6 +14,7 @@
 @import 'base/forms';
 @import 'base/popups';
 // Components
+@import 'component/shared';
 @import 'component/accounting';
 @import 'component/teams';
 

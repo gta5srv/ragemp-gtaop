@@ -1,49 +1,82 @@
-import * as Listeners from '@lib/listeners';
-import { EventEmitter } from 'events';
-
-export default class Gui extends EventEmitter implements Listeners.GuiListener {
+export default class Gui {
   accountingBrowser: BrowserMp;
+  teamsBrowser: BrowserMp|null = null;
+
 
   constructor () {
-    super();
-
     this.accountingBrowser = mp.browsers.new('package://gui/accounting.html');
     this.showChat(false);
   }
 
-  showChat(toggle: boolean) {
+
+  public showChat(toggle: boolean) {
     mp.gui.chat.show(toggle);
   }
 
-  showLogin (socialClubName: string, registeredSalt: string) {
+
+  public showLogin (socialClubName: string, registeredSalt: string) {
     this.accountingBrowser.execute(`showLoginForm('${socialClubName}', '${registeredSalt}');`);
     mp.gui.cursor.show(true, true);
   }
 
-  showRegister (socialClubName: string) {
+
+  public showRegister (socialClubName: string) {
     this.accountingBrowser.execute(`showRegisterForm('${socialClubName}');`);
     mp.gui.cursor.show(true, true);
   }
 
-  onTryRegister(email: string, hash: string, salt: string): void {
+
+  public onTryRegister(email: string, hash: string, salt: string): void {
     mp.events.callRemote('OP.tryRegister', email, hash, salt);
   }
 
-  loginResult (success: boolean, message?: string): void {
+
+  public loginResult (success: boolean, message?: string): void {
     this.accountingBrowser.execute(`onLoginResult(${Boolean(success)}, '${message}');`);
   }
 
-  registerResult (success: boolean, message?: string): void {
+
+  public registerResult (success: boolean, message?: string): void {
     this.accountingBrowser.execute(`onRegisterResult(${Boolean(success)}, '${message}');`);
   }
 
-  onGuiDebug (text: string): void {
-    mp.gui.chat.push('[BROWSER] ' + text);
-  }
 
-  toggleLoginRegister (toggle: boolean): void {
+  public toggleLoginRegister (toggle: boolean): void {
     this.accountingBrowser.execute(`toggleAll(${Boolean(toggle)});`);
     mp.gui.cursor.show(toggle, toggle);
     this.showChat(!toggle);
+  }
+
+
+  public showTeamSelection () {
+    this.teamsBrowser = mp.browsers.new('package://gui/teams.html');
+    mp.gui.cursor.show(true, true);
+    this.showChat(false);
+  }
+
+
+  public hideTeamSelection () {
+    if (!this.teamsBrowser) {
+      return;
+    }
+
+    this.teamsBrowser.destroy();
+    this.teamsBrowser = null;
+
+    mp.gui.cursor.show(false, false);
+    this.showChat(true);
+  }
+
+
+  public onTeamJoinResponse (success: boolean, message?: string) {
+    if (!this.teamsBrowser) {
+      return;
+    }
+
+    if (!success) {
+      this.teamsBrowser.execute(`requestTeamError('${message}');`)
+    } else {
+      this.hideTeamSelection();
+    }
   }
 }

@@ -9,6 +9,8 @@ interface ClientListener extends Listener<Client> {
   onClientCreateWaypoint(x: number, y: number): void;
   onClientTryLogin(hash: string): void;
   onClientTryRegister(email:string, hash: string, salt: string): void;
+  onClientRequestTeamInfos(): void;
+  onClientRequestTeamJoin(teamSlug: string): void;
 }
 
 function isClientListener(listener: Listener<any>): listener is ClientListener {

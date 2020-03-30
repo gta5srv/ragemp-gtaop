@@ -12,7 +12,6 @@ export default class Callback extends List<Listener<any>> {
   constructor () {
     super()
 
-    this.init()
     this.register()
   }
 
@@ -35,27 +34,11 @@ export default class Callback extends List<Listener<any>> {
 
         let params = Util.convertRageMPInstances(...args);
 
-        // if (subscriberCheckCb === Listeners.isVehicleListener) {
-        //   if (params[0] instanceof Vehicle && params[0] != subscriber) {
-        //     return true;
-        //   }
-        // }
-
         // Prepend issueing subscriber to parameters
         params.unshift(subscriber);
         callback(...params);
       });
     });
-  }
-
-  private init (): void {
-    // mp.events.add('playerJoin', (player: PlayerMp) => {
-    //   new Client(player);
-    // });
-    //
-    // mp.events.add('playerQuit', (player: PlayerMp) => {
-    //   Client.all.removeByPlayerMp(player);
-    // });
   }
 
   private register (): void {
@@ -104,6 +87,26 @@ export default class Callback extends List<Listener<any>> {
       subscriber.onPlayAsGuest();
     });
 
+    this.addEvent('OP.GUI.TEAMS.requestJoin', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, teamSlug: string) => {
+      subscriber.onRequestTeamJoin(teamSlug);
+    });
+
+    this.addEvent('OP.GUI.TEAMS.requestInfos', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener) => {
+      subscriber.onRequestTeamInfos();
+    });
+
+    this.addEvent('OP.teamJoinResponse', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, success: boolean, message?: string) => {
+      subscriber.onTeamJoinResponse(success, message);
+    });
+
+    this.addEvent('OP.teamInfosResponse', Listeners.isClientListener,
+                  (subscriber: Listeners.ClientListener, teamInfos: string) => {
+      subscriber.onTeamInfosResponse(teamInfos);
+    });
+
     this.addEvent('OP.loginResponse', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener, success: boolean, message?: string) => {
       subscriber.onLoginResponse(success, message);
@@ -113,15 +116,6 @@ export default class Callback extends List<Listener<any>> {
                   (subscriber: Listeners.ClientListener, success: boolean, message?: string) => {
       subscriber.onRegisterResponse(success, message);
     });
-
-    this.addEvent('OP.GUI.debug', Listeners.isGuiListener,
-                  (subscriber: Listeners.GuiListener, text: string) => {
-      subscriber.onGuiDebug(text);
-    });
-
-
-
-
 
     this.addEvent('OP.accountStatusUpdate', Listeners.isClientListener,
                   (subscriber: Listeners.ClientListener, socialClubName: string, isLoggedIn: boolean, registeredSalt?: string) => {

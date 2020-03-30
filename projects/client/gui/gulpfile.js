@@ -31,6 +31,7 @@ function clear (cb) {
 function scripts () {
   const ENTRY_FILES = [
     'accounting/index.js',
+    'teams/index.js',
     'index.js'
   ];
 

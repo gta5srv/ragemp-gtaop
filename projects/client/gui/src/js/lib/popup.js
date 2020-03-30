@@ -17,8 +17,12 @@ class PopUp {
       this.$content,
       this.$buttons
     );
+    this.$wrapper = $('<div>', { class: 'popup-wrap' }).append(
+      this.$element
+    );
+
     this.$content.html(html);
-    this.$element.appendTo($('body'));
+    this.$wrapper.appendTo($('body'));
   }
 
 
@@ -69,7 +73,10 @@ class PopUp {
 
 
   show () {
-    this.$element.addClass('visible');
+    this.$wrapper.addClass('visible');
+    window.setTimeout(() => {
+      this.$element.addClass('visible');
+    }, 0);
 
     const $buttons = $('button', this.$buttons);
     if ($buttons.length) {
@@ -79,14 +86,14 @@ class PopUp {
 
 
   hide () {
-    this.$element.removeClass('visible');
+    this.$wrapper.removeClass('visible');
   }
 
 
   remove () {
     this.hide();
 
-    this.$element.one("transitionend webkitTransitionEnd oTransitionEnd", () => {
+    this.$wrapper.one("transitionend webkitTransitionEnd oTransitionEnd", () => {
       this.$element.remove();
     });
   }

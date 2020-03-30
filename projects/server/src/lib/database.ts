@@ -1,6 +1,6 @@
 import mysql from 'mysql';
 import { EventEmitter } from 'events';
-import sha256 from 'sha256';
+import { SHA3 } from 'sha3';
 
 
 class Database extends EventEmitter {
@@ -71,7 +71,8 @@ class Database extends EventEmitter {
   }
 
   public addUser (socialClubName: string, email: string, hash: string, salt: string, cb: (err?: string) => void) {
-    hash = sha256(hash);
+    const sha3hash = new SHA3(512);
+    sha3hash.update(hash);
 
     this.getUserBySocialClub(socialClubName, (userData: any) => {
       if (userData != null) {
@@ -79,7 +80,8 @@ class Database extends EventEmitter {
         return;
       }
 
-      this.query(Database.Sql.addUser(socialClubName, email, hash, salt), (err, result) => {
+      const query = Database.Sql.addUser(socialClubName, email, sha3hash.digest('hex'), salt);
+      this.query(query, (err, result) => {
         cb();
       });
     });
@@ -91,7 +93,9 @@ class Database extends EventEmitter {
         cb(false);
       }
 
-      cb(sha256(hash) === userData.PasswordHash);
+      const sha3hash = new SHA3(512);
+      sha3hash.update(hash);
+      cb(sha3hash.digest('hex') === userData.PasswordHash);
     });
   }
 }
@@ -138,7 +142,7 @@ namespace Database {
           ID int(11) AUTO_INCREMENT PRIMARY KEY,
           SocialClubName varchar(32),
           Email varchar(32),
-          PasswordHash varchar(64),
+          PasswordHash varchar(512),
           PasswordSalt varchar(64),
           AdminLevel tinyint(1) DEFAULT 0,
           XP int(11) DEFAULT 0,

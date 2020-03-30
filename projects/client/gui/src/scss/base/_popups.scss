@@ -1,57 +1,66 @@
 @import '../config/fonts';
 @import '../core/util';
 
-.popup {
-  @extend %centered;
-  background: #fff;
-  border-radius: 5px;
-  text-align: center;
-  padding: 2em;
-  max-width: 90%;
-  max-height: 90%;
-  overflow-y: auto;
+.popup-wrap {
+  @extend %cover;
+  background: rgba(#000, 0.2);
 
-  visibility: hidden;
-  opacity: 0;
+  &,
+  .popup {
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s;
 
-  transition: 0.3s;
-
-  color: darken(#3b98be, 10%);
-  font-size: floor($font-size * 0.85);
-
-  &.visible {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .popup-image {
-    img {
-      max-width: 25%;
-      margin-bottom: 3em;
+    &.visible {
+      visibility: visible;
+      opacity: 1;
     }
   }
 
-  .popup-content {
-    line-height: 1.5;
-  }
+  .popup {
+    @extend %centered;
+    background: #fff;
+    border-radius: 5px;
+    text-align: center;
+    padding: 2em;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
 
-  .popup-buttons {
-    margin-top: 3em;
-    font-size: $font-size;
+    color: darken(#3b98be, 10%);
+    font-size: floor($font-size * 0.85);
 
-    &.popup-buttons-multiple {
-      display: flex;
-      margin-left: -0.5em;
-      margin-right: -0.5em;
+    transition-delay: 0.2s;
 
-      button {
-        width: 50%;
-        margin: 0 0.5em;
+    .popup-image {
+      img {
+        max-width: 25%;
+        margin-bottom: 3em;
       }
     }
-  }
 
-  @media (min-width: 768px) {
-    padding: 2em 4em;
+    .popup-content {
+      line-height: 1.5;
+    }
+
+    .popup-buttons {
+      margin-top: 3em;
+      font-size: $font-size;
+
+      &.popup-buttons-multiple {
+        display: flex;
+        margin-left: -0.5em;
+        margin-right: -0.5em;
+
+        button {
+          width: 50%;
+          margin: 0 0.5em;
+        }
+      }
+    }
+
+    @media (min-width: 768px) {
+      padding: 2em 4em;
+    }
   }
 }

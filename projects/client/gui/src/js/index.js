@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import op from './op';
+import op from './lib/op';
 
 $(function () {
   if (op.getCfg().isProduction === false) {

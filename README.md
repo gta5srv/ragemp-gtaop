@@ -20,3 +20,10 @@ All **source files are located in** ```projects/```.
 ```bash
 $ node gtaop build <server/client/all>
 ```
+
+
+# Bugs
+**Server-side:**
+* Destroyed vehicles don't respawn
+
+**Client-side:**

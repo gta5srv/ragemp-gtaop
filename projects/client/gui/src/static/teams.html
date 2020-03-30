@@ -8,44 +8,102 @@
     <link href="assets/css/style.css" rel="stylesheet">
 
   </head>
-  <body class="teams demo">
+  <body class="teams">
 
     <div class="backdrop"></div>
 
+    <div class="logo-top-left">
+      <img src="assets/img/logo.png">
+    </div>
+
     <main class="teams-container">
+      <svg viewBox="0 0 100 100" style="display: none">
+        <defs>
+          <polygon id="teamspath" points="0,100 35,0 100,0 65,100" fill="transparent" stroke="#fbc845" stroke-width="2px" />
+        </defs>
+      </svg>
+
       <ul class="teams-list">
-        <li>
-          <div
-            class="teams-bg"
-            style="background-image: url(assets/img/teams/fib.webp)">
-          </div>
+        <!-- TEAM FIB -->
+        <li data-team-slug="fib" class="teams-item-container">
+          <div class="teams-item">
+            <div
+              class="teams-bg"
+              style="background-image: url(assets/img/teams/fib.webp)">
+            </div>
 
-          <div class="teams-content">
-            <h2>FIB</h2>
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+              <use href="#teamspath">
+            </svg>
+
+            <div class="teams-content">
+              <div class="teams-content-inner">
+                <h2>FIB</h2>
+
+                <div class="teams-content-extra">
+                  <button type="button" class="button-gold join-team">
+                    Join
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </li>
+        <!-- /TEAM FIB -->
 
-        <li>
-          <div
-            class="teams-bg"
-            style="background-image: url(assets/img/teams/bikers.webp)">
-          </div>
+        <!-- TEAM LOST MC -->
+        <li data-team-slug="lost_mc" class="teams-item-container">
+          <div class="teams-item">
+            <div
+              class="teams-bg"
+              style="background-image: url(assets/img/teams/bikers.webp)">
+            </div>
 
-          <div class="teams-content">
-            <h2>The Lost</h2>
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+              <use href="#teamspath">
+            </svg>
+
+            <div class="teams-content">
+              <div class="teams-content-inner">
+                <h2>Lost MC</h2>
+
+                <div class="teams-content-extra">
+                  <button type="button" class="button-gold join-team">
+                    Join
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </li>
+        <!-- /TEAM LOST MC -->
 
-        <li>
-          <div
-            class="teams-bg"
-            style="background-image: url(assets/img/teams/marines.webp)">
-          </div>
+        <!-- TEAM MARINES -->
+        <li data-team-slug="marines" class="teams-item-container">
+          <div class="teams-item">
+            <div
+              class="teams-bg"
+              style="background-image: url(assets/img/teams/marines.webp)">
+            </div>
 
-          <div class="teams-content">
-            <h2>Marines</h2>
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+             <use href="#teamspath">
+            </svg>
+
+            <div class="teams-content">
+              <div class="teams-content-inner">
+                <h2>Marines</h2>
+
+                <div class="teams-content-extra">
+                  <button type="button" class="button-gold join-team">
+                    Join
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </li>
+        <!-- /TEAM MARINES -->
     </main>
 
     <script>window.OPPOSING_FORCES = {};</script>

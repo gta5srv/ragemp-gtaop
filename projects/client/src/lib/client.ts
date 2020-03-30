@@ -11,14 +11,17 @@ export default class Client implements Listeners.ClientListener {
   public static readonly gui: Gui = new Gui();
   public static lastVehicle: Vehicle|null = null;
 
+  private isLoggedIn: boolean = false;
   private isGuiReady: boolean = false;
   private awaitingLogin: boolean = false;
   private awaitingRegister: boolean = false;
+
 
   constructor () {
     this.listeners = new Listeners.Callback();
     this.listeners.add(this);
   }
+
 
   public static get instance () {
     if (!Client._instance) {
@@ -28,21 +31,26 @@ export default class Client implements Listeners.ClientListener {
     return Client._instance;
   }
 
+
   static get vehicle () {
     return Vehicle.all.byVehicleMp(mp.players.local.vehicle);
   }
+
 
   public static message (...args: any[]) {
     mp.gui.chat.push(args.map((a) => String(a)).join(' '));
   }
 
+
   public onEnterVehicle (vehicle: Vehicle): void {
     vehicle.hiddenOnMap = true;
   }
 
+
   public onExitVehicle (lastVehicle: Vehicle): void {
     lastVehicle.hiddenOnMap = false;
   }
+
 
   public onTryLogin(hash: string): void {
     if (this.awaitingLogin) {
@@ -53,14 +61,17 @@ export default class Client implements Listeners.ClientListener {
     mp.events.callRemote('OP.CLIENT.tryLogin', hash);
   }
 
+
   public onLoginResponse (success: boolean, message?: string): void {
     this.awaitingLogin = false;
     Client.gui.loginResult(success, message);
   }
 
+
   public onConfirmLogin (): void {
     mp.events.callRemote('OP.CLIENT.requestAccountStatus');
   }
+
 
   public onTryRegister (email: string, hash: string, salt: string): void {
     if (this.awaitingRegister) {
@@ -71,14 +82,17 @@ export default class Client implements Listeners.ClientListener {
     mp.events.callRemote('OP.CLIENT.tryRegister', email, hash, salt);
   }
 
+
   public onRegisterResponse (success: boolean, message?: string): void {
     this.awaitingRegister = false;
     Client.gui.registerResult(success, message);
   }
 
+
   public onConfirmRegister (): void {
     mp.events.callRemote('OP.CLIENT.requestAccountStatus');
   }
+
 
   public onBrowserReady(): void {
     if (!this.isGuiReady) {
@@ -89,13 +103,16 @@ export default class Client implements Listeners.ClientListener {
     }
   }
 
+
   public onForgotPassword (): void {
     mp.events.callRemote('OP.CLIENT.forgotPassword');
   }
 
+
   public onPlayAsGuest (): void {
     Client.gui.toggleLoginRegister(false);
   }
+
 
   public onAccountStatusUpdate(socialClubName: string, isLoggedIn: boolean, registeredSalt?: string): void {
     if (!isLoggedIn) {
@@ -107,5 +124,33 @@ export default class Client implements Listeners.ClientListener {
     }
 
     Client.gui.toggleLoginRegister(!isLoggedIn);
+
+    if (isLoggedIn !== this.isLoggedIn) {
+      if (isLoggedIn) {
+        Client.gui.showTeamSelection();
+      }
+
+      this.isLoggedIn = isLoggedIn;
+    }
+  }
+
+
+  public onTeamInfosResponse(teamInfoData: string): void {
+    // TODO: Implement behaviour
+  }
+
+
+  public onRequestTeamInfos(): void {
+    mp.events.callRemote('OP.CLIENT.requestTeamInfos');
+  }
+
+
+  public onTeamJoinResponse(success: boolean, message?: string | undefined): void {
+    Client.gui.onTeamJoinResponse(success, message);
+  }
+
+
+  public onRequestTeamJoin(teamSlug: string): void {
+    mp.events.callRemote('OP.CLIENT.requestTeamJoin', teamSlug);
   }
 }

@@ -92,6 +92,14 @@ export class Team {
     return this._vehicles;
   }
 
+  get isFull () {
+    return false;
+  }
+
+  get isBoosted () {
+    return false;
+  }
+
   private init (): void {
     // TODO: Implement proper class
     this._label = mp.labels.new(
@@ -126,19 +134,23 @@ export class Team {
     });
   }
 
+
   public setupClient (client: Client): void {
     const modelIndex = Math.floor(Math.random() * this._models.length);
     client.model = mp.joaat(this._models[modelIndex]);
   }
+
 
   public getSpawn (): any { // TODO: Change type
     const spawnIndex = Math.floor(Math.random() * this._spawns.length);
     return this._spawns[spawnIndex];
   }
 
+
   public toString (): string {
     return `(Team "${this.name}" <${this.slug}>)`;
   }
+
 
   public toJSON () {
     return {

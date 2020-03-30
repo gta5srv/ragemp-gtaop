@@ -1,9 +1,9 @@
 /**
  * Dependencies
  */
-import './forms';
-import { PopUp } from './popup';
-import op from '../op';
+import op from '../lib/op';
+import '../lib/forms';
+import { PopUp } from '../lib/popup';
 
 import $ from 'jquery';
 import bcrypt from 'bcryptjs';

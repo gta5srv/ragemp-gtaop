@@ -26,6 +26,7 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     Server.listeners.add(this);
   }
 
+
   get position () {
     return this.mp.position;
   }
@@ -82,7 +83,8 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     return this._spawnZone
   }
 
-  setSpawnZone (spawnZone: Zone): boolean {
+
+  public setSpawnZone (spawnZone: Zone): boolean {
     if (!spawnZone.spawns.length) {
       return false;
     }
@@ -91,14 +93,16 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     return true;
   }
 
-  sendMessage (...args: any[]): void {
+
+  public sendMessage (...args: any[]): void {
     let texts = [...args];
     let textsPutTogether = texts.map(text => String(text)).join(' ');
 
     this.mp.outputChatBox(textsPutTogether);
   }
 
-  spawn (timeMs?: number): void {
+
+  public spawn (timeMs?: number): void {
     if (this._respawnTimer) {
       clearTimeout(this._respawnTimer);
       this._respawnTimer = null;
@@ -133,41 +137,49 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     this.mp.giveWeapon(mp.joaat('weapon_compactlauncher'), 50);
   }
 
-  kill (): void {
+
+  public kill (): void {
     this.mp.health = 0;
   }
 
-  call (eventName: string, ...args: any[]) {
+
+  public call (eventName: string, ...args: any[]) {
     this.mp.call(eventName, args);
   }
 
-  putInVehicle(v: Vehicle, seat: RageEnums.VehicleSeat = RageEnums.VehicleSeat.DRIVER) {
+
+  public putInVehicle(v: Vehicle, seat: RageEnums.VehicleSeat = RageEnums.VehicleSeat.DRIVER) {
     this.mp.putIntoVehicle(v.vehicleMp, seat);
   }
 
-  giveWeapon(weaponName: HashOrString, ammo: number): void {
+
+  public giveWeapon(weaponName: HashOrString, ammo: number): void {
     const weaponHash = mp.joaat(String(weaponName))
     this.mp.giveWeapon(weaponHash, ammo)
   }
 
-  loadWorldLocation(worldLocation: WorldLocation) {
+
+  public loadWorldLocation(worldLocation: WorldLocation) {
     this.call('loadInteriorProps', worldLocation.position, worldLocation.interiorProps);
   }
 
-  onClientChat(message: string): void {
+
+  public onClientChat(message: string): void {
     const color = this.team ? '!{' + Util.rgbToHex(...this.team.color) + '}' : '';
 
     Server.log(`${this.name}: ${message}`);
     Server.sendMessage(`${color}${this.name}: !{#ffffff}${message}`);
   }
 
-  onClientCreateWaypoint(x: number, y: number): void {
+
+  public onClientCreateWaypoint(x: number, y: number): void {
     Server.heightMap.getZ(x, y, (z: number) => {
       this.position = new mp.Vector3(x, y, z + 0.5);
     });
   }
 
-  onClientDeath(_reason: number, _killer: Client): void {
+
+  public onClientDeath(_reason: number, _killer: Client): void {
     if (this.currentZone) {
       Server.broadcast(`Client ${this.name} died in zone ${this.currentZone.name}`);
       this.currentZone.onZoneExit(this);
@@ -176,7 +188,8 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     this.spawn(5000);
   }
 
-  onClientReady(): void {
+
+  public onClientReady(): void {
     WorldLocations.all.forEach((worldLocation: WorldLocation) => {
       this.loadWorldLocation(worldLocation);
     });
@@ -189,26 +202,34 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     this.sendMessage('!{#34c6eb}Welcome to OPPOSING FORCES. To start exploring, use !{#ffff00}/help');
   }
 
-  onClientRequestAccountStatus () {
+
+  public onClientRequestAccountStatus () {
     Server.db.getUserBySocialClub(this.mp.socialClub, (userData) => {
       const salt = userData ? userData.PasswordSalt : undefined;
       this.call('OP.accountStatusUpdate', this.mp.socialClub, this._isLoggedIn, salt);
     });
   }
 
-  onClientTryLogin (hash: string): void {
+
+  public onClientTryLogin (hash: string): void {
+    if (!hash) {
+      this.call('OP.loginResponse', false, 'Invalid hash provided');
+      return;
+    }
+
     Server.db.checkUserPassword(this.mp.socialClub, hash, (success: boolean) => {
       this._isLoggedIn = success;
 
       if (success) {
         this.call('OP.loginResponse', true);
       } else {
-        this.call('OP.loginResponse', false, 'Wrong password given.');
+        this.call('OP.loginResponse', false, 'Wrong password given');
       }
     });
   }
 
-  onClientTryRegister(email: string, hash: string, salt: string): void {
+
+  public onClientTryRegister(email: string, hash: string, salt: string): void {
     let errors = [];
 
     if (!Util.isEmail(email)) {
@@ -236,14 +257,51 @@ export default class Client implements EntityAdapter, Listeners.ClientListener, 
     });
   }
 
-  onVehicleDeath(vehicle: Vehicle): void {
+
+  public onClientRequestTeamJoin(teamSlug: string): void {
+    const team = Team.all.bySlug(teamSlug);
+
+    if (!team) {
+      this.call('OP.teamJoinResponse', false, 'Team not found');
+      return;
+    }
+
+    if (team.isFull) {
+      this.call('OP.teamJoinResponse', false, 'Team is full');
+      return;
+    }
+
+    this.team = team;
+  	this.spawn();
+
+    this.call('OP.teamJoinResponse', true);
+  }
+
+
+  public onClientRequestTeamInfos(): void {
+    let teamInfos: any = {};
+
+    Team.all.items.forEach((team: Team) => {
+      teamInfos[team.slug] = {
+        isFull: team.isFull,
+        isBoosted: team.isBoosted
+      };
+    });
+
+    this.call('OP.teamInfosResponse', JSON.stringify(teamInfos));
+  }
+
+
+  public onVehicleDeath(vehicle: Vehicle): void {
     console.log('client VEHICLE DEATH');
   }
 
-  onVehicleAdd(vehicle: Vehicle): void {
+
+  public onVehicleAdd(vehicle: Vehicle): void {
     this.call('vehiclesAdded', JSON.stringify([ vehicle ]));
   }
 
-  onVehicleDamage(vehicle: Vehicle, bodyHealthLoss: number, engineHealthLoss: number): void {
+
+  public onVehicleDamage(vehicle: Vehicle, bodyHealthLoss: number, engineHealthLoss: number): void {
   }
 }

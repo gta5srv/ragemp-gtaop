@@ -2,6 +2,7 @@
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const path = require('path-posix');
+const glob = require('glob');
 
 // Gulp
 const gulp = require('gulp');
@@ -29,14 +30,10 @@ function clear (cb) {
 }
 
 function scripts () {
-  const ENTRY_FILES = [
-    'accounting/index.js',
-    'teams/index.js',
-    'index.js'
-  ];
+  const entryFiles = glob.sync('*.js', { cwd: 'src/js' });
 
-  let scriptTasks = ENTRY_FILES.map((entryFile) => {
-    const dirname = path.dirname(entryFile)
+  let scriptTasks = entryFiles.map((entryFile) => {
+    const fileName = path.basename(entryFile, '.js');
 
     return browserify(entryFile, {
         basedir: 'src/js',
@@ -47,16 +44,16 @@ function scripts () {
           sourceMaps: true
       })
       .bundle()
-      .pipe(prettyError())
       .pipe(source(entryFile))
       .pipe(buffer())
+      .pipe(prettyError())
       .pipe(gulpif(!IS_PRODUCTION, sourceMaps.init({ loadMaps: true })))
       .pipe(gulpif(IS_PRODUCTION, uglify()))
       // .pipe(gulpif(IS_PRODUCTION, stripDebug()))
-      .pipe(gulpif(dirname !== '.', rename(file => {
+      .pipe(rename(file => {
         file.dirname = ''
-        file.basename = dirname
-      })))
+        file.basename = fileName
+      }))
       .pipe(gulpif(!IS_PRODUCTION, sourceMaps.write('./')))
       .pipe(gulp.dest('assets/js', { cwd: 'build' }));
   })

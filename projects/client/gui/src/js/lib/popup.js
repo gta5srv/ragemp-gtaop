@@ -81,7 +81,7 @@ class PopUp {
     });
 
     this.nodes.buttons.append(button);
-    if (this.nodes.buttons.childElementCount.length >= 2) {
+    if (this.nodes.buttons.childElementCount >= 2) {
       this.nodes.buttons.classList.add('popup-buttons-multiple');
     }
   }
@@ -106,6 +106,8 @@ class PopUp {
   remove () {
     this.nodes.wrapper.addEventListener('transitionend', () => {
       DOM.remove(this.nodes.wrapper);
+    }, {
+      once: true
     });
 
     this.hide();

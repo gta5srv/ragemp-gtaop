@@ -34971,7 +34971,7 @@ var PopUp = /*#__PURE__*/function () {
       });
       this.nodes.buttons.append(button);
 
-      if (this.nodes.buttons.childElementCount.length >= 2) {
+      if (this.nodes.buttons.childElementCount >= 2) {
         this.nodes.buttons.classList.add('popup-buttons-multiple');
       }
     }
@@ -35002,6 +35002,8 @@ var PopUp = /*#__PURE__*/function () {
 
       this.nodes.wrapper.addEventListener('transitionend', function () {
         _dom["default"].remove(_this3.nodes.wrapper);
+      }, {
+        once: true
       });
       this.hide();
     }
@@ -35202,7 +35204,8 @@ window.onPlayAsGuest = function () {
   playAsGuest.error();
   playAsGuest.button('Go back');
   playAsGuest.button('Proceed', function () {
-    mp.trigger('OP.GUI.playAsGuest');
+    _gui.GUI.callClient('playAsGuest');
+
     playAsGuest.remove();
   });
   playAsGuest.show();
@@ -35212,7 +35215,8 @@ window.onForgotPassword = function () {
   var forgotPassword = new _popup.PopUp('We will send an E-Mail to your account containing instructions on how to reset your password.');
   forgotPassword.error();
   forgotPassword.button('Okay', function () {
-    mp.trigger('OP.GUI.forgotPassword');
+    _gui.GUI.callClient('forgotPassword');
+
     forgotPassword.remove();
     var confirm = new _popup.PopUp('An E-Mail containing reset instructions has been sent.<br><br>Please check your inbox.');
     confirm.success();

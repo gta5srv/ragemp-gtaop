@@ -172,7 +172,7 @@ window.onPlayAsGuest = () => {
   playAsGuest.error();
   playAsGuest.button('Go back');
   playAsGuest.button('Proceed', () => {
-    mp.trigger('OP.GUI.playAsGuest');
+    GUI.callClient('playAsGuest');
     playAsGuest.remove();
   });
   playAsGuest.show();
@@ -183,7 +183,7 @@ window.onForgotPassword = () => {
   const forgotPassword = new PopUp('We will send an E-Mail to your account containing instructions on how to reset your password.');
   forgotPassword.error();
   forgotPassword.button('Okay', () => {
-    mp.trigger('OP.GUI.forgotPassword');
+    GUI.callClient('forgotPassword');
     forgotPassword.remove();
 
     const confirm = new PopUp('An E-Mail containing reset instructions has been sent.<br><br>Please check your inbox.');

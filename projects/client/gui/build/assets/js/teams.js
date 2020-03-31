@@ -11268,7 +11268,7 @@ var PopUp = /*#__PURE__*/function () {
       });
       this.nodes.buttons.append(button);
 
-      if (this.nodes.buttons.childElementCount.length >= 2) {
+      if (this.nodes.buttons.childElementCount >= 2) {
         this.nodes.buttons.classList.add('popup-buttons-multiple');
       }
     }
@@ -11299,6 +11299,8 @@ var PopUp = /*#__PURE__*/function () {
 
       this.nodes.wrapper.addEventListener('transitionend', function () {
         _dom["default"].remove(_this3.nodes.wrapper);
+      }, {
+        once: true
       });
       this.hide();
     }

@@ -1,1 +1,120 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="assets/css/style.css" rel="stylesheet"></head><body class="teams"><div class="backdrop"></div><div class="logo-top-left"><img src="assets/img/logo.png"></div><main class="teams-container"><svg viewBox="0 0 100 100" style="display: none"><defs><polygon id="teamspath" points="0,100 35,0 100,0 65,100" fill="transparent" stroke="#fbc845" stroke-width="2px"/></defs></svg><ul class="teams-list"><!-- TEAM FIB --><li data-team-slug="fib" class="teams-item-container"><div class="teams-item"><div class="teams-bg" style="background-image: url(assets/img/teams/fib.webp)"></div><svg viewBox="0 0 100 100" preserveAspectRatio="none"><use href="#teamspath"></use></svg><div class="teams-content"><div class="teams-content-inner"><h2>FIB</h2><div class="teams-content-extra"><button type="button" class="button-gold join-team">Join</button></div></div></div></div></li><!-- /TEAM FIB --><!-- TEAM LOST MC --><li data-team-slug="lost_mc" class="teams-item-container"><div class="teams-item"><div class="teams-bg" style="background-image: url(assets/img/teams/bikers.webp)"></div><svg viewBox="0 0 100 100" preserveAspectRatio="none"><use href="#teamspath"></use></svg><div class="teams-content"><div class="teams-content-inner"><h2>Lost MC</h2><div class="teams-content-extra"><button type="button" class="button-gold join-team">Join</button></div></div></div></div></li><!-- /TEAM LOST MC --><!-- TEAM MARINES --><li data-team-slug="marines" class="teams-item-container"><div class="teams-item"><div class="teams-bg" style="background-image: url(assets/img/teams/marines.webp)"></div><svg viewBox="0 0 100 100" preserveAspectRatio="none"><use href="#teamspath"></use></svg><div class="teams-content"><div class="teams-content-inner"><h2>Marines</h2><div class="teams-content-extra"><button type="button" class="button-gold join-team">Join</button></div></div></div></div></li><!-- /TEAM MARINES --></ul></main><script>window.OPPOSING_FORCES = {"isProduction":true};</script><script src="assets/js/index.js"></script><script src="assets/js/teams.js"></script></body></html>
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="assets/css/style.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <div class="backdrop"></div>
+
+    <div data-gui-component="watermark" class="gui-component gui-component-watermark">
+      <img src="assets/img/logo.webp">
+    </div>
+
+    <div data-gui-component="teams" class="gui-component gui-component-teams">
+      <svg viewBox="0 0 100 100" style="display: none">
+        <defs>
+          <polygon id="teamspath" points="0,100 35,0 100,0 65,100" fill="transparent" stroke="#fbc845" stroke-width="2px" />
+        </defs>
+      </svg>
+
+      <ul class="teams-list">
+        <!-- TEAM FIB -->
+        <li data-team-slug="fib" class="teams-item-container">
+          <div class="teams-item">
+            <div
+              class="teams-bg"
+              style="background-image: url(assets/img/teams/fib.webp)">
+            </div>
+
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+              <use href="#teamspath" />
+            </svg>
+
+            <div class="teams-content">
+              <div class="teams-content-inner">
+                <h2>FIB</h2>
+
+                <div class="teams-content-extra">
+                  <div class="teams-content-extra-inner">
+                    <button type="button" class="button-gold join-team">
+                      Join
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <!-- /TEAM FIB -->
+
+        <!-- TEAM LOST MC -->
+        <li data-team-slug="lost_mc" class="teams-item-container">
+          <div class="teams-item">
+            <div
+              class="teams-bg"
+              style="background-image: url(assets/img/teams/bikers.webp)">
+            </div>
+
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+              <use href="#teamspath" />
+            </svg>
+
+            <div class="teams-content">
+              <div class="teams-content-inner">
+                <h2>Lost MC</h2>
+
+                <div class="teams-content-extra">
+                  <div class="teams-content-extra-inner">
+                    <button type="button" class="button-gold join-team">
+                      Join
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <!-- /TEAM LOST MC -->
+
+        <!-- TEAM MARINES -->
+        <li data-team-slug="marines" class="teams-item-container">
+          <div class="teams-item">
+            <div
+              class="teams-bg"
+              style="background-image: url(assets/img/teams/marines.webp)">
+            </div>
+
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+             <use href="#teamspath" />
+            </svg>
+
+            <div class="teams-content">
+              <div class="teams-content-inner">
+                <h2>Marines</h2>
+
+                <div class="teams-content-extra">
+                  <div class="teams-content-extra-inner">
+                    <button type="button" class="button-gold join-team">
+                      Join
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <!-- /TEAM MARINES -->
+      </ul>
+    </div>
+
+    <script>window.OPPOSING_FORCES = {"isProduction":false};</script>
+    <script src="assets/js/teams.js"></script>
+
+  </body>
+</html>

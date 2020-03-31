@@ -1,7 +1,7 @@
 @import '../config/fonts';
 @import '../core/util';
 
-.popup-wrap {
+.popup-wrapper {
   @extend %cover;
   background: rgba(#000, 0.2);
 

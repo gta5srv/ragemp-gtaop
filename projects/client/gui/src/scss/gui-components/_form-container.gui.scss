@@ -3,7 +3,7 @@
 @import '../config/container';
 @import '../core/util';
 
-.accounting-container {
+.gui-component.gui-component-form-container {
   @extend %centered;
 
   display: flex;
@@ -13,46 +13,57 @@
   height: 70%;
   border-radius: 10px;
 
-  visibility: hidden;
-  opacity: 0;
-  transition: 0.5s;
-
-  &.visible {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .accounting-background,
-  .accounting-content {
+  .form-container-background,
+  .form-container-content {
     display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
   }
 
-  .accounting-background {
+  .form-container-background {
     position: relative;
     width: 30%;
     background: rgba(#b8c1d1, 0.4);
     border-radius: 10px 0 0 10px;
     border-right: 5px solid #fbc845;
 
-    .accounting-logo {
+    .form-container-logo {
+      position: relative;
       width: 80%;
 
       img {
         width: 100%;
+
+        &.form-container-logo-primary {
+          opacity: 0;
+          transition: 0.75s;
+          transition-delay: 0.5s;
+        }
+
+        &.form-container-logo-secondary {
+          @extend %cover;
+          height: auto !important;
+
+          transform: translateY(25%);
+          opacity: 0;
+          transition: 0.75s;
+          transition-delay: 1.5s;
+
+          animation: float 6s ease-in-out infinite;
+          animation-delay: 2.25s;
+        }
       }
     }
   }
 
-  .accounting-content {
+  .form-container-content {
     width: 70%;
     background: #3b98be;
     color: #fff;
     border-radius: 0 10px 10px 0;
 
-    .accounting-content-inner {
+    .form-container-content-inner {
       width: 85%;
       text-align: center;
     }
@@ -65,12 +76,7 @@
     }
 
     form {
-      display: none;
       color: mix(#fff, #3b98be, 70%);
-
-      &.active {
-        display: block;
-      }
 
       label {
         span {
@@ -98,18 +104,35 @@
     @extend %pseudo-clear;
   }
 
+  &.visible {
+    .form-container-background {
+      .form-container-logo {
+        img {
+          &.form-container-logo-primary {
+            opacity: 1;
+          }
+
+          &.form-container-logo-secondary {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
   @media (min-width: #{$md}) {
     width: $container-width-md;
 
-    .accounting-background {
+    .form-container-background {
       width: 40%;
 
-      .accounting-logo {
+      .form-container-logo {
         width: 60%;
       }
     }
 
-    .accounting-content {
+    .form-container-content {
       width: 60%;
     }
   }
@@ -117,8 +140,8 @@
   @media (min-width: #{$lg}) {
     width: $container-width-lg;
 
-    .accounting-content {
-      .accounting-content-inner {
+    .form-container-content {
+      .form-container-content-inner {
         width: 50%;
       }
     }

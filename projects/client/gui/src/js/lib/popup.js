@@ -1,44 +1,59 @@
-/**
- * Dependencies
- */
-import $ from 'jquery';
+import DOM from '@lib/dom';
 
 
 /**
  * Creates pop-ups on page
  */
 class PopUp {
-  constructor (html) {
-    this.$image = $('<div>', { class: 'popup-image' });
-    this.$content = $('<div>', { class: 'popup-content' });
-    this.$buttons = $('<div>', { class: 'popup-buttons '});
-    this.$element = $('<div>', { class: 'popup' }).append(
-      this.$image,
-      this.$content,
-      this.$buttons
-    );
-    this.$wrapper = $('<div>', { class: 'popup-wrap' }).append(
-      this.$element
-    );
+  nodes = {};
 
-    this.$content.html(html);
-    this.$wrapper.appendTo($('body'));
+
+  constructor (html) {
+    this._createNodes();
+    this.html = html;
+    document.body.append(this.nodes.wrapper);
+  }
+
+
+  _createNodes () {
+    const image = document.createElement('div');
+    image.classList.add('popup-image');
+
+    const content = document.createElement('div');
+    content.classList.add('popup-content');
+
+    const buttons = document.createElement('div');
+    buttons.classList.add('popup-buttons');
+
+    const main = document.createElement('div');
+    main.classList.add('popup');
+    main.append(image, content, buttons);
+
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('popup-wrapper');
+    wrapper.append(main);
+
+    this.nodes.image = image;
+    this.nodes.content = content;
+    this.nodes.buttons = buttons;
+    this.nodes.main = main;
+    this.nodes.wrapper = wrapper;
   }
 
 
   set image (href) {
-    this.$image.empty();
+    this.nodes.image.innerHTML = '';
 
     if (href) {
-      this.$image.append(
-        $('<img>', { src: href })
-      )
+      const image = document.createElement('img');
+      image.setAttribute('src', href);
+      this.nodes.image.append(image);
     }
   }
 
 
   set html (html) {
-    this.$content.html(html);
+    this.nodes.content.innerHTML = html;
   }
 
 
@@ -57,45 +72,43 @@ class PopUp {
       callback = () => this.remove();
     }
 
-    const $button = $('<button>', {
-      type: 'button',
-      text: text,
-      class: 'button-dark'
-    }).click(function (e) {
+    const button = document.createElement('button');
+    button.classList.add('button-dark');
+    button.innerHTML = text;
+    button.setAttribute('type', 'button');
+    button.addEventListener('click', function () {
       callback();
-    })
+    });
 
-    this.$buttons.append($button);
-    if (this.$buttons.children().length >= 2) {
-      this.$buttons.addClass('popup-buttons-multiple')
+    this.nodes.buttons.append(button);
+    if (this.nodes.buttons.childElementCount.length >= 2) {
+      this.nodes.buttons.classList.add('popup-buttons-multiple');
     }
   }
 
 
   show () {
-    this.$wrapper.addClass('visible');
-    window.setTimeout(() => {
-      this.$element.addClass('visible');
-    }, 0);
+    this.nodes.wrapper.classList.add('visible');
+    setImmediate(() => this.nodes.main.classList.add('visible'));
 
-    const $buttons = $('button', this.$buttons);
-    if ($buttons.length) {
-      $buttons.first().focus();
+    const button = this.nodes.buttons.querySelector('button');
+    if (button) {
+      button.focus();
     }
   }
 
 
   hide () {
-    this.$wrapper.removeClass('visible');
+    this.nodes.wrapper.classList.remove('visible');
   }
 
 
   remove () {
-    this.hide();
-
-    this.$wrapper.one("transitionend webkitTransitionEnd oTransitionEnd", () => {
-      this.$element.remove();
+    this.nodes.wrapper.addEventListener('transitionend', () => {
+      DOM.remove(this.nodes.wrapper);
     });
+
+    this.hide();
   }
 }
 

@@ -1,10 +1,11 @@
 /**
  * Dependencies
  */
-import op from '../lib/op';
-import '../lib/forms';
-import { PopUp } from '../lib/popup';
-
+import '@core/loader';
+import { GUI } from '@core/gui/gui';
+import '@lib/forms';
+import { PopUp } from '@lib/popup';
+import util from '@core/util';
 import $ from 'jquery';
 import bcrypt from 'bcryptjs';
 
@@ -32,10 +33,18 @@ function getFormData ($form) {
 }
 
 
-$(function () {
-  mp.trigger('OP.GUI.ready', 'accounting');
+GUI.onReady(() => {
+  const loginGUI = GUI.getComponentByName('login');
 
-  $main = $('.accounting-container');
+  if (util.isDemo()) {
+    GUI.replacePlaceholder('socialclub', 'Natural BOT Killer');
+
+    if (loginGUI) {
+      loginGUI.setVisible(false);
+    }
+  }
+
+  $main = $('.gui-component-form-container');
 
   $forms = $('form', $main);
   $forms.submit(function (e) {
@@ -52,7 +61,7 @@ $(function () {
       }
 
       const hash = bcrypt.hashSync(formData.password, registeredSalt);
-      mp.trigger('OP.GUI.tryLogin', hash);
+      GUI.callClient('tryLogin', hash);
       return;
     }
 
@@ -60,10 +69,12 @@ $(function () {
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(formData.password, salt);
 
-      mp.trigger('OP.GUI.tryRegister', formData.email, hash, salt);
+      GUI.callClient('tryRegister', formData.email, hash, salt);
       return;
     }
   });
+
+  GUI.callClient('ready', 'accounting');
 });
 
 
@@ -72,14 +83,14 @@ $(function () {
  */
 window.showLoginForm = (socialClubName, savedRegisteredSalt) => {
   $forms
-    .removeClass('active')
-    .filter('.form-login')
-    .addClass('active')
+    .removeClass('visible')
+    .filter('[data-gui-component="login"]')
+    .addClass('visible')
     .find('input:not([disabled]):first')
     .focus();
 
   registeredSalt = savedRegisteredSalt;
-  op.replacePlaceholder('socialclub', socialClubName);
+  GUI.replacePlaceholder('socialclub', socialClubName);
 };
 
 
@@ -88,13 +99,13 @@ window.showLoginForm = (socialClubName, savedRegisteredSalt) => {
  */
 window.showRegisterForm = (socialClubName) => {
   $forms
-    .removeClass('active')
-    .filter('.form-register')
-    .addClass('active')
+    .removeClass('visible')
+    .filter('[data-gui-component="register"]')
+    .addClass('visible')
     .find('input:not([disabled]):first')
     .focus();
 
-  op.replacePlaceholder('socialclub', socialClubName);
+  GUI.replacePlaceholder('socialclub', socialClubName);
 };
 
 
@@ -105,7 +116,7 @@ window.onLoginResult = (success, message) => {
     loginAlert.html = 'Login has been successfull.';
     loginAlert.success();
     loginAlert.button('Okay', () => {
-      mp.trigger('OP.GUI.confirmLogin');
+      GUI.callClient('confirmLogin');
       loginAlert.remove();
     });
   } else {
@@ -133,7 +144,7 @@ window.onRegisterResult = (success, message) => {
     registerAlert.html = 'Registration has been successfull.';
     registerAlert.success();
     registerAlert.button('Okay', () => {
-      mp.trigger('OP.GUI.confirmRegister');
+      GUI.callClient('confirmRegister');
       registerAlert.remove();
     });
   } else {

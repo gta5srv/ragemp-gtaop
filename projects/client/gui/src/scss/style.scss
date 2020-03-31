@@ -13,10 +13,11 @@
 @import 'base/inputs';
 @import 'base/forms';
 @import 'base/popups';
+@import 'base/gui-component';
 // Components
-@import 'component/shared';
-@import 'component/accounting';
-@import 'component/teams';
+@import 'gui-components/form-container.gui';
+@import 'gui-components/teams.gui';
+@import 'gui-components/watermark.gui';
 
 // Misc (to be removed)
 body.demo {

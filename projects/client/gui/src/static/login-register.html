@@ -8,19 +8,20 @@
     <link href="assets/css/style.css" rel="stylesheet">
 
   </head>
-  <body class="accounting">
+  <body>
 
     <div class="backdrop"></div>
 
-    <main class="accounting-container">
-      <div class="accounting-background">
-        <div class="accounting-logo">
-          <img src="assets/img/logot.webp">
+    <div data-gui-component="login" class="gui-component gui-component-form-container">
+      <div class="form-container-background">
+        <div class="form-container-logo">
+          <img class="form-container-logo-primary" src="assets/img/logo.webp">
+          <img class="form-container-logo-secondary" src="assets/img/logotsingle.webp">
         </div>
       </div>
 
-      <div class="accounting-content">
-        <div class="accounting-content-inner">
+      <div class="form-container-content">
+        <div class="form-container-content-inner">
           <form class="form-login" novalidate autocomplete="off">
             <h2>Welcome back to paradise.</h2>
 
@@ -45,7 +46,20 @@
               Forgot password
             </button>
           </form>
+        </div>
+      </div>
+    </div>
 
+    <div data-gui-component="register" class="gui-component gui-component-form-container">
+      <div class="form-container-background">
+        <div class="form-container-logo">
+          <img class="form-container-logo-primary" src="assets/img/logo.webp">
+          <img class="form-container-logo-secondary" src="assets/img/logotsingle.webp">
+        </div>
+      </div>
+
+      <div class="form-container-content">
+        <div class="form-container-content-inner">
           <form class="form-register" novalidate autocomplete="off">
             <h2>School's out for summer,<br />school's out forever.</h2>
 
@@ -87,11 +101,10 @@
           </form>
         </div>
       </div>
-    </main>
+    </div>
 
     <script>window.OPPOSING_FORCES = {};</script>
-    <script src="assets/js/index.js"></script>
-    <script src="assets/js/accounting.js"></script>
+    <script src="assets/js/login-register.js"></script>
 
   </body>
 </html>

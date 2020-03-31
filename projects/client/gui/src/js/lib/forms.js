@@ -2,6 +2,7 @@
  * Dependencies
  */
 import $ from 'jquery';
+import DOM from '@lib/dom';
 
 
 /**
@@ -106,12 +107,12 @@ function validate ($form) {
 /**
  * On form submit
  */
-$(function () {
-  $('form').each(function () {
-    $(this).submit(function (e) {
-      if (!validate($(this))) {
+DOM.onReady(() => {
+  document.addEventListener('submit', function (e) {
+    if (e.target.matches('form')) {
+      if (!validate($(e.target))) {
         e.preventDefault();
       }
-    });
+    }
   });
-});
+})

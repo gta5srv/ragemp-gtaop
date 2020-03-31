@@ -26,7 +26,7 @@
   }
 }
 
-@keyframes dyeblue {
+@keyframes yellowing {
   from {
     filter: sepia(100%) hue-rotate(13deg) saturate(0%);
   }
@@ -38,4 +38,16 @@
   to {
     filter: sepia(100%) hue-rotate(13deg) saturate(0%);
   }
+}
+
+@keyframes float {
+	0% {
+		transform: translatey(0px);
+	}
+	50% {
+		transform: translatey(-5px);
+	}
+	100% {
+		transform: translatey(0px);
+	}
 }

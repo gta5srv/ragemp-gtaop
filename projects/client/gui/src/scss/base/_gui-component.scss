@@ -1,0 +1,10 @@
+[data-gui-component] {
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.5s;
+
+  &.visible {
+    visibility: visible;
+    opacity: 1;
+  }
+}

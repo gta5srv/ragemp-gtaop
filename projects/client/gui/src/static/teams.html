@@ -8,15 +8,15 @@
     <link href="assets/css/style.css" rel="stylesheet">
 
   </head>
-  <body class="teams">
+  <body>
 
     <div class="backdrop"></div>
 
-    <div class="logo-top-left">
-      <img src="assets/img/logo.png">
+    <div data-gui-component="watermark" class="gui-component gui-component-watermark">
+      <img src="assets/img/logo.webp">
     </div>
 
-    <main class="teams-container">
+    <div data-gui-component="teams" class="gui-component gui-component-teams">
       <svg viewBox="0 0 100 100" style="display: none">
         <defs>
           <polygon id="teamspath" points="0,100 35,0 100,0 65,100" fill="transparent" stroke="#fbc845" stroke-width="2px" />
@@ -33,7 +33,7 @@
             </div>
 
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-              <use href="#teamspath">
+              <use href="#teamspath" />
             </svg>
 
             <div class="teams-content">
@@ -41,9 +41,11 @@
                 <h2>FIB</h2>
 
                 <div class="teams-content-extra">
-                  <button type="button" class="button-gold join-team">
-                    Join
-                  </button>
+                  <div class="teams-content-extra-inner">
+                    <button type="button" class="button-gold join-team">
+                      Join
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -60,7 +62,7 @@
             </div>
 
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-              <use href="#teamspath">
+              <use href="#teamspath" />
             </svg>
 
             <div class="teams-content">
@@ -68,9 +70,11 @@
                 <h2>Lost MC</h2>
 
                 <div class="teams-content-extra">
-                  <button type="button" class="button-gold join-team">
-                    Join
-                  </button>
+                  <div class="teams-content-extra-inner">
+                    <button type="button" class="button-gold join-team">
+                      Join
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -87,7 +91,7 @@
             </div>
 
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-             <use href="#teamspath">
+             <use href="#teamspath" />
             </svg>
 
             <div class="teams-content">
@@ -95,19 +99,21 @@
                 <h2>Marines</h2>
 
                 <div class="teams-content-extra">
-                  <button type="button" class="button-gold join-team">
-                    Join
-                  </button>
+                  <div class="teams-content-extra-inner">
+                    <button type="button" class="button-gold join-team">
+                      Join
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </li>
         <!-- /TEAM MARINES -->
-    </main>
+      </ul>
+    </div>
 
     <script>window.OPPOSING_FORCES = {};</script>
-    <script src="assets/js/index.js"></script>
     <script src="assets/js/teams.js"></script>
 
   </body>

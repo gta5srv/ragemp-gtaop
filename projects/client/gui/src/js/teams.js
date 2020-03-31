@@ -1,52 +1,53 @@
-import { PopUp } from '../lib/popup';
+import '@core/loader';
+
+import DOM from '@lib/dom';
+import { PopUp } from '@lib/popup';
+import { GUI } from '@core/gui/gui';
 import $ from 'jquery';
 
 
-$(function () {
-  const $teamContainer = $('.teams-container');
-  const $teamSelectionElements = $('.teams-item', $teamContainer);
+GUI.onReady(function () {
+  const teamGUI = GUI.getComponentByName('teams');
+  if (!teamGUI) {
+    return;
+  }
 
+  teamGUI.registerEvent('requestTeamError', (message) => {
+    console.log(message);
+  });
 
-  $teamSelectionElements.click(function (e) {
-    const hadClass = $(this).hasClass('clicked');
-    $(this).addClass('clicked');
+  const teamSelectionNodes = teamGUI.node.querySelectorAll('.teams-item');
 
-    if (!hadClass) {
-      const $contentExtra = $('.teams-content-extra', $(this));
-      const contentExtraHeight = $contentExtra.css('height', 'auto').outerHeight();
-      $contentExtra.css('height', '');
+  teamSelectionNodes.forEach((teamSelectionNode) => {
+    teamSelectionNode.addEventListener('click', function () {
+      this.classList.add('clicked');
+    });
 
-      $('.teams-content-extra', $(this))
-        .stop()
-        .animate({ height: contentExtraHeight, opacity: 1 });
+    teamSelectionNode.addEventListener('mouseleave', function (e) {
+      const parentTeamSelectionNode = DOM.getClosest(e.target, '.teams-item');
+
+      if (parentTeamSelectionNode) {
+        parentTeamSelectionNode.classList.remove('clicked');
+      }
+    });
+
+    const joinButtonNode = teamSelectionNode.querySelector('button.join-team');
+    if (joinButtonNode) {
+      joinButtonNode.addEventListener('click', function () {
+        const parentTeamNode = DOM.getClosest(this, '[data-team-slug]');
+        if (!parentTeamNode) {
+          return;
+        }
+
+        const clickedTeamSlug = parentTeamNode.getAttribute('data-team-slug');
+        GUI.callClient('TEAMS.requestJoin', clickedTeamSlug);
+      });
     }
   });
 
+  GUI.callClient('TEAMS.requestInfos');
+})
 
-  $('button.join-team', $teamSelectionElements).click(function () {
-    const $parentTeamItem = $(this).parents('[data-team-slug]');
-    if (!$parentTeamItem.length) {
-      return;
-    }
-
-    const clickedTeamSlug = $parentTeamItem.attr('data-team-slug');
-    console.log('Request join', clickedTeamSlug)
-    mp.trigger('OP.GUI.TEAMS.requestJoin', clickedTeamSlug);
-  });
-
-
-  $teamSelectionElements.mouseleave(function (e) {
-    const $teamSelectionParent = $(e.target).parents('.teams-item');
-    $teamSelectionParent.removeClass('clicked');
-
-    $('.teams-content-extra', $teamSelectionParent)
-      .stop()
-      .animate({ height: 0, opacity: 0 })
-  });
-
-
-  mp.trigger('OP.GUI.TEAMS.requestInfos');
-});
 
 
 window.requestTeamError = (error) => {

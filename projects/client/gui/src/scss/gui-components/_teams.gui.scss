@@ -6,7 +6,7 @@
 $teams-count: 3;
 $svg-stroke-width: 2px;
 
-.teams-container {
+.gui-component.gui-component-teams {
   @extend %centered;
 
   user-select: none;
@@ -36,10 +36,13 @@ $svg-stroke-width: 2px;
 
       .teams-item {
         height: 100%;
-        clip-path: polygon(0% 100%, 35% 0%, 100% 0%, 65% 100%);
-
         cursor: pointer;
         pointer-events: auto;
+
+        &,
+        .teams-bg {
+          clip-path: polygon(0% 100%, 35% 0%, 100% 0%, 65% 100%);
+        }
 
         .teams-bg {
           @extend %centered;
@@ -100,13 +103,17 @@ $svg-stroke-width: 2px;
             }
 
             .teams-content-extra {
-              height: 0;
+              height: auto;
+              max-height: 0;
+              // height: 0;
               opacity: 0;
               overflow: hidden;
 
               color: #fff;
               line-height: 2;
               font-size: floor($font-size * 0.85);
+
+              transition: 0.5s;
 
               span {
                 color: #fbc845;
@@ -179,6 +186,17 @@ $svg-stroke-width: 2px;
             height: calc(100% + #{$svg-stroke-width * 2});
           }
         }
+
+        &.clicked {
+          .teams-content {
+            .teams-content-inner {
+              .teams-content-extra {
+                max-height: 100px;
+                opacity: 1;
+              }
+            }
+          }
+        }
       }
 
       &.teams-item-container-disabled {
@@ -226,7 +244,7 @@ $svg-stroke-width: 2px;
           animation-name: pulse;
 
           .teams-bg {
-            animation-name: dyeblue;
+            animation-name: yellowing;
           }
 
           &,

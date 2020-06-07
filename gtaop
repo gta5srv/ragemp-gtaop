@@ -13,22 +13,22 @@
 /**
  * Dependencies
  */
-const chalk = require('chalk')
-const spawn = require('cross-spawn')
-const fs = require('fs-extra')
-const strftime = require('strftime')
-const { Signale } = require('signale')
-const stripAnsi = require('strip-ansi')
-const box = require('ascii-box').box
+const chalk = require('chalk');
+const spawn = require('cross-spawn');
+const fs = require('fs-extra');
+const strftime = require('strftime');
+const { Signale } = require('signale');
+const stripAnsi = require('strip-ansi');
+const box = require('ascii-box').box;
 // Local dependencies
-const util = require('./lib/util')
+const util = require('./lib/util');
 
 
 /**
  * Constants/Variables
  */
-const PROJECTS = [ 'client', 'server' ]
-const ERROR_LOG_FILE = 'gtaop-error.log'
+const PROJECTS = [ 'client', 'server' ];
+const ERROR_LOG_FILE = 'gtaop-error.log';
 
 
 /**
@@ -38,7 +38,7 @@ const argv = require('yargs')
  .command(['build <project>'], 'Build a project')
  .choices('project', [...PROJECTS, 'all'])
  .demandCommand()
- .argv
+ .argv;
 
 
 /**
@@ -49,17 +49,17 @@ const argv = require('yargs')
  */
 function build (project) {
   // Save start time
-  const startTime = new Date()
+  const startTime = new Date();
 
   const buildSignale = new Signale({
     scope: `BUILD:${project}`,
-  })
+  });
 
-  buildSignale.pending(`Start building ${chalk.yellow(project)}...`)
+  buildSignale.pending(`Start building ${chalk.yellow(project)}...`);
 
   // Log strings
-  let errorLog = ''
-  let exceptionLog = ''
+  let errorLog = '';
+  let exceptionLog = '';
 
   // Spawn gulp child process
   const buildProcess = spawn(
@@ -69,49 +69,49 @@ function build (project) {
       env: { PROJECT_ROOT: __dirname },
       silent: true,
       stdio: 'pipe'
-    })
+    });
 
-  buildProcess.stdout.setEncoding('utf-8')
+  buildProcess.stdout.setEncoding('utf-8');
   buildProcess.stderr.on('data', (chunk) => {
-    exceptionLog += chunk
-  })
+    exceptionLog += chunk;
+  });
 
-  buildProcess.stdout.setEncoding('utf-8')
+  buildProcess.stdout.setEncoding('utf-8');
   buildProcess.stdout.on('data', (chunk) => {
-    errorLog += chunk
-  })
+    errorLog += chunk;
+  });
 
   // On process exit
   buildProcess.on('exit', (code, signal) => {
     // Success exit code
     if (code === 0) {
       // Calculate elapsed time
-      secondsElapsed = (new Date() - startTime) / 1000
-      buildSignale.success(`Successfully built! (${secondsElapsed}s)`)
-      return
+      secondsElapsed = (new Date() - startTime) / 1000;
+      buildSignale.success(`Successfully built! (${secondsElapsed}s)`);
+      return;
     }
-	
-	console.log(chalk.red('ERROR'), errorLog)
-	console.log(chalk.red('EXCEPTION'), exceptionLog)
+
+  	console.log(chalk.red('ERROR'), errorLog);
+  	console.log(chalk.red('EXCEPTION'), exceptionLog);
 
     // Unsuccessfull exit code
     buildSignale.fatal(
       chalk.red('An error occured while building. ')
       + `Please see ${chalk.yellow(ERROR_LOG_FILE)} for details.`
-    )
+    );
 
     // Log error to file
-    const failReason = errorLog ? 'Error' : 'Exception'
-    let headerText = `[BUILD:${project}:${failReason}]\n`
-    headerText += strftime('(%F %T)', new Date())
+    const failReason = errorLog ? 'Error' : 'Exception';
+    let headerText = `[BUILD:${project}:${failReason}]\n`;
+    headerText += strftime('(%F %T)', new Date());
 
-    mainLog = errorLog ? errorLog : exceptionLog
+    mainLog = errorLog ? errorLog : exceptionLog;
 
     const errorLogFile = fs.createWriteStream(ERROR_LOG_FILE, { flags: 'a' });
-    errorLogFile.write(box(headerText) + '\n')
-    errorLogFile.write(stripAnsi(mainLog) + '\n') // We strip ANSI characters for logging
-    errorLogFile.end()
-  })
+    errorLogFile.write(box(headerText) + '\n');
+    errorLogFile.write(stripAnsi(mainLog) + '\n'); // We strip ANSI characters for logging
+    errorLogFile.end();
+  });
 }
 
 
@@ -121,14 +121,14 @@ function build (project) {
  * @return {void}
  */
 function main () {
-  util.printHeader()
+  util.printHeader();
 
   if (argv.project === 'all') {
     PROJECTS.forEach((project) => {
-      build(project)
-    })
+      build(project);
+    });
   } else {
-    build(argv.project)
+    build(argv.project);
   }
 }
 
@@ -137,5 +137,5 @@ function main () {
  * Invoke main method
  */
 if (require.main === module) {
-  main()
+  main();
 }

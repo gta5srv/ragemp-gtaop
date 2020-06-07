@@ -30,15 +30,7 @@ function clean (cb) {
 
 
 function gui (cb) {
-  // const guiBuild = spawn(
-  //   path.join(PROJECT_ROOT, 'node_modules/gulp-cli/bin/gulp.js'),
-  //   ['--gulpfile', `gui/gulpfile.js`], {
-  //     env: { NODE_ENV: 'production' },
-  //   });
-  //
-  // guiBuild.on('exit', function() {
-    cb();
-  // });
+  cb();
 }
 
 

@@ -1,0 +1,3 @@
+[submodule "projects/client/gui"]
+	path = projects/client/gui
+	url = git@bitbucket.org:alexanderroidl/client-gui.git

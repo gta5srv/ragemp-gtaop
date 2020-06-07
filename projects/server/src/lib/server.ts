@@ -12,6 +12,9 @@ import BlipStreamer from '@lib//streamers/blip-streamer';
 import Loader from '@core/loader';
 
 
+const mysqlConfig = require('@config/mysql').mysql;
+
+
 /**
  * The Gamemode's heart
  */
@@ -34,11 +37,13 @@ class Server implements Listeners.TickListener {
 
   constructor () {
     Server.listeners.add(this);
+
     Server.Time.randomize();
     Server.blipStreamer = new BlipStreamer();
     WorldLocations.load();
 
-    const mysqlConfig = require('@config/mysql').mysql;
+    console.log('DB CFG', mysqlConfig);
+
     Server.db = new Database(
       mysqlConfig.host,
       mysqlConfig.user,
@@ -46,10 +51,7 @@ class Server implements Listeners.TickListener {
       mysqlConfig.database
     );
     Server.db.on('ready', () => {
-      console.log('REAAAADYYYY')
-      // const salt = bcrypt.genSaltSync();
-      // const hash = bcrypt.hashSync('PENIS', salt);
-      // Server.db.addUser('penisFucker69', 'aroidl@crusoe.com', hash, salt);
+      console.log('REAAAADYYYY');
     })
 
     Server.log(`Started (Ingame time: ${Server.Time})`);

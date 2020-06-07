@@ -110,7 +110,7 @@ export default class Client implements Listeners.ClientListener {
 
 
   public onPlayAsGuest (): void {
-    Client.gui.toggleLoginRegister(false);
+    Client.gui.hideLoginRegister();
   }
 
 
@@ -123,10 +123,9 @@ export default class Client implements Listeners.ClientListener {
       }
     }
 
-    Client.gui.toggleLoginRegister(!isLoggedIn);
-
     if (isLoggedIn !== this.isLoggedIn) {
       if (isLoggedIn) {
+        Client.gui.hideLoginRegister();
         Client.gui.showTeamSelection();
       }
 

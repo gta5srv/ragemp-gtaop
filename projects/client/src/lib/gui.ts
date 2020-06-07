@@ -4,7 +4,7 @@ export default class Gui {
 
 
   constructor () {
-    this.accountingBrowser = mp.browsers.new('package://gui/accounting.html');
+    this.accountingBrowser = mp.browsers.new('package://gui/login-register.html');
     this.showChat(false);
   }
 
@@ -41,10 +41,10 @@ export default class Gui {
   }
 
 
-  public toggleLoginRegister (toggle: boolean): void {
-    this.accountingBrowser.execute(`toggleAll(${Boolean(toggle)});`);
-    mp.gui.cursor.show(toggle, toggle);
-    this.showChat(!toggle);
+  public hideLoginRegister (): void {
+    this.accountingBrowser.execute(`hideLoginRegister();`);
+    mp.gui.cursor.show(false, false);
+    this.showChat(true);
   }
 
 

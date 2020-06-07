@@ -19,10 +19,6 @@ class Database extends EventEmitter {
     });
     this._connection.connect();
 
-    if(this._connection.state === 'disconnected'){
-      console.log('DB CONNECTION FAILED!!!!')
-    }
-
     this._database = dbname;
 
     this.init();
@@ -65,7 +61,8 @@ class Database extends EventEmitter {
   }
 
   public getUserBySocialClub (socialClubName: string, cb: (userData: any) => void) {
-    this.query(Database.Sql.getUserBySocialClub(socialClubName), (err, result) => {
+    const query: string = Database.Sql.getUserBySocialClub(socialClubName);
+    this.query(query, (err, result) => {
       cb(result.length ? result[0] : null)
     });
   }
